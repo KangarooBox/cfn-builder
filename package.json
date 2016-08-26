@@ -1,0 +1,42 @@
+{
+  "author": "Richard Hurt",
+  "bin": {
+    "cfn-build": "./scripts/build.js",
+    "cfn-deploy": "./scripts/deploy.js",
+    "cfn-diff": "./scripts/diff.js",
+    "cfn-update": "./scripts/update-amis.sh"
+  },
+  "bugs": {
+    "url": "https://github.com/rnhurt/cfn-builder/issues"
+  },
+  "dependencies": {
+    "async": "^1.5.2",
+    "aws-sdk": "^2.2.28",
+    "change-case": "^2.3.1",
+    "fs-extra": "^0.26.4",
+    "handlebars": "^3.0.3",
+    "open": "0.0.5",
+    "swag": "^0.7.0"
+  },
+  "description": "Build & deploy AWS CloudFormation templates",
+  "devDependencies": {
+    "jsondiffpatch": "~0.1"
+  },
+  "homepage": "https://github.com/rnhurt/cfn-builder",
+  "keywords": [
+    "CloudFormation",
+    "AWS",
+    "Template"
+  ],
+  "license": "MIT",
+  "name": "cfn-builder",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rnhurt/cfn-builder.git"
+  },
+  "version": "0.0.1",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
