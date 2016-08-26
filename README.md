@@ -1,6 +1,6 @@
 # cfn-builder
 
-This repository contains a NodeJS command line application that will convert your JSON "blueprints" to an
+cfn-builder is a NodeJS command line application that will convert your JSON "blueprints" to an
 AWS CloudFormation template.
 
 ## Introduction
