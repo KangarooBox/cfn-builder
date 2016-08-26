@@ -16,7 +16,9 @@ which results in a CloudFormation template that can be executed.
 
 ## Installing
 
-1. Install cfn-builder globally: ```npm -g install cfn-builder```
+Install cfn-builder from NPM using the following command line:
+
+    npm -g install cfn-builder
 
 ## Testing
 
@@ -31,9 +33,8 @@ sections are required.
 
 * Almost everything is case sensitive:  "MyProject" != "myProject"
 * CloudFormation hates long identifiers so try to keep IDs/Names short (<10 characters)
-* This file and the resulting blueprint must be valid JSON.  If you have a loop ({{#each}}) then
-make sure you end it with something like ```{{#unless @last}},{{/unless}}``` so that you don't have
-any trailing commas.
+* All of your blueprints must be valid JSON.  If you have a loop ({{#each}}) then make sure you end it with
+something like ```{{#unless @last}},{{/unless}}``` so that you don't have any trailing commas.
 
 
 ## Usage
