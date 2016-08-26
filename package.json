@@ -15,18 +15,17 @@
     "change-case": "^2.3.1",
     "fs-extra": "^0.26.4",
     "handlebars": "^3.0.3",
+    "jsondiffpatch": "~0.1",
     "open": "0.0.5",
     "swag": "^0.7.0"
   },
-  "description": "Build & deploy AWS CloudFormation templates",
-  "devDependencies": {
-    "jsondiffpatch": "~0.1"
-  },
+  "description": "A command line application that builds AWS CloudFormation templates our of JSON 'blueprints'.",
   "homepage": "https://github.com/rnhurt/cfn-builder",
   "keywords": [
     "CloudFormation",
     "AWS",
-    "Template"
+    "Template",
+    "Blueprint"
   ],
   "license": "MIT",
   "name": "cfn-builder",
