@@ -1,0 +1,13 @@
+{{!--
+  Creates an API Gateway Rest API
+
+  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-an-api
+ --}}
+"api{{this.Name}}" : {
+  "Type" : "Custom::RestApi",
+  "Properties" : {
+      "ServiceToken" : "{{@root.Region.ServiceToken}}",
+      "name" : "{{this.Name}}",
+      "Description" : "{{this.Name}} Rest API"
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvType}})",
+
+  "Metadata" : {
+    {{#each Metadata}}{{{this}}},{{/each~}}
+    "Environment" : "{{EnvType}}",
+    "Version"     : "{{EnvVersion}}",
+    "ProjectName" : "{{ProjectName}}",
+    "Region"      : "{{Region.Id}}",
+    "Role"        : "{{ProjectName}}"
+  },
+
+  "Mappings" : {
+    {{#each Mappings}}{{{this}}}
+    {{/each}}
+  },
+
+  "Resources" : {
+    {{#each AccessKeys}}
+    {{> iam_accesskey}},
+    {{/each~}}
+
+    {{#each APIs}}
+    {{> apigateway_restapi}},
+    {{/each~}}
+
+    {{#each APIResources}}
+    {{> apigateway_resource}},
+    {{/each~}}
+
+    {{#each APIMethods}}
+    {{> apigateway_method}}
+    {{/each~}}
+
+    {{#each APIModels}}
+    {{> apigateway_model}},
+    {{/each~}}
+
+    {{#each APIDomainNames}}
+    {{> apigateway_domain_name}},
+    {{/each~}}
+
+    {{#each AutoscalingGroups}}
+    {{> autoscaling_group}},
+    {{/each}}
+
+    {{#each AutoscalingLaunchConfigs}}
+    {{> autoscaling_launch_config}},
+    {{/each}}
+
+    {{#each RDSInstances}}
+    {{> rds_instance}},
+    {{/each~}}
+
+    {{#each DataPipelines}}
+    {{> datapipeline_pipeline}},
+    {{/each~}}
+
+    {{#each EC2Instances}}
+    {{> ec2_instance}},
+    {{/each~}}
+
+    {{#each EC2Volumes}}
+    {{> ec2_volume}},
+    {{/each~}}
+
+    {{#each ElastiCacheClusters}}
+    {{> elasticache_cachecluster}},
+    {{/each~}}
+
+    {{#each ElastiCacheParameterGroups}}
+    {{> elasticache_parametergroup}},
+    {{/each~}}
+
+    {{#each ElasticLoadBalancers}}
+    {{> elasticloadbalancing_loadbalancer}},
+    {{/each~}}
+
+    {{#each EventSourceMappings}}
+    {{> lambda_event_source_mapping}},
+    {{/each~}}
+
+    {{#each InstanceProfiles}}
+    {{> iam_instance_profile}},
+    {{/each}}
+
+    {{#each KinesisStreams}}
+    {{> kinesis_stream}},
+    {{/each~}}
+    {{#each KinesisFirehoses}}
+    {{> kinesis_firehose}},
+    {{/each~}}
+
+    {{#each LambdaFunctions}}
+    {{> lambda_function}},
+    {{/each~}}
+
+    {{#each ManagedPolicies}}
+    {{> iam_managed_policy}},
+    {{/each}}
+
+    {{#each RedshiftClusters}}
+    {{> redshift_cluster}},
+    {{/each~}}
+
+    {{#each Route53RecordSets}}
+    {{> route53_recordset}},
+    {{/each~}}
+
+    {{#each Roles}}
+    {{> iam_role}},
+    {{/each}}
+
+    {{#each S3Buckets}}
+    {{> s3_bucket}},
+    {{/each~}}
+
+    {{#each S3BucketPolicies}}
+    {{> s3_bucket_policy}},
+    {{/each~}}
+
+    {{#each this.ScheduledActions}}
+    {{> autoscaling_scheduledaction}},
+    {{/each}}
+
+    {{#each SecurityGroups}}
+    {{> security_group}}
+    {{/each}}
+
+    {{#each SNSTopics}}
+    {{> sns_topic}},
+    {{/each~}}
+
+    {{#each SNSTopicPolicies}}
+    {{> sns_topic_policy}},
+    {{/each~}}
+
+    {{#each SQSQueues}}
+    {{> sqs_queue}},
+    {{/each~}}
+
+    {{#each SQSQueuePolicies}}
+    {{> sqs_queue_policy}},
+    {{/each~}}
+
+    {{#each Users}}
+    {{> iam_user}},
+    {{/each~}}
+
+    "JSONTerminator" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle",
+      "Properties" : {}
+    }
+  },
+
+  "Outputs" : {
+    {{#each AccessKeys}}
+    {{> iam_accesskey_output}},
+    {{/each}}
+    {{#each KinesisFirehoses}}
+    {{> kinesis_firehose_output}},
+    {{/each}}
+    {{#each KinesisStreams}}
+    {{> kinesis_stream_output}},
+    {{/each}}
+    {{#each RedshiftClusters}}
+    {{> redshift_cluster_output}},
+    {{/each}}
+    "StackId" : { "Value" : { "Ref" : "AWS::StackId" }, "Description" : "CloudFormation stack id" }
+  }
+}

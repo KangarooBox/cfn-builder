@@ -1,0 +1,8 @@
+"{{this.UserName}}AccessKey" : {
+  "Value" : { "Ref" : "ak{{this.UserName}}" },
+  "Description" : "{{this.UserName}} user access key id"
+},
+"{{this.UserName}}SecretKey" : {
+  "Value" : { "Fn::GetAtt" : [ "ak{{this.UserName}}", "SecretAccessKey" ] },
+  "Description" : "{{this.UserName}} user secret key"
+}

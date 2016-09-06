@@ -1,0 +1,20 @@
+{{!--
+  The AWS::ApiGateway::RestApi resource contains a collection of Amazon API Gateway (API Gateway)
+  resources and methods that can be invoked through HTTPS endpoints.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html
+ --}}
+"api{{this.Name}}" : {
+  "Type" : "AWS::ApiGateway::RestApi",
+  "Properties" : {
+    {{~#if this.Body}}"Body" : "{{{this.Body}}}",{{/if}}
+    {{~#if this.BodyS3Location}}"BodyS3Location" : { {{{inject this.BodyS3Location}}} },{{/if}}
+    {{~#if this.CloneFrom}}"CloneFrom" : "{{this.CloneFrom}}",{{/if}}
+    "Description" : "{{this.Description}}",
+    "FailOnWarnings" : {{default true this.FailOnWarnings}},
+    {{~#if this.Parameters}}
+    "Parameters" : [{{#each this.Parameters}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}],
+    {{/if}}
+    "Name" : "{{this.Name}}"
+  }
+}

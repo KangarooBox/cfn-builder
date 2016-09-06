@@ -1,0 +1,33 @@
+"{{this.Name}}" : {
+  "Type" : "AWS::EC2::SecurityGroup",
+  "Properties" : {
+    "GroupDescription" : "{{this.GroupDescription}}",
+    "VpcId" : "{{@root.Region.VPCId}}",
+    "SecurityGroupIngress" : [
+      {{#each this.SecurityGroupIngress}}
+      { "IpProtocol" : "{{this.IpProtocol}}",
+        {{~#if this.FromPort}}"FromPort" : {{this.FromPort}}, "ToPort" : {{this.ToPort}}, {{/if}}
+        {{~#if this.CidrIp}}"CidrIp" : "{{this.CidrIp}}" }{{/if}}
+        {{~#if this.SourceSecurityGroupId}} "SourceSecurityGroupId" : { "Ref" : "{{this.SourceSecurityGroupId}}" }}{{/if}}
+        {{~#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    "SecurityGroupEgress" : [
+      {{#each this.SecurityGroupEgress}}
+      { "IpProtocol" : "{{this.IpProtocol}}",
+        {{~#if this.FromPort}}"FromPort" : {{this.FromPort}}, "ToPort" : {{this.ToPort}}, {{/if}}
+        {{~#if this.CidrIp}}"CidrIp" : "{{this.CidrIp}}" }{{/if}}
+        {{~#if this.SourceSecurityGroupId}} "SourceSecurityGroupId" : { "Ref" : "{{this.SourceSecurityGroupId}}" }}{{/if}}
+        {{~#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    "Tags" : [
+      { "Key" : "Name",         "Value" : "{{@root.ProjectName}}: {{this.GroupDescription}}" },
+      { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+      { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+      { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+    ]
+  }
+},

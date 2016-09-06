@@ -1,0 +1,32 @@
+{{!--
+  Creates a stage for an Amazon API Gateway (API Gateway) deployment.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-stage.html
+ --}}
+"apiSTG{{this.Name}}":{
+  "Type":"AWS::ApiGateway::Stage",
+  "Properties":{
+    "CacheClusterEnabled":{{default (toString this.CacheClusterEnabled) false}},
+    {{~#if this.CacheClusterSize}}"CacheClusterSize":"{{this.CacheClusterSize}}",{{/if}}
+    {{~#if this.ClientCertificateId}}"ClientCertificateId":"{{this.ClientCertificateId}}",{{/if}}
+    {{~#if this.Variables}}"Variables":{ {{{inject this.Variables}}} },{{/if}}
+    {{~#if this.MethodSettings}}
+    "MethodSettings":[
+    {{#each this.MethodSettings}}{
+      {{~#if this.CacheDataEncrypte}}"CacheDataEncrypted":{{default (toString this.CacheDataEncrypted) false}},{{/if}}
+      {{~#if this.CacheTtlInSeconds}}"CacheTtlInSeconds":{{this.CacheTtlInSeconds}},{{/if}}
+      {{~#if this.DataTraceEnabled}}"DataTraceEnabled":{{default (toString this.DataTraceEnabled) false}},{{/if}}
+      {{~#if this.HttpMethod}}"HttpMethod":"{{this.HttpMethod}}",{{/if}}
+      {{~#if this.LoggingLevel}}"LoggingLevel":"{{this.LoggingLevel}}",{{/if}}
+      {{~#if this.MetricsEnabled}}"MetricsEnabled":{{default (toString this.MetricsEnabled) false}},{{/if}}
+      {{~#if this.ResourcePath}}"ResourcePath":"{{this.ResourcePath}}",{{/if}}
+      {{~#if this.ThrottlingBurstLimit}}"ThrottlingBurstLimit":{{this.ThrottlingBurstLimit}},{{/if}}
+      {{~#if this.ThrottlingRateLimit}}"ThrottlingRateLimit":{{this.ThrottlingRateLimit}},{{/if}}
+      "CachingEnabled":{{default (toString this.CachingEnabled) false}}
+    }{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "DeploymentId":{"Ref":"apidepl{{this.DeploymentId}}"},
+    "Description":"{{this.Description}}",
+    "StageName":"{{this.Name}}",
+    "RestApiId":{"Ref":"api{{this.RestApiId}}"}
+  }
+}

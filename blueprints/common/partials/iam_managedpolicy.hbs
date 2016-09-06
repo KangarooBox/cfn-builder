@@ -1,0 +1,17 @@
+{{!--
+  Creates an AWS Identity and Access Management (IAM) managed policy for your AWS account that you can use
+  to apply permissions to IAM users, groups, and roles.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html
+ --}}
+"mp{{this.Name}}" : {
+  "Type" : "AWS::IAM::ManagedPolicy",
+  "Properties": {
+    "Description" : "IAM Managed Policy for {{@root.ProjectName}} function",
+    {{~#if this.Groups}}"Groups" : [ {{#each this.Groups}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+    {{~#if this.Path}}"Path" : "{{this.Path}}",{{/if}}
+    {{~#if this.Roles}}"Roles" : [ {{#each this.Roles}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+    {{~#if this.Users}}"Users" : [ {{#each this.Users}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+    "PolicyDocument" : { {{{inject this.PolicyDocument}}} }
+  }
+}

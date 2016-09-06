@@ -1,0 +1,27 @@
+{{!--
+  Create a Route53 DNS RecordSet
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html
+ --}}
+ "53rs{{this.Name}}":{
+  "Type":"AWS::Route53::RecordSet",
+  "Properties":{
+    "Comment":"{{@root.ProjectName}}: {{@root.EnvVersion}}{{@root.EnvType}}",
+    {{#is this.Scheme "internal"}}
+    {{#with (lookupById @root.DNS @root.Route53::RecordSet.Internal.Domain)}}
+    "HostedZoneId":"{{this.PrivateHostedZoneId}}",
+    {{/with}}
+    "Name":"{{#if this.DNSName}}{{this.DNSName}}{{else}}{{lowercase @root.ProjectName}}.{{@root.Route53::RecordSet.Internal.Domain}}.{{/if}}",
+    {{else}}
+    {{#with (lookupById @root.DNS @root.Route53::RecordSet.External.Domain)}}
+    "HostedZoneId":"{{this.HostedZoneId}}",
+    {{/with}}
+    "Name":"{{#if this.DNSName}}{{this.DNSName}}{{else}}{{lowercase @root.ProjectName}}.{{lowercase @root.Region.Name}}.{{@root.EnvVersion}}.{{@root.EnvType}}.{{@root.Route53::RecordSet.External.Domain}}.{{/if}}",
+    {{/is}}
+    "Type":"{{default this.Type "CNAME"}}",
+    "TTL":{{default this.TTL 300}},
+    "ResourceRecords":[ {{#if this.ResourceRecord}}{"Fn::GetAtt":["elb{{this.ResourceRecord}}","DNSName"]}{{/if}}
+      {{#each this.ResourceRecords}}{"Fn::GetAtt":["elb{{this}}","DNSName"]}{{#unless @last}},{{/unless}}{{/each}}
+    ]
+  }
+}

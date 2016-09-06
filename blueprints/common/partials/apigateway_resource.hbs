@@ -1,0 +1,13 @@
+{{!--
+  Creates an API Gateway Resource
+
+  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-an-api-resource
+ --}}
+"apres{{this.Name}}" : {
+  "Type" : "AWS::ApiGateway::Resource",
+  "Properties" : {
+    "ParentId" : { "Fn::GetAtt" : ["api{{this.ParentId}}", "RootResourceId"] },
+    {{#if this.PathPart}}"PathPart" : "{{this.PathPart}}",{{/if}}
+    "RestApiId" : { "Ref" : "api{{this.RestApi}}" }
+  }
+}

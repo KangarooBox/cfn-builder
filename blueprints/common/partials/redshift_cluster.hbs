@@ -1,0 +1,105 @@
+{{!--
+  Creates an Amazon Redshift cluster. A cluster is a fully managed data warehouse that
+  consists of set of compute nodes.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html
+ --}}
+"rsc{{this.Name}}" : {
+  "Type": "AWS::Redshift::Cluster",
+  "Properties": {
+    {{#if this.AllowVersionUpgrade}}"AllowVersionUpgrade" : {{this.AllowVersionUpgrade}},{{/if~}}
+    {{#if this.AutomatedSnapshotRetentionPeriod}}"AutomatedSnapshotRetentionPeriod" : {{this.AutomatedSnapshotRetentionPeriod}},{{/if~}}
+    {{#if this.AvailabilityZone}}"AvailabilityZone" : "{{this.AvailabilityZone}}",{{/if~}}
+    {{#if this.ClusterParameterGroupName}}"ClusterParameterGroupName" : "{{this.ClusterParameterGroupName}}",{{/if~}}
+    {{#if this.ClusterSecurityGroups}}"ClusterSecurityGroups" : [ {{#each ClusterSecurityGroups}}{ "Ref":"csg{{this.Name}}" }{{/each}}{{#unless @last}},{{/unless}} ],{{/if~}}
+    {{#if this.ClusterVersion}}"ClusterVersion" : "{{this.ClusterVersion}}",{{/if~}}
+    {{#if this.ElasticIp}}"ElasticIp" : "{{this.ElasticIp}}",{{/if~}}
+    {{#if this.Encrypted}}"Encrypted" : {{this.Encrypted}},{{/if~}}
+    {{#if this.HsmClientCertificateIdentifier}}"HsmClientCertificateIdentifier" : "{{this.HsmClientCertificateIdentifier}}",{{/if~}}
+    {{#if this.HsmConfigurationIdentifier}}"HsmConfigurationIdentifier" : "{{this.HsmConfigurationIdentifier}}",{{/if~}}
+    {{#if this.KmsKeyId}}"KmsKeyId" : "{{this.KmsKeyId}}",{{/if~}}
+    {{#if this.OwnerAccount}}"OwnerAccount" : "{{this.OwnerAccount}}",{{/if~}}
+    {{#if this.Port}}"Port" : {{this.Port}},{{/if~}}
+    {{#if this.PreferredMaintenanceWindow}}"PreferredMaintenanceWindow" : "{{this.PreferredMaintenanceWindow}}",{{/if~}}
+    {{#if this.SnapshotClusterIdentifier}}
+    "SnapshotClusterIdentifier" : "{{this.SnapshotClusterIdentifier}}",
+    "SnapshotIdentifier" : "{{this.SnapshotIdentifier}}",
+    {{/if~}}
+    {{#if this.VpcSecurityGroups}}"VpcSecurityGroupIds" : [ {{#each this.VpcSecurityGroups}}{ "Ref":"{{this}}" }{{#unless @last}},{{/unless}}{{/each}} ],{{/if~}}
+    "ClusterType" : "{{this.ClusterType}}",
+    {{#is this.ClusterType "multi-node"}}"NumberOfNodes" : {{default this.NumberOfNodes 2}},{{/is}}
+    "DBName" : "{{this.DBName}}",
+    "MasterUsername" : "{{this.MasterUsername}}",
+    "MasterUserPassword" : "{{this.MasterUserPassword}}",
+    "NodeType" : "{{this.NodeType}}",
+    "ClusterSubnetGroupName" : { "Ref" : "rscsg{{this.Name}}" },
+    "PubliclyAccessible" : {{default this.PubliclyAccessible "false"}}
+  }
+},
+
+{{#each this.ClusterSecurityGroups}}
+"csg{{this.Name}}" : {
+  "Type": "AWS::Redshift::ClusterSecurityGroup",
+  "Properties": {
+    "Description" : "{{this.Description}}"
+  }
+},
+"sgi{{this.Name}}" : {
+  "Type": "AWS::Redshift::ClusterSecurityGroupIngress",
+  "Properties": {
+    {{#if this.CidrIp}}"CIDRIP" : "{{this.CidrIp}}",{{/if}}
+    {{#if this.EC2SecurityGroupName}}"EC2SecurityGroupName" : "{{this.EC2SecurityGroupName}}",{{/if}}
+    {{#if this.EC2SecurityGroupOwnerId}}"EC2SecurityGroupOwnerId" : "{{this.EC2SecurityGroupOwnerId}}",{{/if}}
+    "ClusterSecurityGroupName" : { "Ref":"csg{{this.Name}}" }
+  }
+},
+{{/each}}
+
+
+{{#if this.Parameters}}
+"rspg{{this.Name}}" : {
+  "Type": "AWS::Redshift::ClusterParameterGroup",
+  "Properties": {
+    "Description" : "{{this.Name}} Redshift Parameter Group",
+    "ParameterGroupFamily" : "{{default "redshift-1.0" this.ParameterGroupFamily}}",
+    "Parameters" : [
+      {{#each this.Parameters}} { "ParameterName" : "{{this.Name}}", "ParameterValue" : "{{{this.Value}}}" }
+      {{#unless @last}},{{/unless}}{{/each}}
+{{!--
+      ],
+      "Tags" : [
+        { "Key" : "Name",         "Value" : "{{this.Name}}" },
+        { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+        { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+        { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+        { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+        { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+ --}}
+      ]
+  }
+},
+{{/if}}
+
+"rscsg{{this.Name}}" : {
+  "Type": "AWS::Redshift::ClusterSubnetGroup",
+  "Properties": {
+    "Description" : "{{this.Name}} Redshift Cluster Subnet Group",
+    "SubnetIds" : [
+      {{#if this.PubliclyAccessible}}
+      {{#each @root.Region.SubnetIds.Public}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+      {{else}}
+      {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+      {{/if}}
+    ]
+{{!--
+    "Tags" : [
+      { "Key" : "Name",         "Value" : "{{this.Name}}" },
+      { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+      { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+      { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+    ]
+ --}}
+  }
+}

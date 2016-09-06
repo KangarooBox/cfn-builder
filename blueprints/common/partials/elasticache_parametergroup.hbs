@@ -1,0 +1,14 @@
+{{!--
+  Creates an Amazon ElastiCache cache parameter group
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html
+ --}}
+
+"ecpg{{this.Name}}":{
+  "Type": "AWS::ElastiCache::ParameterGroup",
+  "Properties": {
+    "Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}})",
+    "CacheParameterGroupFamily":"{{this.CacheParameterGroupFamily}}",
+    "Properties":{ {{#each this.Properties}}"{{this.key}}":"{{this.value}}"{{#unless @last}},{{/unless}}{{/each}} }
+  }
+}

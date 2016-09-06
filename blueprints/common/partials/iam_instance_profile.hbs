@@ -1,0 +1,13 @@
+{{!--
+  Creates an AWS Identity and Access Management (IAM) Instance Profile that can be used with
+  IAM Roles for EC2 Instances.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html
+ --}}
+"ip{{this.Name}}" : {
+  "Type" : "AWS::IAM::InstanceProfile",
+  "Properties" : {
+    "Path" : {{#if this.Path}}"{{this.Path}}"{{else}}"/"{{/if}},
+    "Roles" : [ {{#each Roles}}{ "Ref" : "r{{this}}" }{{#unless @last}},{{/unless}}{{/each}} ]
+  }
+}

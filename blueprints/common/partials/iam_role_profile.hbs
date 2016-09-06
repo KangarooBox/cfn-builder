@@ -1,0 +1,8 @@
+"{{@root.IAM::Role.Name}}" : {
+  "Type" : "AWS::IAM::Role",
+  "Properties" : { {{{@root.IAM::Role.Properties}}} }
+},
+"{{@root.IAM::InstanceProfile.Name}}" : {
+  "Type" : "AWS::IAM::InstanceProfile",
+  "Properties" : { {{{@root.IAM::InstanceProfile.Properties}}} }
+},

@@ -1,0 +1,34 @@
+{{!--
+  Uses an AWS Lambda (Lambda) function that evaluates configuration items to assess whether your
+  AWS resources comply with your specified configurations.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-configrule.html
+ --}}
+"cr{{this.Name}}" : {
+  "Type" : "AWS::Config::ConfigRule",
+  "Properties" : {
+    "ConfigRuleName" : "{{this.Name}}",
+    "Description" : "{{this.Description}}",
+    {{#if this.InputParameters}}"InputParameters" : { {{{inject this.InputParameters}}} },{{~/if}}
+    {{#if this.MaximumExecutionFrequency}}"MaximumExecutionFrequency" : "{{this.MaximumExecutionFrequency}}",{{~/if}}
+    {{#if this.Scope}}
+    {{#with this.Scope}}
+    "Scope" : {
+      {{#if this.ComplianceResourceId}}"ComplianceResourceId" : "{{this.ComplianceResourceId}}",{{~/if}}
+      {{#if this.ComplianceResourceTypes}}"ComplianceResourceTypes" : [ {{#each this.ComplianceResourceTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]{{~/if}}
+      {{#if this.TagKey}}"TagKey" : "{{this.TagKey}}",{{~/if}}
+      {{#if this.TagValue}}"TagValue" : "{{this.TagValue}}"{{~/if}}
+    },
+    {{/with}}
+    {{~/if}}
+    {{#with this.Source}}
+    "Source" : {
+      "Owner" : "{{this.Owner}}",
+      {{#if this.SourceDetails}}
+      "SourceDetails" : [ {{#each this.SourceDetails}} {"EventSource":"{{this.EventSource}}", "MessageType":"{{this.MessageType}}"} {{/each}} ],
+      {{/if}}
+      "SourceIdentifier" : "{{this.SourceIdentifier}}"
+    }
+    {{~/with}}
+  }
+}

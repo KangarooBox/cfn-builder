@@ -1,0 +1,105 @@
+{{!--
+  Creates an Amazon Kinesis Firehose (Firehose) delivery stream that delivers real-time streaming data to an
+  Amazon Simple Storage Service (Amazon S3), Amazon Redshift, or Amazon Elasticsearch Service (Amazon ES) destination.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html
+ --}}
+"kfds{{this.Name}}":{
+  "Type":"AWS::KinesisFirehose::DeliveryStream",
+  "Properties":{
+    "DeliveryStreamName":"{{this.Name}}-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}",
+    {{#if this.ElasticsearchDestinationConfiguration}}
+    {{#with this.ElasticsearchDestinationConfiguration}}
+    "ElasticsearchDestinationConfiguration": {
+      {{#with this.BufferingHints}}
+      "BufferingHints":{
+        "IntervalInSeconds":{{this.IntervalInSeconds}},
+        "SizeInMBs":{{this.SizeInMBs}}
+      },{{/with}}
+      {{#if this.CloudWatchLoggingOptions}}
+      "CloudWatchLoggingOptions":{
+        "Enabled":{{this.CloudWatchLoggingOptions.Enabled}},
+        "LogGroupName":"{{this.CloudWatchLoggingOptions.LogGroupName}}",
+        "LogStreamName":"{{this.CloudWatchLoggingOptions.LogStreamName}}"
+      },{{/if}}
+      "DomainARN":"{{this.DomainARN}}",
+      "IndexName":"{{this.IndexName}}",
+      "IndexRotationPeriod":"{{this.IndexRotationPeriod}}",
+      "RetryOptions":{"DurationInSeconds":{{this.RetryOptions.DurationInSeconds}} },
+      "RoleARN":"{{this.RoleARN}}",
+      "S3BackupMode":"{{this.S3BackupMode}}",
+      {{#with this.S3Configuration}}
+      "S3Configuration":{
+        "BucketARN":"{{this.BucketARN}}",
+        {{#with this.BufferingHints}}
+        "BufferingHints":{
+          "IntervalInSeconds":{{this.IntervalInSeconds}},
+          "SizeInMBs":{{this.SizeInMBs}}
+        },{{/with}}
+        {{#if this.CloudWatchLoggingOptions}}
+        "CloudWatchLoggingOptions":{
+          "Enabled":{{this.CloudWatchLoggingOptions.Enabled}},
+          "LogGroupName":"{{this.CloudWatchLoggingOptions.LogGroupName}}",
+          "LogStreamName":"{{this.CloudWatchLoggingOptions.LogStreamName}}"
+        },{{/if}}
+        "CompressionFormat":"{{this.CompressionFormat}}",
+        {{#with this.EncryptionConfiguration}}
+        "EncryptionConfiguration":{
+          "KMSEncryptionConfig":{"AWSKMSKeyARN":"{{this.KMSEncryptionConfig.AWSKMSKeyARN}}"},
+          "NoEncryptionConfig":"{{this.NoEncryptionConfig}}"
+        },{{/with}}
+        "Prefix":"{{this.Prefix}}",
+        "RoleARN":"{{this.RoleARN}}"
+      },{{/with}}
+      "TypeName":"{{this.TypeName}}"
+    }{{/with}}
+    {{/if}}
+
+    {{#if this.RedshiftDestinationConfiguration}}{{#with this.RedshiftDestinationConfiguration}}
+    "RedshiftDestinationConfiguration":{
+      {{#if this.CloudWatchLoggingOptions}}
+      "CloudWatchLoggingOptions":{
+        "Enabled":{{this.CloudWatchLoggingOptions.Enabled}},
+        "LogGroupName":{"Ref":"loggrp{{this.CloudWatchLoggingOptions.LogGroupName}}"},
+        "LogStreamName":"{{this.CloudWatchLoggingOptions.LogStreamName}}"
+      },{{/if}}
+      {{#with this.S3Configuration}}
+      "S3Configuration":{
+        "BucketARN":"{{this.BucketARN}}",
+        {{#with this.BufferingHints}}
+        "BufferingHints":{
+          "IntervalInSeconds":{{this.IntervalInSeconds}},
+          "SizeInMBs":{{this.SizeInMBs}}
+        },{{/with}}
+        {{#if this.CloudWatchLoggingOptions}}
+        "CloudWatchLoggingOptions":{
+          "Enabled":{{this.CloudWatchLoggingOptions.Enabled}},
+          "LogGroupName":"{{this.CloudWatchLoggingOptions.LogGroupName}}",
+          "LogStreamName":"{{this.CloudWatchLoggingOptions.LogStreamName}}"
+        },{{/if}}
+        "CompressionFormat":"{{this.CompressionFormat}}",
+        {{#with this.EncryptionConfiguration}}
+        "EncryptionConfiguration":{
+          "KMSEncryptionConfig":{"AWSKMSKeyARN":"{{this.KMSEncryptionConfig.AWSKMSKeyARN}}"},
+          "NoEncryptionConfig":"{{this.NoEncryptionConfig}}"
+        },{{/with}}
+        "Prefix":"{{this.Prefix}}",
+        "RoleARN":{"Fn::GetAtt":["r{{this.Role}}","Arn"]}
+      },{{/with}}
+      {{#with this.CopyCommand}}
+      "CopyCommand":{
+        "CopyOptions":"{{{this.CopyOptions}}}",
+        "DataTableColumns":"{{this.DataTableColumns}}",
+        "DataTableName":"{{this.DataTableName}}"
+      },{{/with}}
+      "ClusterJDBCURL":"{{this.ClusterJDBCURL}}",
+      "RoleARN":{"Fn::GetAtt":["r{{this.Role}}","Arn"]},
+      "Username":"{{this.Username}}",
+      "Password":"{{this.Password}}"
+    }{{/with}}{{/if}}
+
+    {{#if this.S3DestinationConfiguration}}{{#with this.S3DestinationConfiguration}}
+    "S3DestinationConfiguration":S3DestinationConfiguration
+    {{/with}}{{/if}}
+  }
+}

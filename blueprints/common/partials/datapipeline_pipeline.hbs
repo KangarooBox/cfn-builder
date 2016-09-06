@@ -1,0 +1,95 @@
+{{!--
+  Creates a data pipeline that you can use to automate the movement and transformation of data.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datapipeline-pipeline.html
+ --}}
+"dpp{{this.Name}}" : {
+  "Type" : "AWS::DataPipeline::Pipeline",
+  "Properties" : {
+    "Name" : {"Fn::Join":["", ["{{this.Name}} (",{"Ref":"AWS::StackName"},")"]]},
+    "Description" : "{{this.Description}}",
+    {{#if this.Activate}}"Activate" : {{this.Activate}},{{/if}}
+    {{#if this.ParameterObjects}}"ParameterObjects" : [{{#each this.ParameterObjects}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],{{~/if}}
+    {{#if this.ParameterValues}}"ParameterValues" : [{{#each this.ParameterValues}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],{{~/if}}
+    {{#if this.PipelineObjects}}"PipelineObjects" : [
+      {{#with this.PipelineObjects}}
+      {{#if this.Default}}{{#with this.Default}}
+        { "Id": "Default",
+          "Name": "Default",
+          "Fields": [
+            {{~#if this.ScheduleType}}{"Key":"scheduleType", "StringValue":"{{this.ScheduleType}}"},{{/if}}
+            {{~#if this.ScheduleType}}{"Key":"scheduleType", "StringValue":"{{this.ScheduleType}}"},{{/if}}
+            {{~#if this.PipelineLogUri}}{"Key":"pipelineLogUri", "StringValue":"{{this.PipelineLogUri}}"},{{/if}}
+            {{~#if this.FailureAndRerunMode}}{"Key":"failureAndRerunMode", "StringValue":"{{this.FailureAndRerunMode}}"},{{/if}}
+            {{~#if this.Role}}{"Key":"role", "StringValue":{"Ref":"r{{this.Role}}"} },{{/if}}
+            {{~#if this.ResourceRoleProfile}}{"Key":"resourceRole", "StringValue":{"Ref":"ip{{this.ResourceRoleProfile}}"} },{{/if}}
+            {"Key":"type", "StringValue":"Default"}
+          ]
+        },
+      {{/with}}{{/if}}
+      {{/with}}
+      {{~#each this.PipelineObjects.Activities}}
+        { "Id": "{{this.Name}}",
+          "Name": "{{this.Name}}",
+          "Fields": [
+            {{~#if this.Command}}{"Key": "command", "StringValue": "{{this.Command}}"},{{/if}}
+            {{~#if this.ScriptUri}}{"Key": "scriptUri", "StringValue": "{{this.ScriptUri}}"},{{/if}}
+            {{~#if this.RunsOn}}{"Key": "runsOn", "RefValue": "{{this.RunsOn}}"},{{/if}}
+            {{~#if this.Schedule}}{"Key": "schedule", "RefValue": "{{this.Schedule}}"},{{/if}}
+            {{~#if this.WorkerGroup}}{"Key": "workerGroup", "StringValue": "{{this.WorkerGroup}}"},{{/if}}
+            {"Key":"type","StringValue":"{{this.Type}}"}
+          ]
+        },
+      {{/each}}
+
+      {{~#each this.PipelineObjects.Resources}}
+        { "Id": "{{this.Name}}",
+          "Name": "{{this.Name}}",
+          "Fields": [
+            {{#is this.Type "Ec2Resource"}}
+            {"Key":"subnetId", "StringValue":"{{@root.Region.SubnetIds.Private.[0]}}"},
+            {"Key":"role", "StringValue":{"Ref":"r{{this.Role}}"} },
+            {"Key":"resourceRole", "StringValue":{"Ref":"ip{{this.ResourceRoleProfile}}"} },
+            {"Key":"instanceType", "StringValue": "{{this.InstanceType}}" },
+            {{~#if this.TerminateAfter}}{"Key":"terminateAfter", "StringValue": "{{this.TerminateAfter}}" },{{/if}}
+            {{~#if this.SecurityGroup}}{"Key":"securityGroupIds", "StringValue": {"Ref":"{{this.SecurityGroup}}"} },{{/if}}
+            {{~#if this.ImageId}}{"Key":"imageId", "StringValue": "{{findAMI this.ImageId @root.Region.AMIs}}" },{{/if}}
+            {{/is}}
+            {{~#if this.PipelineLogUri}}{"Key":"pipelineLogUri", "StringValue":"{{this.PipelineLogUri}}"},{{/if}}
+            {"Key":"schedule", "RefValue":"{{this.Schedule}}" },
+            {"Key":"actionOnTaskFailure", "StringValue":"{{this.ActionOnTaskFailure}}" },
+            {"Key":"actionOnResourceFailure", "StringValue":"{{this.ActionOnResourceFailure}}" },
+            {"Key":"maximumRetries", "StringValue":"{{this.MaximumRetries}}" },
+            {"Key":"type", "StringValue":"{{this.Type}}" }
+          ]
+        },
+      {{/each}}
+
+      {{~#each this.PipelineObjects.Schedules}}
+        { "Id": "{{this.Name}}",
+          "Name": "{{this.Name}}",
+          "Fields": [
+            {"Key":"period", "StringValue":"{{this.Period}}" },
+            {{~#if this.StartAt}}{"Key":"startAt", "StringValue":"{{this.StartAt}}" },{{/if}}
+            {{~#if this.StartDateTime}}{"Key":"startDateTime", "StringValue":"{{this.StartDateTime}}" },{{/if}}
+            {{~#if this.EndDateTime}}{"Key":"endDateTime", "StringValue":"{{this.EndDateTime}}" },{{/if}}
+            {{~#if this.Occurrences}}{"Key":"occurrences", "StringValue":"{{this.Occurrences}}" },{{/if}}
+            {{~#if this.Parent}}{"Key":"parent", "RefValue":"{{this.Parent}}" },{{/if}}
+            {"Key":"type", "StringValue":"Schedule" }
+          ]
+        }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],{{~/if}}
+    "PipelineTags": [
+      { "Key" : "Name",         "Value" : "{{@root.ProjectName}} Pipeline" },
+      { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+      { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+      { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+    ]
+  },
+  "DependsOn" : [{{#each @root.Roles}}"r{{this.Name}}"{{#unless @last}},{{/unless}}{{/each}}]
+}
+
+

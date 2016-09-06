@@ -1,0 +1,20 @@
+{{!--
+  Creates an SQS queue.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sqs-queues.html
+ --}}
+
+"sqs{{sanitize this.Name ''}}" : {
+  "Type": "AWS::SQS::Queue",
+  "Properties": {
+    {{~#if this.DelaySeconds}}"DelaySeconds": {{this.DelaySeconds}},{{/if}}
+    {{~#if this.MaximumMessageSize}}"MaximumMessageSize": {{this.MaximumMessageSize}},{{/if}}
+    {{~#if this.MessageRetentionPeriod}}"MessageRetentionPeriod": {{this.MessageRetentionPeriod}},{{/if}}
+    {{~#if this.ReceiveMessageWaitTimeSeconds}}"ReceiveMessageWaitTimeSeconds": {{this.ReceiveMessageWaitTimeSeconds}},{{/if}}
+    {{~#if this.RedrivePolicy}}"RedrivePolicy": {
+      {{{inject this.RedrivePolicy}}}
+    },{{/if}}
+    {{~#if this.VisibilityTimeout}}"VisibilityTimeout": {{this.VisibilityTimeout}},{{/if}}
+    "QueueName": "{{this.Name}}"
+  }
+}

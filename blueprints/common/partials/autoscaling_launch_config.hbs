@@ -1,0 +1,40 @@
+{{!--
+ Creates a new Amazon Autoscaling Launch Configuration.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html
+ --}}
+"aslc{{this.Name}}":{
+  "Type":"AWS::AutoScaling::LaunchConfiguration",
+  "Metadata":{
+    "AWS::CloudFormation::Authentication":{
+      "S3AccessCreds":{"type":"S3","roleName":{"Ref":"r{{this.IamInstanceProfile}}"}}
+    },
+    "AWS::CloudFormation::Init":{
+      {{#startsWith "linux" this.AMI}}
+      {{> cfn_init_linux}}
+      {{/startsWith}}
+      {{#startsWith "windows" this.AMI}}
+      {{> cfn_init_windows}}
+      {{/startsWith}}
+    }
+  },
+  "Properties":{
+    "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
+    "InstanceType":"{{this.InstanceType}}",
+    "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
+    "InstanceMonitoring":{{default this.InstanceMonitoring false}},
+    {{#if this.SecurityGroups}}"SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"ip{{this.IamInstanceProfile}}"},{{/if}}
+    {{#if this.BlockDeviceMappings}}
+    "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}],
+    {{/if}}
+    {{#if this.KeyPairName}}"KeyName":"{{this.KeyPairName}}",{{/if}}
+    {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
+    {{#startsWith "linux" this.AMI}}
+    {{> user_data_linux}}
+    {{/startsWith}}
+    {{#startsWith "windows" this.AMI}}
+    {{> user_data_windows}}
+    {{/startsWith}}
+  }
+}

@@ -1,0 +1,52 @@
+{{!--
+  Creates a new Amazon ElasticLoadBalancer.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html
+ --}}
+"elb{{this.Name}}":{
+  "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+  "Properties": {
+    "CrossZone":{{default (toString this.CrossZone) true}},
+    "Scheme":"{{this.Scheme}}",
+    "Subnets":[
+    {{#is "internal" this.Scheme}}
+      {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    {{else}}
+      {{#each @root.Region.SubnetIds.Public}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    {{/is}}
+    ],
+    {{#if this.HealthCheck}}
+    "HealthCheck":{
+    {{#with this.HealthCheck}}
+      "HealthyThreshold":{{default this.HealthyThreshold 10}},
+      "UnhealthyThreshold":{{default this.UnhealthyThreshold 2}},
+      "Interval":{{default this.Interval 30}},
+      "Timeout":{{default this.Timeout 5}},
+      "Target":"{{this.Target}}"
+    {{/with}}
+    },
+    {{/if}}
+    "Listeners":[
+    {{#each this.Listeners}}
+      { "LoadBalancerPort":"{{this.LoadBalancerPort}}",
+        "InstancePort":"{{this.InstancePort}}",
+        {{~#if this.SSLCertificateId}}"SSLCertificateId":"{{this.SSLCertificateId}}",{{/if}}
+        "Protocol":"{{this.Protocol}}"
+      }{{#unless @last}},{{/unless}}
+    {{/each}}
+    ],
+    "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    "Tags":[
+      { "Key":"Name",         "Value":"{{@root.ProjectName}} {{@root.EnvType}}" },
+      { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
+    ]
+  }
+}
+
+{{#if this.RecordSet}}
+,{{> route53_recordset this ResourceRecord=this.Name}}
+{{/if}}

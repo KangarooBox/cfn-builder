@@ -1,0 +1,17 @@
+{{!--
+  Specifies a stream as an event source for an AWS Lambda (Lambda) function. The stream can be
+  an Amazon Kinesis stream or an Amazon DynamoDB (DynamoDB) stream.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html
+ --}}
+"map{{this.Name}}{{@index}}" : {
+  "Type" : "AWS::Lambda::EventSourceMapping",
+  "Properties" : {
+    {{#if this.BatchSize}}"BatchSize" : {{this.BatchSize}},{{/if}}
+    "Enabled"           : {{default this.Enabled "false"}},
+    "EventSourceArn"    : {{#startsWith "arn:aws:" this.EventSourceArn}}"{{this.EventSourceArn}}"{{else}}
+    { "Fn::GetAtt" : [ "{{#is this.EventSource "Kinesis"}}ks{{/is}}{{this.EventSourceArn}}", "Arn" ]}{{/startsWith}},
+    "StartingPosition"  : "{{this.StartingPosition}}",
+    "FunctionName"      : { "Fn::GetAtt" : [ "fun{{this.FunctionName}}", "Arn"] }
+  }
+}

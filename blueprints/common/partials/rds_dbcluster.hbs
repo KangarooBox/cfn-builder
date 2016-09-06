@@ -1,0 +1,62 @@
+{{!--
+  Creates a cluster resource for an RDS instance, such as an Aurora for Amazon RDS
+  (Amazon Aurora) DB cluster.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html
+ --}}
+"dbsng{{this.Name}}": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
+        "SubnetIds" : [ {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
+        "Tags": [
+          { "Key" : "Name",         "Value" : "{{@root.ProjectName}} DB subnet group" },
+          { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+          { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+          { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+          { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+          { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+        ]
+      }
+    },
+
+    "dbc{{this.Name}}" : {
+      "Type" : "AWS::RDS::DBCluster",
+      "Properties" : {
+        "AvailabilityZones" : [ {{#each @root.Region.AvailabilityZones}}"{{@root.Region.Id}}{{this}}"{{#unless @last}}, {{/unless}}{{/each}} ],
+        "BackupRetentionPeriod" : {{default this.BackupRetentionPeriod 1}},
+        {{~#if this.DBClusterParameterGroupName}}"DBClusterParameterGroupName" : "{{this.DBClusterParameterGroupName}}",{{/if}}
+        "DBSubnetGroupName" : { "Ref" : "dbsng{{this.Name}}" },
+        "Engine" : "{{this.Engine}}",
+        {{~#if this.EngineVersion}}"EngineVersion" : "{{this.EngineVersion}}",{{/if}}
+        {{~#if this.KmsKeyId}}"KmsKeyId" : "{{this.KmsKeyId}}",{{/if}}
+        {{~#if this.SnapshotIdentifier}}
+        "SnapshotIdentifier" : "{{this.SnapshotIdentifier}}",
+        {{else}}
+        "MasterUsername" : "{{this.MasterUsername}}",
+        "MasterUserPassword" : "{{this.MasterUserPassword}}",
+        {{/if}}
+        {{~#if this.Port}}"Port" : {{this.Port}},{{/if}}
+        {{~#if this.PreferredBackupWindow}}"PreferredBackupWindow" : "{{this.PreferredBackupWindow}}",{{/if}}
+        {{~#if this.PreferredMaintenanceWindow}}"PreferredMaintenanceWindow" : "{{this.PreferredMaintenanceWindow}}",{{/if}}
+        {{~#if this.StorageEncrypted}}"StorageEncrypted" : {{this.StorageEncrypted}},{{/if}}
+        "VpcSecurityGroupIds" : [{{#each SecurityGroupIds}} { "Ref" : "{{this}}" }{{#unless @last}}, {{/unless}}{{/each}} ],
+        "Tags": [
+          { "Key" : "Name",         "Value" : "{{@root.ProjectName}} DB cluster" },
+          { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+          { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+          { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+          { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+          { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+        ],
+        "DatabaseName" : "{{this.Name}}"
+      }
+    },
+
+    {{#if this.ReadReplicas}}
+    {{#each @root.Region.AvailabilityZones}}
+    {{> rds_instance .. AvailabilityZone=this Parent="dbcluster"}}{{#unless @last}}, {{/unless}}
+    {{/each}}
+    {{else}}
+    {{> rds_instance .. AvailabilityZone=@root.Region.AvailabilityZones.[0] Parent="dbcluster"}}{{#unless @last}}, {{/unless}}
+    {{/if}}

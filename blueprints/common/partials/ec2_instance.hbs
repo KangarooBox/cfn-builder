@@ -1,0 +1,73 @@
+{{!--
+ Creates a new Amazon Autoscaling Group.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html
+ --}}
+"ec2{{this.Name}}":{
+  "Type":"AWS::EC2::Instance",
+  "Properties":{
+    {{~#if this.Affinity}}"Affinity":"{{this.Affinity}}",{{/if}}
+    {{~#if this.SubnetIndex}}"AvailabilityZone":"{{this.AvailabilityZone}}",{{/if}}
+    {{#if this.BlockDeviceMappings}}
+    "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}],
+    {{/if}}
+    "DisableApiTermination":{{default (toString this.DisableApiTermination) false}},
+    "EbsOptimized":{{default this.EbsOptimized false}},
+    {{~#if this.HostId}}"HostId":"{{this.HostId}}",{{/if}}
+    {{~#if this.IamInstanceProfile}}"IamInstanceProfile":"ip{{this.IamInstanceProfile}}",{{/if}}
+    "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
+    {{~#if this.InstanceInitiatedShutdownBehavior}}"InstanceInitiatedShutdownBehavior":"{{this.InstanceInitiatedShutdownBehavior}}",{{/if}}
+    "InstanceType":"{{this.InstanceType}}",
+    {{~#if this.KernelId}}"KernelId":"{{this.KernelId}}",{{/if}}
+    {{~#if this.KeyName}}"KeyName":"{{this.KeyName}}",{{/if}}
+    "Monitoring":{{default this.InstanceMonitoring false}},
+    {{#if this.NetworkInterfaces}}
+    "NetworkInterfaces":[
+      {{#each this.NetworkInterfaces}}{
+        "Description":"{{this.Description}}",
+        {{#if this.AssociatePublicIpAddress}}
+        "SubnetId":"{{lookup @root.Region.SubnetIds.Public this.SubnetIndex}}",
+        {{else}}
+        "SubnetId":"{{lookup @root.Region.SubnetIds.Private this.SubnetIndex}}",
+        {{/if}}
+        "DeviceIndex":"{{this.DeviceIndex}}",
+        {{!-- "DeleteOnTermination":{{#if this.DeleteOnTermination}}true{{else}}false{{/if}}, --}}
+        "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
+        "GroupSet":[{{#each this.GroupSet}}{"Ref":"sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
+      }{{#unless @last}},{{/unless}}{{/each}}],
+    {{/if}}
+
+    {{~#if this.PlacementGroupName}}"PlacementGroupName":"{{this.PlacementGroupName}}",{{/if}}
+    {{~#if this.PrivateIpAddress}}"PrivateIpAddress":"{{this.PrivateIpAddress}}",{{/if}}
+    {{~#if this.RamdiskId}}"RamdiskId":"{{this.RamdiskId}}",{{/if}}
+    {{~#if this.SecurityGroups}}"SecurityGroupIds":[{{#each this.SecurityGroups}}{"Ref":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+
+    "SourceDestCheck":{{default (toString this.SourceDestCheck) true}},
+
+    {{!-- "SsmAssociations":[ SSMAssociation, ... ] --}}
+    {{!-- "SubnetId":String, --}}
+    {{~#if this.Tenancy}}"Tenancy":"{{this.Tenancy}}",{{/if}}
+    {{~#if this.UserData}}"UserData":"{{this.UserData}}",{{/if}}
+    {{!-- "Volumes":[ EC2 MountPoint, ... ], --}}
+    {{~#if this.AdditionalInfo}}"AdditionalInfo":"{{this.AdditionalInfo}}",{{/if}}
+
+    "Tags":[
+      {{#startsWith 'linux_ubuntu' this.AMI}}
+      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      {{else is this.AMI 'linux_amazon'}}
+      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      {{else is this.AMI 'windows_core'}}
+      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      {{else is this.AMI 'windows_base'}}
+      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      {{else}}
+      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      {{/startsWith}}
+      { "PropagateAtLaunch":true, "Key":"Environment",  "Value":"{{@root.EnvType}}" },
+      { "PropagateAtLaunch":true, "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "PropagateAtLaunch":true, "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "PropagateAtLaunch":true, "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "PropagateAtLaunch":true, "Key":"Owner",        "Value":"{{@root.Owner}}" }
+    ]
+  }
+}

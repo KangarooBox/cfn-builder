@@ -1,0 +1,32 @@
+{{!--
+  Creates an Amazon CloudWatch alarm.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
+ --}}
+"cldwalrm{{this.Name}}":{
+   "Type":"AWS::CloudWatch::Alarm",
+   "Properties":{
+      {{#if this.ActionsEnabled}}"ActionsEnabled":{{this.ActionsEnabled}},{{/if}}
+      {{#if this.AlarmActions}}"AlarmActions":[{{#each this.AlarmActions}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"{{else}}{"Ref":"{{this}}"}{{/startsWith}}
+      {{#unless @last}},{{/unless}}{{/each}}
+      ],{{/if}}
+      {{#if this.AlarmDescription}}"AlarmDescription":"{{this.AlarmDescription}} [{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.VPCName}}]",{{/if}}
+      {{#if this.Dimensions}}"Dimensions":[{{#each this.Dimensions}}
+        { "Name":"{{this.Name}}",
+         "Value":"{{this.Value}}"
+        }{{#unless @last}},{{/unless}}{{/each}}
+      ],{{/if}}
+      {{#if this.InsufficientDataActions}}"InsufficientDataActions":[ "{{this.}}", ... ],{{/if}}
+      {{#if this.OKActions}}"OKActions":[{{#each this.OKActions}}"{{this.}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+      {{#if this.Unit}}"Unit":"{{this.Unit}}",{{/if}}
+      "AlarmName":"{{this.Name}}",
+      "ComparisonOperator":"{{this.ComparisonOperator}}",
+      "EvaluationPeriods":"{{this.EvaluationPeriods}}",
+      "MetricName":"{{this.MetricName}}",
+      "Namespace":"{{this.Namespace}}",
+      "Period":"{{this.Period}}",
+      "Statistic":"{{this.Statistic}}",
+      "Threshold":"{{this.Threshold}}"
+   }
+}

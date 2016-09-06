@@ -1,0 +1,13 @@
+{{!--
+  Creates an Amazon CloudWatch Logs log stream in a log group. A log stream represents the sequence
+  of events coming from an application instance or resource that you are monitoring.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html
+ --}}
+"logstrm{{this.Name}}" : {
+  "Type" : "AWS::Logs::LogStream",
+  "Properties" : {
+    "LogGroupName" : {"Ref":"loggrp{{this.LogGroupName}}"},
+    "LogStreamName" : "{{this.LogStreamName}}"
+  }
+}

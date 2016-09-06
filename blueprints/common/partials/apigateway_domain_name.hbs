@@ -1,0 +1,16 @@
+{{!--
+  Creates an API Gateway Domain Name
+
+  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-a-domain-name
+ --}}
+"apdn{{this.Name}}" : {
+   "Type" : "Custom::ApiDomainName",
+    "Properties" : {
+      "ServiceToken" : "{{@root.Region.ServiceToken}}",
+      "domainName": "{{this.DomainName}}",
+      "certificateName": "{{this.CertificateName}}",
+      "certificateBody": "{{this.CertificateBody}}",
+      "certificateChain": "{{this.CertificateChain}}",
+      "certificatePrivateKey": "{{this.CertificatePrivateKey}}"
+  }
+}

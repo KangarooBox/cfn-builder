@@ -1,0 +1,23 @@
+{{!--
+  Creates an Amazon Kinesis firehose.  This is a temporary workaround until CFN gets Firehose support
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-firehose.html
+ --}}
+"kf{{this.Name}}" : {
+  "Type" : "Custom::KinesisFirehose",
+  "Properties" : {
+    "ServiceToken" : "arn:aws:lambda:us-east-1:464365132396:function:LambdaUSE1-bLive-funCloudFormationRunJSON-RNX929EWCN6I",
+    "Command" : "firehose",
+    "Option" : "create-delivery-stream",
+    "Name" : "{{this.Name}}",
+    "JSON" : { {{{inject JSON}}} },
+    "Tags": [
+      { "Key" : "Name",         "Value" : "{{@root.ProjectName}} Kinesis firehose" },
+      { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+      { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+      { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+    ]
+  }
+}

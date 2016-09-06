@@ -1,0 +1,17 @@
+{{!--
+  Creates an SNS topic
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html
+ --}}
+"sns{{sanitize this.Name ''}}" : {
+  "Type" : "AWS::SNS::Topic",
+  "Properties" : {
+    "DisplayName" : "{{this.DisplayName}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}})",
+    "TopicName" : "{{this.Name}}",
+    "Subscription" : [
+      {{#each this.Subscriptions}}{
+      "Endpoint": { "Fn::GetAtt" : [ "fun{{this.Endpoint}}", "Arn" ]},
+      "Protocol":"{{this.Protocol}}"}{{/each}}
+    ]
+  }
+}

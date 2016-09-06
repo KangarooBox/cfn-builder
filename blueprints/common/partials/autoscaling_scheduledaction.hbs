@@ -1,0 +1,17 @@
+{{!--
+ Creates a new Amazon Autoscaling Scheduled Action.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html
+ --}}
+"asgsa{{this.Name}}":{
+  "Type":"AWS::AutoScaling::ScheduledAction",
+  "Properties":{
+    {{~#if this.DesiredCapacity}}"DesiredCapacity":{{this.DesiredCapacity}},{{/if}}
+    {{~#if this.EndTime}}"EndTime":{{this.EndTime}},{{/if}}
+    {{~#if this.MaxSize}}"MaxSize":{{this.MaxSize}},{{/if}}
+    {{~#if this.MinSize}}"MinSize":{{this.MinSize}},{{/if}}
+    {{~#if this.Recurrence}}"Recurrence":"{{this.Recurrence}}",{{/if}}
+    {{~#if this.StartTime}}"StartTime":{{this.StartTime}},{{/if}}
+    "AutoScalingGroupName":{"Ref":"asg{{this.AutoScalingGroupName}}"}
+  }
+}

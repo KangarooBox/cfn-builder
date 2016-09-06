@@ -1,0 +1,14 @@
+{{!--
+  Deploys an Amazon API Gateway (API Gateway) RestApi resource to a stage so that clients can call the
+  API over the Internet. The stage acts as an environment
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-deployment.html
+ --}}
+"apidepl{{this.Name}}":{
+  "Type":"AWS::ApiGateway::Deployment",
+  "Properties":{
+    "Description":"{{this.Name}} deployment",
+    "RestApiId":{"Ref":"api{{this.RestApiId}}"},
+    "StageName":"Dummy"
+  }
+}

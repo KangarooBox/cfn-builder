@@ -1,0 +1,36 @@
+"config":{
+  "services":{
+    "sysvinit":{
+      "sendmail":{
+        "enabled":"false",
+        "ensureRunning":"false"
+      }
+    }
+  },
+  "commands":{
+    {{#startsWith "linux_ubuntu" this.AMI}}
+    "aa":{
+      "command":"apt-get upgrade -y"
+    },
+    {{else is this.AMI "linux_amazon"}}
+    "aa":{
+      "command":"yum update -y"
+    },
+    "ab":{
+      "command":"yum upgrade -y"
+    },
+    {{/startsWith}}
+    "zz":{
+      "command":"/tmp/{{@root.ProjectName}}-{{@root.EnvType}}.sh > /var/log/{{@root.ProjectName}}-{{@root.EnvType}}.log"
+    }
+  },
+  "files":{
+    "/tmp/{{@root.ProjectName}}-{{@root.EnvType}}.sh":{
+      "source":"https://cp-artifacts-{{@root.Region.Id}}.s3.amazonaws.com/user-data/{{@root.ProjectName}}-{{@root.EnvType}}.sh",
+      "authentication":"S3AccessCreds",
+      "mode":"000500",
+      "owner":"root",
+      "group":"root"
+    }
+  }
+}

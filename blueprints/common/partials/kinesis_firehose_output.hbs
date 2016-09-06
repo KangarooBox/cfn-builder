@@ -1,0 +1,9 @@
+{{!--
+  Creates an Amazon Kinesis firehose.  This is a temporary workaround until CFN gets Firehose support
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-firehose.html
+ --}}
+"kf{{this.Name}}" : {
+  "Description" : "AWS::Kinesis::Firehose",
+  "Value" : { "Ref" : "kf{{this.Name}}" }
+}

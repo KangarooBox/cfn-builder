@@ -1,0 +1,16 @@
+{{!--
+  Creates an API Gateway Model
+
+  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-a-model
+ --}}
+"apmod{{this.Name}}" : {
+  "Type" : "Custom::ApiModel",
+  "Properties" : {
+    "ServiceToken" : "{{@root.Region.ServiceToken}}",
+    "restApiId": { "Fn::GetAtt" : [ "api{{this.RestApiId}}", "id" ] },
+    "name" : "{{this.Name}}",
+    "contentType" : "{{default this.ContentType "application/json"}}",
+    "description" : "{{this.Description}}",
+    "schema" : { {{{inject this.Schema}}} }
+  }
+}

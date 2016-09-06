@@ -1,0 +1,23 @@
+{{!--
+  Creates a rule that matches incoming Amazon CloudWatch Events (CloudWatch Events) events and routes them to one
+  or more targets for processing
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html
+ --}}
+"evtrule{{this.Name}}":{
+  "Type":"AWS::Events::Rule",
+  "Properties":{
+    {{#if this.EventPattern}}"EventPattern":{ {{{inject this.EventPattern}}} },{{/if}}
+    {{#if this.RoleArn}}"RoleArn":{{#startsWith "arn:aws:" this}}"{{this}}"{{else}}{"Ref":"{{this}}"}{{/startsWith}},{{/if}}
+    {{#if this.ScheduleExpression}}"ScheduleExpression":"{{this.ScheduleExpression}}",{{/if}}
+    {{#if this.State}}"State":"{{this.State}}",{{/if}}
+    {{#if this.Targets}}"Targets":[{{#each this.Targets}}
+      { {{#if this.Input}}"Input":"{{this.Input}}",{{/if}}
+        {{#if this.InputPath}}"InputPath":"{{this.InputPath}}",{{/if}}
+        "Arn":{{#startsWith "arn:aws:" this.Arn}}"{{this.Arn}}"{{else}}{"Ref":"{{this.Arn}}"}{{/startsWith}},
+        "Id":"{{this.Id}}"
+      }{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "Description":"{{this.Description}} [{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.VPCName}}]",
+    "Name":"{{this.Name}}"
+  }
+}

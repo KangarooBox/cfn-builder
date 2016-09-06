@@ -1,0 +1,11 @@
+{{!--
+  Creates an Amazon Kinesis stream that captures and transports data records that are
+  emitted from data sources.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-stream.html
+ --}}
+
+"ks{{this.Name}}" : {
+  "Description" : "AWS::Kinesis::Stream",
+  "Value" : { "Ref" : "ks{{this.Name}}" }
+}

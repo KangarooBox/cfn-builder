@@ -1,0 +1,20 @@
+{{!--
+  Creates an Amazon Kinesis stream that captures and transports data records that are
+  emitted from data sources.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-stream.html
+ --}}
+"ks{{this.Name}}" : {
+  "Type" : "AWS::Kinesis::Stream",
+  "Properties" : {
+    "ShardCount" : {{this.ShardCount}},
+    "Tags": [
+      { "Key" : "Name",         "Value" : "{{@root.ProjectName}} Kinesis stream" },
+      { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+      { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
+      { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
+      { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+    ]
+  }
+}

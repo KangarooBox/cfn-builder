@@ -1,0 +1,41 @@
+"s3{{sanitize this.Name ''}}":{
+  "Type":"AWS::S3::Bucket",
+  "DeletionPolicy":"{{default this.DeletionPolicy 'Retain'}}",
+  "Properties":{
+    "BucketName":"{{this.Name}}",
+    {{#if this.LifecycleConfiguration}}
+    "LifecycleConfiguration":{
+      {{{inject this.LifecycleConfiguration}}}
+    },
+    {{/if}}
+    {{#if this.NotificationConfiguration}}
+    "NotificationConfiguration":[
+      {{#if this.LambdaConfigurations}}
+      "LambdaConfigurations":[
+        {{#each this.LambdaConfigurations}}
+        {
+          "Event":"{{this.Event}}",
+          "Filter":{
+            "S3Key":{ "Rules":[
+            {{#each this.Filter.S3Key.Rules}}
+            { "Name":"{{this.Name}}", "Value":"{{this.Value}}"}
+            {{/each}}
+            ]}
+          },
+          "Function":"{{this.Function}}"
+        }{{#unless @last}},{{/unless}}
+        {{/each}}
+      ]
+      {{/if}}
+    ],
+    {{/if}}
+    "Tags":[
+      { "Key":"Name",         "Value":"{{this.Name}}" },
+      { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{default this.Project @root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{default this.Role @root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{default this.Owner @root.Owner}}" }
+    ]
+  }
+}

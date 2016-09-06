@@ -1,0 +1,17 @@
+{{!--
+  Creates an SQS queue policy.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sqs-policy.html
+ --}}
+
+"sqsp{{sanitize this.Name ''}}" : {
+  "Type" : "AWS::SQS::QueuePolicy",
+  "Properties" : {
+    "PolicyDocument" : { {{{inject this.PolicyDocument}}} },
+    "Queues" : [
+    {{#each this.Queues }}
+      { "Ref" : "sqs{{sanitize this ''}}" }{{#unless @last}},{{/unless}}
+    {{/each}}
+    ]
+  }
+ }

@@ -1,0 +1,11 @@
+{{!--
+  Creates an AWS Identity and Access Management (IAM) access key.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-accesskey.html
+--}}
+"ak{{this.UserName}}" : {
+  "Type" : "AWS::IAM::AccessKey",
+  "Properties" : {
+    "UserName" : { "Ref" : "{{this.UserName}}" }
+  }
+}

@@ -1,0 +1,4 @@
+"{{this.Name}}RedshiftEndpoint" : {
+  "Value" : { "Fn::GetAtt" : [ "rsc{{this.Name}}", "Endpoint.Address" ] },
+  "Description" : "{{this.Name}} Redshift cluster endpoint address"
+}
