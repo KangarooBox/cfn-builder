@@ -44,7 +44,7 @@ something like ```{{#unless @last}},{{/unless}}``` so that you don't have any tr
 cfn-builder expects certain files to be in a certain directory structure.  Under the root directory there should be a
 'blueprints' directory.  This directory contains all of the cnf-builder specific files.  Inside the 'blueprints'
 directory there should be two other directories: 'common' & 'stacks'.  The 'common' directory contains blueprints that
-are used in multiple stacks, such as ``globals.hbs`` and ``live.hbs``.  The 'stacks' directory contains blueprints that
+are used in multiple stacks, such as ``globals.hbs``, ``stage.hbs``, ``live.hbs``.  The 'stacks' directory contains blueprints that
 describe a particular CFN stack, such as the one for a VPC or a project.  An example directory structure is listed here:
 
     .../my-project
@@ -60,8 +60,8 @@ describe a particular CFN stack, such as the one for a VPC or a project.  An exa
 
 ### Create a globals file:  ``.../blueprints/globals.hbs``
 
-The ``globals.hbs`` file is used to specify things that don't change between environments.  This includes
-things like IPAddresses and region information.  An example ``globals.hbs`` file is listed here:
+The globals file is used to specify things that don't change between environments.  This includes
+things like IP addresses and region information.  An example ``globals.hbs`` file is listed here:
 
     {
       "IPAddresses": {
