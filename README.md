@@ -34,7 +34,7 @@ sections are required.
 * Almost everything is case sensitive:  "MyProject" != "myProject"
 * CloudFormation hates long identifiers so try to keep IDs/Names short (<10 characters)
 * All of your blueprints must be valid JSON.  If you have a loop ({{#each}}) then make sure you end it with
-something like ```{{#unless @last}},{{/unless}}``` so that you don't have any trailing commas.
+something like ``{{#unless @last}},{{/unless}}{{/each}}`` so that you don't have any trailing commas.
 
 
 ## Usage
