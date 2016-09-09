@@ -53,6 +53,10 @@
     {{> cloudtrail_trail}},
     {{/each~}}
 
+    {{#each CloudWatchAlarms}}
+    {{> cloudwatch_alarm}},
+    {{/each~}}
+
     {{#each ConfigDeliveryChannels}}
     {{> config_delivery_channel}},
     {{/each~}}
