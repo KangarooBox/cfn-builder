@@ -49,8 +49,16 @@
     {{> autoscaling_launch_config}},
     {{/each}}
 
-    {{#each RDSInstances}}
-    {{> rds_instance}},
+    {{#each CloudTrailTrails}}
+    {{> cloudtrail_trail}},
+    {{/each~}}
+
+    {{#each ConfigDeliveryChannels}}
+    {{> config_delivery_channel}},
+    {{/each~}}
+
+    {{#each ConfigRules}}
+    {{> config_rule}},
     {{/each~}}
 
     {{#each DataPipelines}}
@@ -100,6 +108,10 @@
     {{> iam_managed_policy}},
     {{/each}}
 
+    {{#each RDSInstances}}
+    {{> rds_instance}},
+    {{/each~}}
+
     {{#each RedshiftClusters}}
     {{> redshift_cluster}},
     {{/each~}}
@@ -117,7 +129,7 @@
     {{/each~}}
 
     {{#each S3BucketPolicies}}
-    {{> s3_bucket_policy}},
+    {{> s3_bucketpolicy}},
     {{/each~}}
 
     {{#each this.ScheduledActions}}

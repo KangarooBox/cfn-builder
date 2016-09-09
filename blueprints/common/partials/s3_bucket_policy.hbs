@@ -1,7 +1,0 @@
-"s3{{sanitize this.Name ''}}" : {
-  "Type" : "AWS::S3::BucketPolicy",
-  "Properties" : {
-    "Bucket" : { "Ref" : "s3{{sanitize this.Bucket ''}}" },
-    "PolicyDocument" : { {{{inject this.PolicyDocument}}} }
-  }
-}
