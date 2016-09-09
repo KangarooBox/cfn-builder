@@ -3,15 +3,20 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html
  --}}
-"sns{{sanitize this.Name ''}}" : {
+"snst{{sanitize this.Name ''}}" : {
   "Type" : "AWS::SNS::Topic",
   "Properties" : {
-    "DisplayName" : "{{this.DisplayName}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}})",
+    "DisplayName" : "{{this.DisplayName}} [{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}]",
     "TopicName" : "{{this.Name}}",
     "Subscription" : [
       {{#each this.Subscriptions}}{
-      "Endpoint": { "Fn::GetAtt" : [ "fun{{this.Endpoint}}", "Arn" ]},
-      "Protocol":"{{this.Protocol}}"}{{/each}}
+        {{#startsWith "email" this.Protocol}}
+          "Endpoint":"{{this.Endpoint}}","Protocol":"email"
+        {{else}}
+          "Endpoint": { "Fn::GetAtt" : [ "fun{{this.Endpoint}}", "Arn" ]},
+          "Protocol":"{{this.Protocol}}"
+        {{/startsWith}}
+      }{{#unless @last}},{{/unless}}{{/each}}
     ]
   }
 }
