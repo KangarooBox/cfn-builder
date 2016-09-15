@@ -3,10 +3,11 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html
  --}}
-"s3bp{{sanitize this.Name ''}}" : {
+"s3bp{{sanitize this.Bucket ''}}" : {
   "Type" : "AWS::S3::BucketPolicy",
   "Properties" : {
     "Bucket" : { "Ref" : "s3b{{sanitize this.Bucket ''}}" },
     "PolicyDocument" : { {{{inject this.PolicyDocument}}} }
-  }
+  },
+  "DependsOn":"s3b{{sanitize this.Bucket ''}}"
 }
