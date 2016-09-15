@@ -4,7 +4,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
  --}}
-"r{{this.Name}}" : {
+"iamr{{this.Name}}" : {
   "Type" : "AWS::IAM::Role",
   "Properties" : {
     {{~#if this.ManagedPolicyArns}}"ManagedPolicyArns" : [
