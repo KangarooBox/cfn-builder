@@ -7,8 +7,9 @@
 "logmtrflt{{this.Name}}" : {
   "Type": "AWS::Logs::MetricFilter",
   "Properties": {
-    {{~#if this.RefLogGroupName}}"LogGroupName":{"Ref":"loggrp{{this.RefLogGroupName}}"},{{/if}}
-    {{~#if this.LogGroupName}}"LogGroupName":"{{this.LogGroupName}}",{{/if}}
+    {{~#if this.LogGroupName}}"LogGroupName":
+      {{#startsWith "arn:aws:" this.LogGroupName}}"{{this.LogGroupName}}"{{else}}{"Ref":"{{this.LogGroupName}}"}{{/startsWith}}
+    {{/if}}
     "FilterPattern":"{{this.FilterPattern}}",
     "MetricTransformations":[{{#each this.MetricTransformations}}
       { "MetricValue":"{{this.MetricValue}}",
