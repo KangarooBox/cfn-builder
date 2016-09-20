@@ -45,8 +45,8 @@
     {{> autoscaling_group}},
     {{/each}}
 
-    {{#each AutoscalingLaunchConfigs}}
-    {{> autoscaling_launch_config}},
+    {{#each AutoscalingLaunchConfigurations}}
+    {{> autoscaling_launchconfiguration}},
     {{/each}}
 
     {{#each CloudTrailTrails}}
@@ -69,8 +69,16 @@
     {{> datapipeline_pipeline}},
     {{/each~}}
 
+    {{#each EC2NATGateways}}
+    {{> ec2_natgateway}},
+    {{/each~}}
+
     {{#each EC2Instances}}
     {{> ec2_instance}},
+    {{/each~}}
+
+    {{#each EC2Subnets}}
+    {{> ec2_subnet}},
     {{/each~}}
 
     {{#each EC2Volumes}}
@@ -94,7 +102,7 @@
     {{/each~}}
 
     {{#each InstanceProfiles}}
-    {{> iam_instance_profile}},
+    {{> iam_instanceprofile}},
     {{/each}}
 
     {{#each KinesisStreams}}
@@ -106,6 +114,10 @@
 
     {{#each LambdaFunctions}}
     {{> lambda_function}},
+    {{/each~}}
+
+    {{#each LogsLogGroups}}
+    {{> logs_loggroup}},
     {{/each~}}
 
     {{#each ManagedPolicies}}
@@ -124,7 +136,7 @@
     {{> route53_recordset}},
     {{/each~}}
 
-    {{#each Roles}}
+    {{#each IAMRoles}}
     {{> iam_role}},
     {{/each}}
 
@@ -136,12 +148,12 @@
     {{> s3_bucketpolicy}},
     {{/each~}}
 
-    {{#each this.ScheduledActions}}
+    {{#each ScheduledActions}}
     {{> autoscaling_scheduledaction}},
     {{/each}}
 
-    {{#each SecurityGroups}}
-    {{> security_group}}
+    {{#each EC2SecurityGroups}}
+    {{> ec2_securitygroup}},
     {{/each}}
 
     {{#each SNSTopics}}
