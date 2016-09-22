@@ -21,12 +21,12 @@
     },
     {{/startsWith}}
     "zz":{
-      "command":"/tmp/{{@root.ProjectName}}-{{@root.EnvType}}.sh > /var/log/{{@root.ProjectName}}-{{@root.EnvType}}.log"
+      "command":"/tmp/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh > /var/log/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.log"
     }
   },
   "files":{
-    "/tmp/{{@root.ProjectName}}-{{@root.EnvType}}.sh":{
-      "source":"https://cp-artifacts-{{@root.Region.Id}}.s3.amazonaws.com/user-data/{{@root.ProjectName}}-{{@root.EnvType}}.sh",
+    "/tmp/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh":{
+      "source":"https://{{@root.Region.ArtifactsBucket}}.s3.amazonaws.com/user-data/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh",
       "authentication":"S3AccessCreds",
       "mode":"000500",
       "owner":"root",

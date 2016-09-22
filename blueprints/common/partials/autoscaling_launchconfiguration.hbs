@@ -6,9 +6,11 @@
 "aslc{{this.Name}}":{
   "Type":"AWS::AutoScaling::LaunchConfiguration",
   "Metadata":{
+    {{#if this.S3AccessRole}}
     "AWS::CloudFormation::Authentication":{
-      "S3AccessCreds":{"type":"S3","roleName":{"Ref":"r{{this.IamInstanceProfile}}"}}
+      "S3AccessCreds":{"type":"S3","roleName":{"Ref":"iamr{{this.S3AccessRole}}"}}
     },
+    {{/if}}
     "AWS::CloudFormation::Init":{
       {{#startsWith "linux" this.AMI}}
       {{> cfn_init_linux}}
@@ -23,12 +25,12 @@
     "InstanceType":"{{this.InstanceType}}",
     "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
     "InstanceMonitoring":{{default this.InstanceMonitoring false}},
-    {{#if this.SecurityGroups}}"SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-    {{#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"ip{{this.IamInstanceProfile}}"},{{/if}}
+    {{#if this.SecurityGroups}}"SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"iamip{{this.IamInstanceProfile}}"},{{/if}}
     {{#if this.BlockDeviceMappings}}
     "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
-    {{#if this.KeyPairName}}"KeyName":"{{this.KeyPairName}}",{{/if}}
+    {{#if this.KeyName}}"KeyName":"{{this.KeyName}}",{{/if}}
     {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
     {{#startsWith "linux" this.AMI}}
     {{> user_data_linux}}

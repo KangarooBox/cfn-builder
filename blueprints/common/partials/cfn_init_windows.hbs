@@ -66,11 +66,11 @@
             },
             { "Id":"CloudWatchLogs",
               "FullName":"AWS.EC2.Windows.CloudWatch.CloudWatchLogsOutput,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"Region":"{{@root.Region.Id}}", "LogGroup":"{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}", "LogStream":"{instance_id}"}
+              "Parameters":{"Region":"{{@root.Region.Id}}", "LogGroup":"{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}", "LogStream":"{instance_id}"}
             },
             { "Id":"CloudWatch",
               "FullName":"AWS.EC2.Windows.CloudWatch.CloudWatch.CloudWatchOutputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"Region":"{{@root.Region.Id}}", "NameSpace":"{{@root.ProjectName}}/{{@root.EnvVersion}}{{@root.EnvType}}"}
+              "Parameters":{"Region":"{{@root.Region.Id}}", "NameSpace":"{{@root.ProjectName}}/{{@root.EnvVersion}}{{@root.EnvName}}"}
             }
           ],
           "Flows":{

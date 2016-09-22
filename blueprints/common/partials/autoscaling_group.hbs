@@ -7,6 +7,13 @@
   "Type":"AWS::AutoScaling::AutoScalingGroup",
   "Properties":{
     "LaunchConfigurationName":{ "Ref":"aslc{{this.LaunchConfigurationName}}" },
+    "VPCZoneIdentifier":[
+    {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
+    "{{this}}"{{#unless @last}},{{/unless}}
+    {{/each}}
+    ],
+
+{{!--
     {{~#if this.SubnetIndex}}
     {{~#if this.AssociatePublicIpAddress}}
     "VPCZoneIdentifier":["{{lookup @root.Region.SubnetIds.Public this.SubnetIndex}}"],
@@ -20,6 +27,8 @@
       [ {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
     {{/if}}
+ --}}
+
     {{#if this.LoadBalancerNames}}
     "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
@@ -29,17 +38,16 @@
     "HealthCheckGracePeriod":{{default this.HealthCheckGracePeriod 300}},
 
     "Tags":[
-      {{!-- {"PropagateAtLaunch":true,"Key":"Name","Value":"awunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}"}, --}}
-  {{#each @root.AutoscalingLaunchConfigs}}
+  {{#each @root.AutoscalingLaunchConfigurations}}
     {{#is this.Name ../LaunchConfigurationName}}
-      {{#is this.AMI 'linux_amazon'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}"},
-      {{else startsWith 'linux_ubuntu' this.AMI}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}"},
-      {{else is this.AMI 'windows_core'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}"},
-      {{else is this.AMI 'windows_base'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}"},
+      {{#is this.AMI 'linux_amazon'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else startsWith 'linux_ubuntu' this.AMI}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'windows_core'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'windows_base'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
       {{/is~}}
     {{/is~}}
   {{/each}}
-      {"PropagateAtLaunch":true,"Key":"Environment","Value":"{{@root.EnvType}}"},
+      {"PropagateAtLaunch":true,"Key":"Environment","Value":"{{@root.EnvName}}"},
       {"PropagateAtLaunch":true,"Key":"Version","Value":"{{@root.EnvVersion}}"},
       {"PropagateAtLaunch":true,"Key":"Project","Value":"{{@root.ProjectName}}"},
       {"PropagateAtLaunch":true,"Key":"Role","Value":"{{@root.ProjectName}}"},

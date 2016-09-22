@@ -1,7 +1,7 @@
 {{!--
- Creates a new Amazon Autoscaling Group.
+ Creates a new EC2 instance.
 
-  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html
  --}}
 "ec2{{this.Name}}":{
   "Type":"AWS::EC2::Instance",
@@ -14,7 +14,7 @@
     "DisableApiTermination":{{default (toString this.DisableApiTermination) false}},
     "EbsOptimized":{{default this.EbsOptimized false}},
     {{~#if this.HostId}}"HostId":"{{this.HostId}}",{{/if}}
-    {{~#if this.IamInstanceProfile}}"IamInstanceProfile":"ip{{this.IamInstanceProfile}}",{{/if}}
+    {{~#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"iamip{{this.IamInstanceProfile}}"},{{/if}}
     "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
     {{~#if this.InstanceInitiatedShutdownBehavior}}"InstanceInitiatedShutdownBehavior":"{{this.InstanceInitiatedShutdownBehavior}}",{{/if}}
     "InstanceType":"{{this.InstanceType}}",
@@ -33,7 +33,7 @@
         "DeviceIndex":"{{this.DeviceIndex}}",
         {{!-- "DeleteOnTermination":{{#if this.DeleteOnTermination}}true{{else}}false{{/if}}, --}}
         "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
-        "GroupSet":[{{#each this.GroupSet}}{"Ref":"sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
+        "GroupSet":[{{#each this.GroupSet}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
       }{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
 
@@ -47,27 +47,27 @@
     {{!-- "SsmAssociations":[ SSMAssociation, ... ] --}}
     {{!-- "SubnetId":String, --}}
     {{~#if this.Tenancy}}"Tenancy":"{{this.Tenancy}}",{{/if}}
-    {{~#if this.UserData}}"UserData":"{{this.UserData}}",{{/if}}
+    {{~#if this.UserData}}"UserData":{ {{{inject this.UserData}}} },{{/if}}
     {{!-- "Volumes":[ EC2 MountPoint, ... ], --}}
     {{~#if this.AdditionalInfo}}"AdditionalInfo":"{{this.AdditionalInfo}}",{{/if}}
 
     "Tags":[
       {{#startsWith 'linux_ubuntu' this.AMI}}
-      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      { "Key":"Name",         "Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
       {{else is this.AMI 'linux_amazon'}}
-      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      { "Key":"Name",         "Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
       {{else is this.AMI 'windows_core'}}
-      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      { "Key":"Name",         "Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
       {{else is this.AMI 'windows_base'}}
-      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      { "Key":"Name",         "Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
       {{else}}
-      { "PropagateAtLaunch":true, "Key":"Name",         "Value":"awunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}" },
+      { "Key":"Name",         "Value":"awunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
       {{/startsWith}}
-      { "PropagateAtLaunch":true, "Key":"Environment",  "Value":"{{@root.EnvType}}" },
-      { "PropagateAtLaunch":true, "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
-      { "PropagateAtLaunch":true, "Key":"Project",      "Value":"{{@root.ProjectName}}" },
-      { "PropagateAtLaunch":true, "Key":"Role",         "Value":"{{@root.ProjectName}}" },
-      { "PropagateAtLaunch":true, "Key":"Owner",        "Value":"{{@root.Owner}}" }
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
     ]
   }
 }

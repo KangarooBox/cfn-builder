@@ -1,4 +1,9 @@
-"{{this.Name}}" : {
+{{!--
+ Creates a new EC2 security group.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+ --}}
+"ec2sg{{this.Name}}" : {
   "Type" : "AWS::EC2::SecurityGroup",
   "Properties" : {
     "GroupDescription" : "{{this.GroupDescription}}",
@@ -30,4 +35,4 @@
       { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
     ]
   }
-},
+}

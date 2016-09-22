@@ -1,10 +1,10 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvType}})",
+  "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvName}})",
 
   "Metadata" : {
     {{#each Metadata}}{{{this}}},{{/each~}}
-    "Environment" : "{{EnvType}}",
+    "Environment" : "{{EnvName}}",
     "Version"     : "{{EnvVersion}}",
     "ProjectName" : "{{ProjectName}}",
     "Region"      : "{{Region.Id}}",
@@ -101,7 +101,7 @@
     {{> lambda_event_source_mapping}},
     {{/each~}}
 
-    {{#each InstanceProfiles}}
+    {{#each IAMInstanceProfiles}}
     {{> iam_instanceprofile}},
     {{/each}}
 
@@ -141,7 +141,9 @@
     {{/each}}
 
     {{#each S3Buckets}}
+    {{#ifEq this.Region @root.Region.Id}}
     {{> s3_bucket}},
+    {{/ifEq}}
     {{/each~}}
 
     {{#each S3BucketPolicies}}
