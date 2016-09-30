@@ -1,0 +1,16 @@
+{{!--
+  Creates a VPC endpoint that you can use to establish a private connection between your VPC and
+  another AWS service without requiring access over the Internet, a VPN connection, or AWS Direct
+  Connect.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html
+ --}}
+"ec2ve{{this.Name}}":{
+  "Type" : "AWS::EC2::VPCEndpoint",
+  "Properties" : {
+    "PolicyDocument" : JSON object,
+    "RouteTableIds" : [ String, ... ],
+    "ServiceName" : "{{this.ServiceName}}",
+    "VpcId" : "{{this.VpcId}}"
+  }
+}

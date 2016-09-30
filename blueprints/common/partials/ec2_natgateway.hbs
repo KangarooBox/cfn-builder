@@ -1,0 +1,14 @@
+{{!--
+  Creates a new EC2 network address translation (NAT) gateway in the specified public subnet.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html
+ --}}
+{{> ec2_eip this}},
+
+"ec2nat{{this.Name}}" : {
+  "Type" : "AWS::EC2::NatGateway",
+  "Properties" : {
+    "AllocationId" : {"Ref":"ec2nateip{{this.Name}}"},
+    "SubnetId" : "{{this.SubnetId}}"
+  }
+}

@@ -1,0 +1,12 @@
+{{!--
+  Allocates an Elastic IP (EIP) address and can, optionally, associate it with an Amazon EC2 instance.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip.html
+ --}}
+"ec2eip{{this.Name}}": {
+   "Type" : "AWS::EC2::EIP",
+   "Properties" : {
+      {{#if this.InstanceId}}"InstanceId" : "{{this.InstanceId}}",{{/if~}}
+      "Domain" : "{{default "vpc" this.Domain}}"
+   }
+}
