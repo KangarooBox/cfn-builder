@@ -1,11 +1,11 @@
-"UserData":{ "Fn::Base64":{ "Fn::Join":["", [
-  "<powershell>\n",
+"UserData":{ "Fn::Base64":{ "Fn::Join":["\n", [
+  "<powershell>",
   {{#if @root.Password}}
-  " $passwd = '{{@root.Password}}' \n",
-  " net user Administrator $passwd \n",
+  " $passwd = '{{@root.Password}}'",
+  " net user Administrator $passwd",
   {{/if}}
-  " Read-S3Object -BucketName cp-artifacts-{{@root.Region.Id}} -Key user-data/{{@root.ProjectName}}-{{@root.EnvType}}.ps1 -File $env:PROGRAMFILES\\Amazon\\Ec2ConfigService\\Scripts\\userdata.ps1 \n",
-  " Set-ExecutionPolicy Unrestricted \n",
-  " & $env:PROGRAMFILES\\Amazon\\Ec2ConfigService\\Scripts\\userdata.ps1 >> $env:PROGRAMFILES\\Amazon\\Ec2ConfigService\\Logs\\userdata.txt \n",
-  "</powershell>\n"
+  " Read-S3Object -BucketName {{@root.Region.ArtifactsBucket}} -Key user-data/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.ps1 -File $env:PROGRAMFILES\\Amazon\\Ec2ConfigService\\Scripts\\userdata.ps1",
+  " Set-ExecutionPolicy Unrestricted",
+  " & $env:PROGRAMFILES\\Amazon\\Ec2ConfigService\\Scripts\\userdata.ps1 >> $env:PROGRAMFILES\\Amazon\\Ec2ConfigService\\Logs\\userdata.txt",
+  "</powershell>"
 ]]}}
