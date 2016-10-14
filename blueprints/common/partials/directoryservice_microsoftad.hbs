@@ -1,19 +1,17 @@
 {{!--
- Create an AWS Directory Service Simple Active Directory (Simple AD) to provide user and group configuration
- and Windows GPO management.
+  Create a Microsoft Active Directory in AWS to provide user and group configuration
+  and Windows GPO management.
 
-  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-directoryservice-simplead.html
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-directoryservice-microsoftad.html
  --}}
-"dssad{{alphaNumeric this.Name}}":{
-  "Type":"AWS::DirectoryService::SimpleAD",
-  "Properties":{
+"dsmad{{alphaNumeric this.Name}}":{
+  "Type" : "AWS::DirectoryService::MicrosoftAD",
+  "Properties" : {
     "Name":"{{this.Name}}",
-    "Description":"{{this.Description}}",
     "Password":"{{this.Password}}",
     {{#if this.ShortName}}"ShortName":"{{this.ShortName}}",{{/if}}
     "CreateAlias":{{default this.CreateAlias false}},
     "EnableSso":{{default this.EnableSso false}},
-    "Size":"{{this.Size}}",
     "VpcSettings":{
       "SubnetIds":[{{#each this.SubnetIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
       "VpcId":"{{@root.Region.VPCId}}"
