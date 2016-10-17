@@ -1,0 +1,12 @@
+{{!--
+  Creates an Amazon EC2 Simple Systems Manager (SSM) document that describes an instance configuration,
+  which you can use to set up and run commands on your instances.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html
+ --}}
+"ssmd{{this.Name}}":{
+  "Type":"AWS::SSM::Document",
+  "Properties":{
+    "Content":{ {{{inject this.Content}}} }
+  }
+}
