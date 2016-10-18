@@ -4,7 +4,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html
  --}}
-"ssmd{{this.Name}}":{
+"ssmd{{alphaNumeric this.Name}}":{
   "Type":"AWS::SSM::Document",
   "Properties":{
     "Content":{ {{{inject this.Content}}} }
