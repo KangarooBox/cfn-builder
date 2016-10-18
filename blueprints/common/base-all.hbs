@@ -85,6 +85,10 @@
     {{> ec2_instance}},
     {{/each~}}
 
+    {{#each EC2SecurityGroups}}
+    {{> ec2_securitygroup}},
+    {{/each}}
+
     {{#each EC2Subnets}}
     {{> ec2_subnet}},
     {{/each~}}
@@ -111,6 +115,10 @@
 
     {{#each IAMInstanceProfiles}}
     {{> iam_instanceprofile}},
+    {{/each}}
+
+    {{#each IAMRoles}}
+    {{> iam_role}},
     {{/each}}
 
     {{#each KinesisStreams}}
@@ -144,10 +152,6 @@
     {{> route53_recordset}},
     {{/each~}}
 
-    {{#each IAMRoles}}
-    {{> iam_role}},
-    {{/each}}
-
     {{#each S3Buckets}}
     {{#ifEq this.Region @root.Region.Id}}
     {{> s3_bucket}},
@@ -162,16 +166,16 @@
     {{> autoscaling_scheduledaction}},
     {{/each}}
 
-    {{#each EC2SecurityGroups}}
-    {{> ec2_securitygroup}},
-    {{/each}}
-
     {{#each SNSTopics}}
     {{> sns_topic}},
     {{/each~}}
 
     {{#each SNSTopicPolicies}}
     {{> sns_topicpolicy}},
+    {{/each~}}
+
+    {{#each SSMDocuments}}
+    {{> ssm_document}},
     {{/each~}}
 
     {{#each SQSQueues}}
