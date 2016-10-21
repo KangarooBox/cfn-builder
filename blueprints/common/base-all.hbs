@@ -77,6 +77,14 @@
     {{> directoryservice_simplead}},
     {{/each~}}
 
+    {{#each EC2DHCPOptions}}
+    {{> ec2_dhcpoptions}},
+    {{/each~}}
+
+    {{#each EC2VPCEndpoints}}
+    {{> ec2_vpcendpoint}},
+    {{/each~}}
+
     {{#each EC2NATGateways}}
     {{> ec2_natgateway}},
     {{/each~}}
