@@ -1,0 +1,33 @@
+{{!--
+  Creates a set of DHCP options for your VPC.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-dhcp-options.html
+ --}}
+"ec2dhcp{{alphaNumeric this.Name}}":{
+  "Type":"AWS::EC2::DHCPOptions",
+  "Properties":{
+    "DomainName":"{{this.DomainName}}",
+    {{#if this.DomainNameServers}}"DomainNameServers":[{{#each this.DomainNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}], {{/if}}
+    {{#if this.NetbiosNameServers}}
+    "NetbiosNameServers":[{{#each this.NetbiosNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+    "NetbiosNodeType":{{this.NetbiosNodeType}},
+    {{/if}}
+    {{#if this.NtpServers}}"NtpServers":[{{#each this.NtpServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "Tags":[
+      { "Key":"Name",         "Value":"{{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})" },
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"VPC DHCP Option Set" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
+    ]
+  }
+},
+
+"ec2vpcdhcpoa{{alphaNumeric this.Name}}":{
+  "Type":"AWS::EC2::VPCDHCPOptionsAssociation",
+  "Properties":{
+    "DhcpOptionsId":{"Ref":"ec2dhcp{{alphaNumeric this.Name}}"},
+    "VpcId":"{{@root.Region.VPCId}}"
+  }
+}

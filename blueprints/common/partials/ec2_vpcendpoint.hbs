@@ -6,11 +6,11 @@
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html
  --}}
 "ec2ve{{this.Name}}":{
-  "Type" : "AWS::EC2::VPCEndpoint",
-  "Properties" : {
-    "PolicyDocument" : JSON object,
-    "RouteTableIds" : [ String, ... ],
-    "ServiceName" : "{{this.ServiceName}}",
-    "VpcId" : "{{this.VpcId}}"
+  "Type":"AWS::EC2::VPCEndpoint",
+  "Properties":{
+    {{#if this.PolicyDocument}}"PolicyDocument":{ {{{inject this.PolicyDocument}}} },{{/if}}
+    {{#if this.RouteTableIds}}"RouteTableIds":[{{#each this.RouteTableIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "ServiceName":"{{this.ServiceName}}",
+    "VpcId":"{{@root.Region.VPCId}}"
   }
 }
