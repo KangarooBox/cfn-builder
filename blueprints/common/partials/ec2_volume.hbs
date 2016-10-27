@@ -3,7 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ebs-volume.html
  --}}
-"ec2v{{this.Name}}" : {
+"ec2v{{sanitize this.Name ""}}" : {
   "Type":"AWS::EC2::Volume",
     "Properties" : {
       "AvailabilityZone" : "{{this.AvailabilityZone}}",
@@ -15,8 +15,8 @@
       {{#if this.SnapshotId}}"SnapshotId" : "{{this.SnapshotId}}",{{~/if}}
       {{#if this.VolumeType}}"VolumeType" : "{{this.VolumeType}}",{{~/if}}
       "Tags": [
-        { "Key" : "Name",         "Value" : "{{@root.ProjectName}} Volume" },
-        { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
+        { "Key" : "Name",         "Value" : "{{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})" },
+        { "Key" : "Environment",  "Value" : "{{@root.EnvName}}" },
         { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
         { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
         { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
