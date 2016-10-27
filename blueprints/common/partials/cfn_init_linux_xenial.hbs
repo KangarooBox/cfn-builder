@@ -1,0 +1,27 @@
+"config":{
+  "services":{
+    "sysvinit":{
+      "sendmail":{
+        "enabled":"false",
+        "ensureRunning":"false"
+      }
+    }
+  },
+  "commands":{
+    "aa":{
+      "command":"apt-get upgrade -y"
+    },
+    "zz":{
+      "command":"/tmp/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh > /var/log/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.log"
+    }
+  },
+  "files":{
+    "/tmp/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh":{
+      "source":"https://{{@root.Region.ArtifactsBucket}}.s3.amazonaws.com/user-data/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh",
+      "authentication":"S3AccessCreds",
+      "mode":"000500",
+      "owner":"root",
+      "group":"root"
+    }
+  }
+}

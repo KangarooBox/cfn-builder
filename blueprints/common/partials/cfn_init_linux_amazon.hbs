@@ -8,18 +8,12 @@
     }
   },
   "commands":{
-    {{#startsWith "linux_ubuntu" this.AMI}}
-    "aa":{
-      "command":"apt-get upgrade -y"
-    },
-    {{else is this.AMI "linux_amazon"}}
     "aa":{
       "command":"yum update -y"
     },
     "ab":{
       "command":"yum upgrade -y"
     },
-    {{/startsWith}}
     "zz":{
       "command":"/tmp/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.sh > /var/log/{{lowercase @root.ProjectName}}.{{lowercase @root.EnvName}}.log"
     }

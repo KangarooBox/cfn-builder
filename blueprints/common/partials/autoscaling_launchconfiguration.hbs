@@ -12,12 +12,7 @@
     },
     {{/if}}
     "AWS::CloudFormation::Init":{
-      {{> (build "cfn_init_" this.AMI "_") }}
-{{!--
-      {{#startsWith "linux" this.AMI}}{{> cfn_init_linux}}{{/startsWith}}
-      {{#startsWith "windows" this.AMI}}{{> cfn_init_windows}}{{/startsWith}}
-      {{#startsWith "win2016" this.AMI}}{{> cfn_init_win2016}}{{/startsWith}}
- --}}
+      {{> (concat "cfn_init_" this.AMI) }}
     }
   },
   "Properties":{
@@ -34,7 +29,7 @@
     {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
     {{~#if this.UserData}}"UserData":{ {{{inject this.UserData}}} }
     {{else}}
-    {{> (build "user_data_" this.AMI "_") }}
+    {{> (concat "user_data_" this.AMI) }}
     {{/if}}
   }
 }
