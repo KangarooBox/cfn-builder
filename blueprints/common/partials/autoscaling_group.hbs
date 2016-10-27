@@ -7,27 +7,22 @@
   "Type":"AWS::AutoScaling::AutoScalingGroup",
   "Properties":{
     "LaunchConfigurationName":{ "Ref":"aslc{{this.LaunchConfigurationName}}" },
+
     "VPCZoneIdentifier":[
+    {{!-- Restrict the instance to a specific subnet group (a,b,c,d,e,etc.) --}}
+    {{#if this.SubnetIndex}}
+    {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
+    {{#ifEq @index ../SubnetIndex}}
+    "{{this}}"
+    {{/ifEq}}
+    {{/each}}
+    {{else}}
+    {{!-- Launch an instance into any subnet group --}}
     {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
     "{{this}}"{{#unless @last}},{{/unless}}
     {{/each}}
+    {{/if}}
     ],
-
-{{!--
-    {{~#if this.SubnetIndex}}
-    {{~#if this.AssociatePublicIpAddress}}
-    "VPCZoneIdentifier":["{{lookup @root.Region.SubnetIds.Public this.SubnetIndex}}"],
-    {{~else}}
-    "VPCZoneIdentifier":["{{lookup @root.Region.SubnetIds.Private this.SubnetIndex}}"],
-    {{/if}}
-    {{~else}}
-    "VPCZoneIdentifier":{{#if this.AssociatePublicIpAddress~}}
-      [ {{#each @root.Region.SubnetIds.Public}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
-    {{~else}}
-      [ {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
-    {{/if}}
-    {{/if}}
- --}}
 
     {{#if this.LoadBalancerNames}}
     "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
@@ -44,6 +39,9 @@
       {{else startsWith 'linux_ubuntu' this.AMI}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
       {{else is this.AMI 'windows_core'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
       {{else is this.AMI 'windows_base'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'win2016_full'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwf-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'win2016_nano'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwn-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else}}{"PropagateAtLaunch":true,"Key":"Name","Value":"aw-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
       {{/is~}}
     {{/is~}}
   {{/each}}
