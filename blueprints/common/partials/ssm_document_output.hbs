@@ -1,0 +1,5 @@
+"ssmd{{sanitize this.Name ""}}":{
+  "Value":{"Ref":"ssmd{{sanitize this.Name ""}}"},
+  "Description":"{{this.Name}} SSM Document",
+  "Export":{"Name":{"Fn::Sub":"${AWS::StackName}-{{this.Name}}"} }
+}
