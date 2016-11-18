@@ -13,6 +13,25 @@
       {{{inject this.LifecycleConfiguration}}}
     },
     {{/if}}
+    {{#if this.ReplicationConfiguration}}
+    {{#with this.ReplicationConfiguration}}
+    "ReplicationConfiguration":{
+      "Role":{{#startsWith "arn:aws:" this.Role}}"{{this.Role}}"{{else}}{"Ref":"iamr{{this.Role}}"}{{/startsWith}},
+      "Rules":[
+      {{#each this.Rules}}{
+        {{~#if this.Id}}"Id":"{{this.Id}}",{{/if}}
+        "Status":"{{this.Status}}",
+        "Destination":{"Bucket":"arn:aws:s3:::{{this.Bucket}}", "StorageClass":"{{this.StorageClass}}"},
+        "Prefix":"{{this.Prefix}}"
+        }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]},
+    "VersioningConfiguration":{"Status":"Enabled"},
+    {{/with}}
+    {{/if}}
+    {{#if this.VersioningConfiguration}}
+    "VersioningConfiguration":{"Status":"{{this.VersioningConfiguration}}"},
+    {{/if}}
     {{#if this.NotificationConfiguration}}
     "NotificationConfiguration":[
       {{#if this.LambdaConfigurations}}
