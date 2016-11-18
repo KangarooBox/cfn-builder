@@ -1,0 +1,5 @@
+"{{this.Name}}IAMRoleArn" : {
+  "Value" : { "Fn::GetAtt" : [ "iamr{{this.Name}}", "Arn" ] },
+  "Description" : "{{this.Name}} IAM Role ARN",
+  "Export":{"Name":"iamr{{this.Name}}" }
+}

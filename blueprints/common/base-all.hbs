@@ -214,9 +214,15 @@
     {{#each KinesisStreams}}
     {{> kinesis_stream_output}},
     {{/each}}
+    {{#each IAMRoles}}
+    {{> iam_role_output}},
+    {{/each}}
     {{#each RedshiftClusters}}
     {{> redshift_cluster_output}},
     {{/each}}
+    {{#each SSMDocuments}}
+    {{> ssm_document_output}},
+    {{/each~}}
     "StackId" : { "Value" : { "Ref" : "AWS::StackId" }, "Description" : "CloudFormation stack id" }
   }
 }
