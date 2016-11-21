@@ -129,6 +129,10 @@
     {{> iam_role}},
     {{/each}}
 
+    {{#each IAMUsers}}
+    {{> iam_user}},
+    {{/each~}}
+
     {{#each KinesisStreams}}
     {{> kinesis_stream}},
     {{/each~}}
@@ -192,10 +196,6 @@
 
     {{#each SQSQueuePolicies}}
     {{> sqs_queue_policy}},
-    {{/each~}}
-
-    {{#each Users}}
-    {{> iam_user}},
     {{/each~}}
 
     "JSONTerminator" : {
