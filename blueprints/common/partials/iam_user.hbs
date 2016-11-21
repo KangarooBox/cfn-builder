@@ -3,12 +3,18 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html
  --}}
-"{{this.Name}}" : {
+"iamu{{this.Name}}" : {
   "Type" : "AWS::IAM::User",
   "Properties" : {
     {{~#if this.Groups}}"Groups":[{{#each this.Groups}}"g{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{~#if this.Password}}
+    "LoginProfile":{"Password":"{{this.Password}}","PasswordResetRequired":{{default this.PasswordResetRequired true}} },
+    {{/if}}
     {{~#if this.ManagedPolicyArns}}"ManagedPolicyArns":[{{#each this.ManagedPolicyArns}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-    {{~#if this.Path ~}}"Path" : "/{{this.Path ~}}/"{{else ~}}"Path" : "/"{{/if}}
+    "Path" : "/{{this.Path}}",
+    {{~#if this.Policies}}"Policies": [ {{#each Policies}}
+    {"PolicyName":"{{this.PolicyName}}","PolicyDocument":{ {{{ inject this.PolicyDocument }}} } }
+    {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "UserName": "{{this.Name}}"
   }
 }
-    {{!-- "Groups" : [ {{#each this.Groups}}{ "Ref" : "g{{this}}" }{{#unless @last}}, {{/unless}}{{/each}} ] --}}
