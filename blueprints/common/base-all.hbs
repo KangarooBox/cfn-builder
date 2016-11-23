@@ -57,6 +57,10 @@
     {{> cloudwatch_alarm}},
     {{/each~}}
 
+    {{#each CodeCommitRepositories}}
+    {{> codecommit_repository}},
+    {{/each~}}
+
     {{#each ConfigDeliveryChannels}}
     {{> config_delivery_channel}},
     {{/each~}}

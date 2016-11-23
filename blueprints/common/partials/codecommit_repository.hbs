@@ -1,0 +1,26 @@
+{{!--
+  Creates an AWS CodeCommit Git repository.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codecommit-repository.html
+ --}}
+"ccr{{this.Name}}": {
+  "Type": "AWS::CodeCommit::Repository",
+  "Properties": {
+    {{#if this.Triggers}}
+    "Triggers": [ {{#each this.Triggers}}
+      { "Name": "{{sanitize this.Name}}",
+        {{#if this.Branches}}"Branches":[{{#each this.Branches}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+        {{#if this.CustomData}}"CustomData": "{{this.CustomData}}",{{/if}}
+        {{#if this.Events}}"Events":[ {{#each this.Events}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+        {{#if this.DestinationArn}}
+        "DestinationArn":{{#startsWith "arn:aws:" this.DestinationArn}}"{{this.DestinationArn}}"{{else}}{"Ref":"{{this.DestinationArn}}"}{{/startsWith}}
+        {{/if}}
+      }{{#unless @last}},{{/unless}}{{/each}}
+    ],
+    {{/if}}
+    {{#if this.RepositoryDescription}}"RepositoryDescription": "{{this.RepositoryDescription}}",{{/if}}
+    "RepositoryName": "{{this.Name}}"
+  }
+}
+
+
