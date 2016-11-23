@@ -10,7 +10,7 @@
     "PolicyDocument" : { {{{inject this.PolicyDocument}}} },
     "Queues" : [
     {{#each this.Queues }}
-      { "Ref" : "sqs{{sanitize this ''}}" }{{#unless @last}},{{/unless}}
+      { "Ref":"sqsq{{sanitize this ''}}" }{{#unless @last}},{{/unless}}
     {{/each}}
     ]
   }

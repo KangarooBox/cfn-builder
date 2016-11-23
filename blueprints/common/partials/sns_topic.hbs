@@ -6,16 +6,16 @@
 "snst{{sanitize this.Name ''}}" : {
   "Type" : "AWS::SNS::Topic",
   "Properties" : {
-    "DisplayName" : "{{this.DisplayName}} [{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}}]",
+    "DisplayName" : "{{truncate this.DisplayName 10}}",
     "TopicName" : "{{this.Name}}",
     "Subscription" : [
       {{#each this.Subscriptions}}{
-        {{#startsWith "email" this.Protocol}}
-          "Endpoint":"{{this.Endpoint}}","Protocol":"email"
-        {{else}}
-          "Endpoint": { "Fn::GetAtt" : [ "fun{{this.Endpoint}}", "Arn" ]},
-          "Protocol":"{{this.Protocol}}"
-        {{/startsWith}}
+      {{#switch (lowercase this.Protocol)}}
+        {{~#case "email"}}"Protocol":"email","Endpoint":"{{this.Endpoint}}"{{/case}}
+        {{~#case "sms"}}"Protocol":"sms","Endpoint":{"Fn::GetAtt":["sms{{this.Endpoint}}","Arn"]}{{/case}}
+        {{~#case "sqs"}}"Protocol":"sqs","Endpoint":{"Fn::GetAtt":["sqsq{{this.Endpoint}}","Arn"]}{{/case}}
+        {{~#case "lambda"}}"Protocol":"lambda","Endpoint":{"Fn::GetAtt":["fun{{this.Endpoint}}","Arn"]}{{/case}}
+      {{/switch}}
       }{{#unless @last}},{{/unless}}{{/each}}
     ]
   }

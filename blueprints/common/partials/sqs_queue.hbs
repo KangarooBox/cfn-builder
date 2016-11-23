@@ -3,8 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sqs-queues.html
  --}}
-
-"sqs{{sanitize this.Name ''}}" : {
+"sqsq{{sanitize this.Name ''}}" : {
   "Type": "AWS::SQS::Queue",
   "Properties": {
     {{~#if this.DelaySeconds}}"DelaySeconds": {{this.DelaySeconds}},{{/if}}
