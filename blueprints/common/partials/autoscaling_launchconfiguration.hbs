@@ -32,4 +32,6 @@
     {{> (concat "user_data_" this.AMI) }}
     {{/if}}
   }
-}
+}{{#if this.Password}},
+{{> decrypt_value CiphertextBlob=this.Password EncryptionContext=this.Context }}
+{{/if}}

@@ -1,0 +1,14 @@
+{{!--
+ Decrypts an encrypted value.
+
+  https://kangaroobox.com/2016/11/22/encrypting-secrets-for-cloudformation.html
+ --}}
+"dv{{this.Name}}": {
+  "Type": "Custom::DecryptValue",
+  "Properties": {
+    {{#if this.EncryptionContext}}"EncryptionContext": { {{{inject this.EncryptionContext}}} },{{/if}}
+    "ServiceToken":"{{@root.Region.Lambdas.DecryptValue}}",
+    "Region": { "Ref": "AWS::Region" },
+    "CiphertextBlob": "{{this.CiphertextBlob}}"
+  }
+}

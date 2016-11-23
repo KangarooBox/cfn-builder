@@ -8,13 +8,15 @@
   "Properties" : {
     {{~#if this.Groups}}"Groups":[{{#each this.Groups}}"g{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
     {{~#if this.Password}}
-    "LoginProfile":{"Password":"{{this.Password}}","PasswordResetRequired":{{default this.PasswordResetRequired true}} },
+    "LoginProfile":{"Password":{ "Fn::GetAtt":["dv{{this.Name}}","Plaintext"] },"PasswordResetRequired":{{default this.PasswordResetRequired true}} },
     {{/if}}
     {{~#if this.ManagedPolicyArns}}"ManagedPolicyArns":[{{#each this.ManagedPolicyArns}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-    "Path" : "/{{this.Path}}",
     {{~#if this.Policies}}"Policies": [ {{#each Policies}}
     {"PolicyName":"{{this.PolicyName}}","PolicyDocument":{ {{{ inject this.PolicyDocument }}} } }
     {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "Path" : "/{{this.Path}}",
     "UserName": "{{this.Name}}"
   }
-}
+}{{#if this.Password}},
+{{> decrypt_value CiphertextBlob=this.Password EncryptionContext=this.Context }}
+{{/if}}
