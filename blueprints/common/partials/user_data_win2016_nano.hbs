@@ -1,8 +1,12 @@
 "UserData":{ "Fn::Base64":{ "Fn::Join":["\n", [
   "<powershell>",
   " & $env:PROGRAMDATA\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeDisks.ps1",
-  {{#if @root.Password}}
-  " $passwd = '{{@root.Password}}'",
+  {{#if this.Password}}
+  { "Fn::Join":["", [
+    " $passwd = '",
+    { "Fn::GetAtt": ["dv{{this.Name}}","Plaintext"] },
+    "'",
+  ]]},
   " net user Administrator $passwd",
   {{/if}}
   {{#if @root.SSMDocumentName}}
