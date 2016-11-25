@@ -1,0 +1,35 @@
+{{!--
+ Creates an AWS OpsWorks stack.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opsworks-stack.html
+ --}}
+"ows{{this.Name}}":{
+  "Type": "AWS::OpsWorks::Stack",
+  "Properties": {
+    {{~#if this.AgentVersion}}"AgentVersion": "{{this.AgentVersion}}",{{/if}}
+    {{~#if this.Attributes}}"Attributes": { String:String, ... },{{/if}}
+    {{~#if this.ChefConfiguration}}"ChefConfiguration": { ChefConfiguration },{{/if}}
+    {{~#if this.CloneAppIds}}"CloneAppIds": [ String, ... ],{{/if}}
+    {{~#if this.ClonePermissions}}"ClonePermissions": {{this.ClonePermissions}},{{/if}}
+    {{~#if this.SourceStackId}}"SourceStackId": "{{this.SourceStackId}}",{{/if}}
+    {{~#if this.ConfigurationManager}}"ConfigurationManager": { StackConfigurationManager },{{/if}}
+    {{~#if this.CustomCookbooksSource}}"CustomCookbooksSource": { Source },{{/if}}
+    {{~#if this.DefaultAvailabilityZone}}"DefaultAvailabilityZone": "{{this.DefaultAvailabilityZone}}",{{/if}}
+    {{~#if this.DefaultOs}}"DefaultOs": "{{this.DefaultOs}}",{{/if}}
+    {{~#if this.DefaultRootDeviceType}}"DefaultRootDeviceType": "{{this.DefaultRootDeviceType}}",{{/if}}
+    {{~#if this.DefaultSshKeyName}}"DefaultSshKeyName": "{{this.DefaultSshKeyName}}",{{/if}}
+    {{~#if this.EcsClusterArn}}"EcsClusterArn": "{{this.EcsClusterArn}}",{{/if}}
+    {{~#if this.ElasticIps}}"ElasticIps": [ ElasticIp, ... ],{{/if}}
+    {{~#if this.HostnameTheme}}"HostnameTheme": "{{this.HostnameTheme}}",{{/if}}
+    {{~#if this.RdsDbInstances}}"RdsDbInstances": [ RdsDbInstance, ... ],{{/if}}
+    {{~#if this.UseCustomCookbooks}}"UseCustomCookbooks": true,
+      {{#if this.CustomJson}}"CustomJson":{ {{{inject this.CustomJson}}} },{{/if}}
+    {{/if}}
+    "UseOpsworksSecurityGroups": {{default this.UseOpsworksSecurityGroups true}},
+    "DefaultInstanceProfileArn": {{#startsWith "arn:aws:" this.Arn}}"{{this.DefaultInstanceProfileArn}}"{{else}}{"Fn::GetAtt":["iamip{{this.DefaultInstanceProfileArn}}","Arn"]}{{/startsWith}},
+    "ServiceRoleArn": {{#startsWith "arn:aws:" this.Arn}}"{{this.ServiceRoleArn}}"{{else}}{"Fn::GetAtt":["iamr{{this.ServiceRoleArn}}","Arn"]}{{/startsWith}},
+    "DefaultSubnetId": "{{first (lookupByNode @root.Region.SubnetIds this.DefaultSubnetId)}}",
+    "VpcId": "{{@root.Region.VPCId}}",
+    "Name": "{{this.Name}}"
+  }
+}

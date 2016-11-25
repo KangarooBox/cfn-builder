@@ -1,0 +1,27 @@
+{{!--
+ Creates an AWS OpsWorks layer.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opsworks-layer.html
+ --}}
+"owl{{sanitize this.Name ''}}":{
+  "Type": "AWS::OpsWorks::Layer",
+  "Properties": {
+    {{~#if this.Attributes}}"Attributes": { String:String, ... },{{/if}}
+    "AutoAssignElasticIps": {{default this.AutoAssignElasticIps false}},
+    "AutoAssignPublicIps": {{default this.AutoAssignPublicIps false}},
+    "EnableAutoHealing": {{default this.EnableAutoHealing true}},
+    "InstallUpdatesOnBoot": {{default this.InstallUpdatesOnBoot true}},
+    {{~#if this.CustomInstanceProfileArn}}"CustomInstanceProfileArn": {{#startsWith "arn:aws:" this.Arn}}"{{this.CustomInstanceProfileArn}}"{{else}}{"Fn::GetAtt":["iamip{{this.CustomInstanceProfileArn}}","Arn"]}{{/startsWith}},{{/if}}
+    {{~#if this.CustomJson}}"CustomJson":{ {{{inject this.CustomJson}}} },{{/if}}
+    {{~#if this.CustomRecipes}}"CustomRecipes": Recipes,{{/if}}
+    {{~#if this.CustomSecurityGroupIds}}"CustomSecurityGroupIds": [{{#each this.CustomSecurityGroupIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{~#if this.LifecycleEventConfiguration}}"LifecycleEventConfiguration": LifeCycleEventConfiguration,{{/if}}
+    {{~#if this.LoadBasedAutoScaling}}"LoadBasedAutoScaling": LoadBasedAutoScaling,{{/if}}
+    {{~#if this.Packages}}"Packages": [{{#each this.Packages}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{~#if this.VolumeConfigurations}}"VolumeConfigurations": [ VolumeConfiguration, ... ],{{/if}}
+    "Shortname": "{{sanitize this.Shortname}}",
+    "Type": "{{this.Type}}",
+    "StackId": {"Ref":"ows{{this.StackId}}"},
+    "Name": "{{this.Name}}"
+  }
+}

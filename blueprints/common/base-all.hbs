@@ -156,6 +156,18 @@
     {{> iam_managed_policy}},
     {{/each}}
 
+    {{#each OpsWorksELBAttachments}}
+    {{> opsworks_elasticloadbalancerattachment}},
+    {{/each~}}
+
+    {{#each OpsWorksLayers}}
+    {{> opsworks_layer}},
+    {{/each~}}
+
+    {{#each OpsWorksStacks}}
+    {{> opsworks_stack}},
+    {{/each~}}
+
     {{#each RDSInstances}}
     {{> rds_instance}},
     {{/each~}}

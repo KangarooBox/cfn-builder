@@ -1,0 +1,12 @@
+{{!--
+ Attaches an ELB to an OpsWorks layer.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opsworks-elbattachment.html
+ --}}
+"owelba{{this.Name}}":{
+  "Type": "AWS::OpsWorks::ElasticLoadBalancerAttachment",
+  "Properties": {
+    "ElasticLoadBalancerName": {"Ref":"elb{{this.ELBName}}"},
+    "LayerId": {"Ref":"owl{{sanitize this.LayerId ''}}"}
+  }
+}
