@@ -35,7 +35,7 @@
     "type": "git",
     "url": "git+https://github.com/rnhurt/cfn-builder.git"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
