@@ -6,54 +6,64 @@
 "rdssng{{this.Name}}": {
   "Type": "AWS::RDS::DBSubnetGroup",
   "Properties": {
-     "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
-     "SubnetIds" : [ {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
-     "Tags": [
-       { "Key" : "Name",         "Value" : "{{@root.ProjectName}} DB subnet group" },
-       { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
-       { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
-       { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
-       { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
-       { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+    "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
+    "SubnetIds": [
+      {{#if this.SubnetId}}
+      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+      {{else}}
+      {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+      {{/if}}
+    ],
+    "Tags": [
+      { "Key":"Name",         "Value":"{{@root.ProjectName}} DB subnet group" },
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
      ]
   }
 },
 
-"rds{{this.Name}}{{this.AvailabilityZone}}" : {
-  "Type" : "AWS::RDS::DBInstance",
-  {{~#if this.DeletionPolicy}}"DeletionPolicy" : "{{this.DeletionPolicy}}",{{/if}}
-  "Properties" : {
-    {{~#if this.DBParameterGroupName}}"DBParameterGroupName" : { "Ref" : "rdsPG{{this.DBParameterGroupName}}" }, {{/if}}
-    {{~#if this.OptionGroupName}}"OptionGroupName" : "{{this.OptionGroupName}}",{{/if}}
-    {{~#if this.AllocatedStorage}}"AllocatedStorage" : "{{this.AllocatedStorage}}",{{/if}}
-    {{~#if this.StorageType}}"StorageType" : "{{this.StorageType}}",{{/if}}
-    {{~#if this.Iops}}"Iops" : {{this.Iops}},{{/if}}
-    "DBInstanceClass" : "{{this.DBInstanceClass}}",
-    {{~#if this.DBSnapshotIdentifier}}
-    "DBSnapshotIdentifier" : "{{this.DBSnapshotIdentifier}}",
+"rds{{this.Name}}{{this.AvailabilityZone}}":{
+  "Type":"AWS::RDS::DBInstance",
+  {{~#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
+  "Properties":{
+    {{~#if this.DBParameterGroupName}}"DBParameterGroupName":{ "Ref":"rdsPG{{this.DBParameterGroupName}}" }, {{/if}}
+    {{~#if this.OptionGroupName}}"OptionGroupName":"{{this.OptionGroupName}}",{{/if}}
+    {{~#if this.AllocatedStorage}}"AllocatedStorage":"{{this.AllocatedStorage}}",{{/if}}
+    {{~#if this.StorageType}}"StorageType":"{{this.StorageType}}",{{/if}}
+    {{~#if this.Iops}}"Iops":{{this.Iops}},{{/if}}
+    "DBInstanceClass":"{{this.DBInstanceClass}}",
+    "VPCSecurityGroups":[{{#each SecurityGroupIds}} { "Ref":"ec2sg{{this}}" }{{#unless @last}}, {{/unless}}{{/each}} ],
+    "DBSubnetGroupName":{ "Ref": "rdssng{{this.Name}}" },
+    "PubliclyAccessible":{{default this.PubliclyAccessible "false"}},
+    {{~#if this.DBInstanceIdentifier}}
+    "DBInstanceIdentifier": "{{this.DBInstanceIdentifier}}",
     {{else}}
-    "Engine" : "{{this.Engine}}",
+    "DBInstanceIdentifier":"{{truncate this.Name (subtract 14 (add (length @root.EnvVersion) (length @root.EnvName)))}}-{{@root.EnvVersion}}{{@root.EnvName}}",
+    {{/if}}
+    {{~#if this.DBSnapshotIdentifier}}
+    "DBSnapshotIdentifier":"{{this.DBSnapshotIdentifier}}",
+    {{else}}
+    "Engine":"{{this.Engine}}",
     {{#is this.Parent "dbcluster"}}
-    "DBClusterIdentifier" : { "Ref" : "dbc{{this.Name}}" },
-    "DBInstanceIdentifier" : "{{truncate this.Name (subtract 14 (add (length @root.EnvVersion) (length @root.EnvType)))}}-{{@root.EnvVersion}}{{@root.EnvType}}-{{this.AvailabilityZone}}",
+    "DBClusterIdentifier":{ "Ref":"dbc{{this.Name}}" },
     {{/is}}
     {{#isnt this.Parent "dbcluster"}}
-    "BackupRetentionPeriod" : {{default this.BackupRetentionPeriod 1}},
-    {{#isnt this.Engine "sqlserver-web"}}"DBName" : "{{lowercase this.Name}}",{{/isnt}}
-    "VPCSecurityGroups" : [{{#each SecurityGroupIds}} { "Ref" : "{{this}}" }{{#unless @last}}, {{/unless}}{{/each}} ],
-    "DBInstanceIdentifier" : "{{truncate this.Name (subtract 14 (add (length @root.EnvVersion) (length @root.EnvType)))}}-{{@root.EnvVersion}}{{@root.EnvType}}",
-    "DBSubnetGroupName" : { "Ref" : "rdssng{{this.Name}}" },
-    "MasterUsername" : "{{this.MasterUsername}}",
-    "MasterUserPassword" : "{{this.MasterUserPassword}}",
+    "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
+    {{#isnt this.Engine "sqlserver-web"}}"DBName":"{{lowercase this.Name}}",{{/isnt}}
+    "MasterUsername":"{{this.MasterUsername}}",
+    "MasterUserPassword":"{{this.MasterUserPassword}}",
     {{/isnt}}
     {{/if}}
     "Tags" : [
-      { "Key" : "Name",         "Value" : "{{this.Name}}" },
-      { "Key" : "Environment",  "Value" : "{{@root.EnvType}}" },
-      { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
-      { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
-      { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
-      { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
+      { "Key":"Name",         "Value":"{{this.Name}}" },
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
     ]
   }
 }
