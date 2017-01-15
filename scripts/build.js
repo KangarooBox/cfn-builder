@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 "use strict";
 
 var template = process.argv[2];

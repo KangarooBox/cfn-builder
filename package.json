@@ -18,7 +18,8 @@
     "handlebars": "^3.0.3",
     "jsondiffpatch": "~0.1",
     "open": "0.0.5",
-    "swag": "^0.7.0"
+    "swag": "^0.7.0",
+    "json-stringify-pretty-compact": "^1.0.2"
   },
   "description": "A command line application that builds AWS CloudFormation templates our of JSON 'blueprints'.",
   "homepage": "https://github.com/rnhurt/cfn-builder",
