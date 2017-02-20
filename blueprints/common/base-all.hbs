@@ -61,6 +61,10 @@
     {{> codecommit_repository}},
     {{/each~}}
 
+    {{#each CodePipelinePipelines}}
+    {{> codepipeline_pipeline}},
+    {{/each~}}
+
     {{#each ConfigDeliveryChannels}}
     {{> config_delivery_channel}},
     {{/each~}}
@@ -83,6 +87,10 @@
 
     {{#each EC2DHCPOptions}}
     {{> ec2_dhcpoptions}},
+    {{/each~}}
+
+    {{#each EC2EIPs}}
+    {{> ec2_eip}},
     {{/each~}}
 
     {{#each EC2VPCEndpoints}}
@@ -121,6 +129,14 @@
     {{> elasticloadbalancing_loadbalancer}},
     {{/each~}}
 
+    {{#each ElasticLoadBalancersV2}}
+    {{> elasticloadbalancingv2_loadbalancer}},
+    {{/each~}}
+
+    {{#each ElasticLoadBalancerV2TargetGroups}}
+    {{> elasticloadbalancingv2_targetgroup}},
+    {{/each~}}
+
     {{#each EventSourceMappings}}
     {{> lambda_event_source_mapping}},
     {{/each~}}
@@ -129,12 +145,20 @@
     {{> iam_instanceprofile}},
     {{/each}}
 
+    {{#each IAMManagedPolicies}}
+    {{> iam_managedpolicy}},
+    {{/each}}
+
     {{#each IAMRoles}}
     {{> iam_role}},
     {{/each}}
 
     {{#each IAMUsers}}
     {{> iam_user}},
+    {{/each~}}
+
+    {{#each IAMGroups}}
+    {{> iam_group}},
     {{/each~}}
 
     {{#each KinesisStreams}}
@@ -151,10 +175,6 @@
     {{#each LogsLogGroups}}
     {{> logs_loggroup}},
     {{/each~}}
-
-    {{#each ManagedPolicies}}
-    {{> iam_managed_policy}},
-    {{/each}}
 
     {{#each OpsWorksELBAttachments}}
     {{> opsworks_elasticloadbalancerattachment}},
