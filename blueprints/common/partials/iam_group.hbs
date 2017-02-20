@@ -3,15 +3,17 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html
  --}}
-"g{{this.Name}}" : {
-  "Type" : "AWS::IAM::Group",
-  "Properties" : {
-    {{#if this.ManagedPolicyArns}}"ManagedPolicyArns" : [
+"iamg{{this.Name}}": {
+  "Type": "AWS::IAM::Group",
+  "Properties": {
+    {{#if this.ManagedPolicyArns}}"ManagedPolicyArns": [
       {{#each this.ManagedPolicyArns}}
-      {{#startsWith "arn:aws:iam::aws:policy" this}}"{{this}}"{{else}}{ "Ref" : "mp{{this}}" }{{/startsWith}}{{#unless @last}}, {{/unless}}
+      {{#startsWith "arn:aws:iam::aws:policy" this}}"{{this}}"{{else}}{ "Ref": "iammp{{this}}" }{{/startsWith}}{{#unless @last}}, {{/unless}}
       {{/each}}
     ]{{/if}}
-    {{#if this.Policies}},"Policies" : [ {{#each this.Policies}}"mp{{this}}"{{#unless @last}}, {{/unless}}{{/each}} ]{{/if}}
+    {{#if this.Policies}}
+    "Policies": [ {{#each this.Policies}}{{{inject this}}}{{#unless @last}},{{/unless}}{{/each}} ]
+    {{/if}}
   }
 }
 
