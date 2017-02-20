@@ -9,11 +9,9 @@
     "CrossZone":{{default (toString this.CrossZone) true}},
     "Scheme":"{{this.Scheme}}",
     "Subnets":[
-    {{#is "internal" this.Scheme}}
-      {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
-    {{else}}
-      {{#each @root.Region.SubnetIds.Public}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
-    {{/is}}
+      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
+      "{{this}}"{{#unless @last}},{{/unless}}
+      {{/each}}
     ],
     {{#if this.HealthCheck}}
     "HealthCheck":{
@@ -35,7 +33,17 @@
       }{{#unless @last}},{{/unless}}
     {{/each}}
     ],
-    "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    {{#if this.AccessLoggingPolicy}}
+    {{#with this.AccessLoggingPolicy}}
+    "AccessLoggingPolicy": {
+      "S3BucketName": "{{this.S3BucketName}}",
+      "S3BucketPrefix": "{{this.S3BucketPrefix}}",
+      "Enabled": {{default (toString this.Enabled) true}},
+      "EmitInterval" : {{this.EmitInterval}}
+    },
+    {{/with}}
+    {{/if}}
     "Tags":[
       { "Key":"Name",         "Value":"{{@root.ProjectName}} {{@root.EnvType}}" },
       { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
