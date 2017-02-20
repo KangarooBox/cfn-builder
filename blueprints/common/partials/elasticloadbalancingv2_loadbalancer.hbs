@@ -1,0 +1,51 @@
+{{!--
+  Creates a new Amazon ElasticLoadBalancer.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
+ --}}
+"elbv2{{this.Name}}": {
+  "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+  "Properties": {
+    "Name": "{{this.Name}}-{{@root.EnvName}}",
+    "Scheme": "{{this.Scheme}}",
+    "Subnets":[
+      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
+      "{{this}}"{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    {{#if this.LoadBalancerAttributes}}
+    "LoadBalancerAttributes": [
+      {{#each this.LoadBalancerAttributes}}
+      { "Key": "{{this.Key}}", "Value": "{{this.Value}}"}
+      {{#unless @last}},{{/unless}}{{/each}}
+    ],
+    {{/if}}
+    "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    "Tags":[
+      { "Key":"Name",         "Value":"{{@root.ProjectName}} {{@root.EnvName}}" },
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
+    ]
+  }
+},
+
+{{#each this.Listeners}}
+"elbv2lis{{../Name}}{{@index}}": {
+  "Type": "AWS::ElasticLoadBalancingV2::Listener",
+  "Properties": {
+    {{!-- "Certificates": [ Certificates, ... ], --}}
+    "SslPolicy": "{{this.SslPolicy}}",
+    "DefaultActions": [
+      {{#each this.DefaultActions}}
+      { "TargetGroupArn": {"Ref":"elbv2tg{{this.TargetGroupArn}}"}, "Type":"{{this.Type}}"}
+      {{#unless @last}},{{/unless}}{{/each}}
+    ],
+    "LoadBalancerArn": { "Ref": "elbv2{{../Name}}" },
+    "Port": "{{this.Port}}",
+    "Protocol": "{{uppercase this.Protocol}}"
+  }
+}
+{{#unless @last}},{{/unless}}{{/each}}

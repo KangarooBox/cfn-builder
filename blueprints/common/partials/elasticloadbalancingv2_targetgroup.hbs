@@ -1,0 +1,43 @@
+{{!--
+  Creates a new Amazon ElasticLoadBalancerv2 TargetGroup
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
+ --}}
+"elbv2tg{{this.Name}}": {
+  "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+  "Properties": {
+    {{#if this.HealthCheckIntervalSeconds}}"HealthCheckIntervalSeconds": {{this.HealthCheckIntervalSeconds}},{{/if}}
+    {{#if this.HealthCheckPath}}"HealthCheckPath": "{{this.HealthCheckPath}}",{{/if}}
+    {{#if this.HealthCheckPort}}"HealthCheckPort": "{{this.HealthCheckPort}}",{{/if}}
+    {{#if this.HealthCheckProtocol}}"HealthCheckProtocol": "{{uppercase this.HealthCheckProtocol}}",{{/if}}
+    {{#if this.HealthCheckTimeoutSeconds}}"HealthCheckTimeoutSeconds": {{this.HealthCheckTimeoutSeconds}},{{/if}}
+    {{#if this.HealthyThresholdCount}}"HealthyThresholdCount": {{this.HealthyThresholdCount}},{{/if}}
+    {{#if this.Matcher}}"Matcher": {{this.Matcher}},{{/if}}
+    "Name": "{{this.Name}}-{{@root.EnvName}}",
+    "Port": {{this.Port}},
+    "Protocol": "{{uppercase this.Protocol}}",
+    {{#if this.TargetGroupAttributes}}
+    "TargetGroupAttributes": [
+      {{#each this.TargetGroupAttributes}}
+      { "Key": "{{this.Key}}", "Value": "{{this.Value}}"}
+      {{#unless @last}},{{/unless}}{{/each}}
+    ],
+    {{/if}}
+    {{#if this.TargetGroupFullName}}"TargetGroupFullName": "{{this.TargetGroupFullName}}",{{/if}}
+    {{#if this.Targets}}"Targets": [
+      {{#each this.Targets}}
+      { "Id": {"Ref":"ec2{{this.Id}}"}, "Port": "{{this.Port}}" }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],{{/if}}
+    {{#if this.UnhealthyThresholdCount}}"UnhealthyThresholdCount": {{this.UnhealthyThresholdCount}},{{/if}}
+    "VpcId":"{{@root.Region.VPCId}}",
+    "Tags":[
+      { "Key":"Name",         "Value":"{{@root.ProjectName}} {{@root.EnvName}}" },
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
+      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
+      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
+      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
+    ]
+  }
+}
