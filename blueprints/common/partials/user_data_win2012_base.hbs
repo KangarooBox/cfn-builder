@@ -4,7 +4,7 @@
   { "Fn::Join":["", [
     " $passwd = '",
     { "Fn::GetAtt": ["dv{{this.Name}}","Plaintext"] },
-    "'",
+    "'"
   ]]},
   " net user Administrator $passwd",
   {{/if}}
