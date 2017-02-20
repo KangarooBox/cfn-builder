@@ -12,7 +12,15 @@
     },
     {{/if}}
     "AWS::CloudFormation::Init":{
-      {{> (concat "cfn_init_" this.AMI) }}
+    {{#if this.CloudInit}}
+      {{{ inject this.CloudInit }}}
+    {{else}}
+      {{#startsWith "ami-" this.AMI}}
+        {{> "cfn_init_win2012_base" }}
+      {{else}}
+        {{> (concat "cfn_init_" this.AMI) }}
+      {{/startsWith}}
+    {{/if}}
     }
   },
   "Properties":{
@@ -29,7 +37,11 @@
     {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
     {{~#if this.UserData}}"UserData":{ {{{inject this.UserData}}} }
     {{else}}
-    {{> (concat "user_data_" this.AMI) }}
+      {{#startsWith "ami-" this.AMI}}
+        {{> "user_data_win2012_base" }}
+      {{else}}
+        {{> (concat "user_data_" this.AMI) }}
+      {{/startsWith}}
     {{/if}}
   }
 }{{#if this.Password}},
