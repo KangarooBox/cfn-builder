@@ -6,12 +6,12 @@
 "iamu{{this.Name}}" : {
   "Type" : "AWS::IAM::User",
   "Properties" : {
-    {{~#if this.Groups}}"Groups":[{{#each this.Groups}}"g{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-    {{~#if this.Password}}
+    {{#if this.Groups}}"Groups":[{{#each this.Groups}}{"Ref":"iamg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.Password}}
     "LoginProfile":{"Password":{ "Fn::GetAtt":["dv{{this.Name}}","Plaintext"] },"PasswordResetRequired":{{default this.PasswordResetRequired true}} },
     {{/if}}
-    {{~#if this.ManagedPolicyArns}}"ManagedPolicyArns":[{{#each this.ManagedPolicyArns}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-    {{~#if this.Policies}}"Policies": [ {{#each Policies}}
+    {{#if this.ManagedPolicyArns}}"ManagedPolicyArns":[{{#each this.ManagedPolicyArns}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.Policies}}"Policies": [ {{#each Policies}}
     {"PolicyName":"{{this.PolicyName}}","PolicyDocument":{ {{{ inject this.PolicyDocument }}} } }
     {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
     "Path" : "/{{this.Path}}",
