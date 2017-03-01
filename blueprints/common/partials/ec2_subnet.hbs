@@ -12,14 +12,7 @@
     {{/with}}
     "AvailabilityZone":"{{@root.Region.Id}}{{this}}",
     "VpcId":{ "Ref":"VPC" },
-    "Tags":[
-      { "Key":"Name",         "Value":"{{@root.EnvVersion}}{{@root.EnvName}} {{../Type}} {{this}}" },
-      { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
-      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
-      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
-      { "Key":"Role",         "Value":"VPC {{../Type}} Subnet" },
-      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
-    ]
+    {{> tags Name=(concat @root.EnvVersion @root.EnvName " " ../Type " " this)}}
   }
 }{{#unless @last}},{{/unless}}
 {{/each}}

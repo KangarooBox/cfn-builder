@@ -17,14 +17,7 @@
     {{~#if this.SnsTopicName}}"SnsTopicName":"{{this.SnsTopicName}}",{{/if}}
     "IsLogging":{{default this.IsLogging false}},
     "S3BucketName":"{{this.S3BucketName}}",
-    "Tags":[
-      { "Key":"Name",         "Value":"{{this.Name}}" },
-      { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
-      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
-      { "Key":"Project",      "Value":"{{default this.Project @root.ProjectName}}" },
-      { "Key":"Role",         "Value":"{{default this.Role @root.ProjectName}}" },
-      { "Key":"Owner",        "Value":"{{default this.Owner @root.Owner}}" }
-    ]
+    {{> tags}}
   },
   "DependsOn":[
     {{#if this.CloudWatchLogsLogGroupArn}}"loggrp{{this.CloudWatchLogsLogGroupArn}}",{{/if}}

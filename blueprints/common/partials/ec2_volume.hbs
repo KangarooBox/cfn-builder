@@ -14,13 +14,6 @@
       {{#if this.KmsKeyId}}"KmsKeyId" : "{{this.KmsKeyId}}",{{~/if}}
       {{#if this.SnapshotId}}"SnapshotId" : "{{this.SnapshotId}}",{{~/if}}
       {{#if this.VolumeType}}"VolumeType" : "{{this.VolumeType}}",{{~/if}}
-      "Tags": [
-        { "Key" : "Name",         "Value" : "{{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})" },
-        { "Key" : "Environment",  "Value" : "{{@root.EnvName}}" },
-        { "Key" : "Version",      "Value" : "{{@root.EnvVersion}}" },
-        { "Key" : "Project",      "Value" : "{{@root.ProjectName}}" },
-        { "Key" : "Role",         "Value" : "{{@root.ProjectName}}" },
-        { "Key" : "Owner",        "Value" : "{{@root.Owner}}" }
-      ]
+      {{> tags Name=(concat this.Name " (" @root.EnvVersion @root.EnvName ")")}}
    }
 }
