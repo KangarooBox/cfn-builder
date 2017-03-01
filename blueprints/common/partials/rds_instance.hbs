@@ -35,7 +35,13 @@
     {{~#if this.StorageType}}"StorageType":"{{this.StorageType}}",{{/if}}
     {{~#if this.Iops}}"Iops":{{this.Iops}},{{/if}}
     "DBInstanceClass":"{{this.DBInstanceClass}}",
-    "VPCSecurityGroups":[{{#each SecurityGroupIds}} { "Ref":"ec2sg{{this}}" }{{#unless @last}}, {{/unless}}{{/each}} ],
+    "VPCSecurityGroups":[{{#each SecurityGroups}}
+      {{#startsWith "sg-" this}}
+      "{{this}}"
+      {{else}}
+      { "Ref":"ec2sg{{this}}" }
+      {{/startsWith}}{{#unless @last}}, {{/unless}}
+    {{/each}}],
     "DBSubnetGroupName":{ "Ref": "rdssng{{this.Name}}" },
     "PubliclyAccessible":{{default this.PubliclyAccessible "false"}},
     {{~#if this.DBInstanceIdentifier}}
