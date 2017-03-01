@@ -7,7 +7,7 @@
 "ecsng{{this.Name}}":{
   "Type":"AWS::ElastiCache::SubnetGroup",
   "Properties":{
-    "Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}})",
+    "Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",
     "SubnetIds":[{{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}]
   }
 },
@@ -20,7 +20,12 @@
     {{#if this.CacheParameterGroupName}}"CacheParameterGroupName":{"Ref":"ecpg{{this.CacheParameterGroupName}}"},{{/if}}
     {{!-- "CacheSecurityGroupNames":[ String, ... ], --}}
     "CacheSubnetGroupName":{"Ref":"ecsng{{this.Name}}"},
-    "ClusterName":"{{truncate @root.ProjectName 7 ''}}-{{truncate this.Name 4 ''}}-{{@root.EnvVersion}}{{@root.EnvType}}",
+    "ClusterName":
+    {{#if this.ClusterName}}
+    "{{this.ClusterName}}",
+    {{else}}
+    "{{truncate @root.ProjectName 7 ''}}-{{truncate this.Name 4 ''}}-{{@root.EnvVersion}}{{@root.EnvType}}",
+    {{/if}}
     "Engine":"{{this.Engine}}",
     {{#if this.EngineVersion}}"EngineVersion":"{{this.EngineVersion}}",{{/if}}
     {{#if this.NotificationTopicArn}}"NotificationTopicArn":"{{this.NotificationTopicArn}}",{{/if}}
@@ -37,10 +42,10 @@
     {{#if this.SnapshotName}}"SnapshotName":"{{this.SnapshotName}}",{{/if}}
     {{#if this.SnapshotRetentionLimit}}"SnapshotRetentionLimit":{{this.SnapshotRetentionLimit}},{{/if}}
     {{#if this.SnapshotWindow}}"SnapshotWindow":"{{this.SnapshotWindow}}",{{/if}}
-    "VpcSecurityGroupIds":[{{#each this.VpcSecurityGroupIds}}{"Ref":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    "VpcSecurityGroupIds":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
     "Tags": [
       { "Key":"Name",         "Value":"{{@root.ProjectName}} ElastiCache cluster" },
-      { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
+      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
       { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
       { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
       { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
