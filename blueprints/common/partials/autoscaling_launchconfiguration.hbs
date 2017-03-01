@@ -35,7 +35,7 @@
     {{/if}}
     {{#if this.KeyName}}"KeyName":"{{this.KeyName}}",{{/if}}
     {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
-    {{~#if this.UserData}}"UserData":{ {{{inject this.UserData}}} }
+    {{#if this.UserData}}"UserData": "{{this.UserData}}"
     {{else}}
       {{#startsWith "ami-" this.AMI}}
         {{> "user_data_win2012_base" }}
