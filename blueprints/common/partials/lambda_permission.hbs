@@ -1,0 +1,16 @@
+{{!--
+  Associates a policy statement with a specific AWS Lambda (Lambda) function's access policy.
+  The function policy grants a specific AWS service or application permission to invoke the function.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-permission.html
+ --}}
+"lamp{{this.Name}}": {
+  "Type": "AWS::Lambda::Permission",
+  "Properties": {
+    {{#if this.SourceAccount}}"SourceAccount": "{{this.SourceAccount}}",{{/if}}
+    {{#if this.SourceArn}}"SourceArn": "{{this.SourceArn}}",{{/if}}
+    "Action": "{{this.Action}}",
+    "FunctionName": {{#startsWith "arn:aws:" this.FunctionName}}"{{this.FunctionName}}"{{else}}{"Fn::GetAtt":["fun{{this.FunctionName}}","Arn"]}{{/startsWith}},
+    "Principal": "{{this.Principal}}"
+  }
+}

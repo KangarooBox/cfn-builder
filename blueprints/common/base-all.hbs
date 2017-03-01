@@ -172,8 +172,16 @@
     {{> lambda_function}},
     {{/each~}}
 
+    {{#each LambdaPermissions}}
+    {{> lambda_permission}},
+    {{/each~}}
+
     {{#each LogsLogGroups}}
     {{> logs_loggroup}},
+    {{/each~}}
+
+    {{#each LogsMetricFilters}}
+    {{> logs_metricfilter}},
     {{/each~}}
 
     {{#each OpsWorksELBAttachments}}
