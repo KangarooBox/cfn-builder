@@ -1,14 +1,14 @@
 {{!--
-  Creates an Amazon CloudWatch Logs log group that defines common properties for log streams, such as their
-  retention and access control rules. Each log stream must belong to one log group.
+  Creates a metric filter that describes how Amazon CloudWatch Logs extracts information from logs
+  that you specify and transforms it into Amazon CloudWatch metrics.
 
-  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html
  --}}
 "logmtrflt{{this.Name}}" : {
   "Type": "AWS::Logs::MetricFilter",
   "Properties": {
-    {{~#if this.LogGroupName}}"LogGroupName":
-      {{#startsWith "arn:aws:" this.LogGroupName}}"{{this.LogGroupName}}"{{else}}{"Ref":"{{this.LogGroupName}}"}{{/startsWith}}
+    {{#if this.LogGroupName}}"LogGroupName":
+      {{#startsWith "arn:aws:" this.LogGroupName}}"{{this.LogGroupName}}"{{else}}{"Ref":"loggrp{{this.LogGroupName}}"}{{/startsWith}},
     {{/if}}
     "FilterPattern":"{{this.FilterPattern}}",
     "MetricTransformations":[{{#each this.MetricTransformations}}
