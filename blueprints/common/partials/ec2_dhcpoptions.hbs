@@ -6,7 +6,7 @@
 "ec2dhcp{{sanitize this.Name ""}}":{
   "Type":"AWS::EC2::DHCPOptions",
   "Properties":{
-    "DomainName":"{{this.DomainName}}",
+    "DomainName":"{{default this.DomainName 'ec2.internal'}}",
     {{#if this.DomainNameServers}}"DomainNameServers":[{{#each this.DomainNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}], {{/if}}
     {{#if this.NetbiosNameServers}}
     "NetbiosNameServers":[{{#each this.NetbiosNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
