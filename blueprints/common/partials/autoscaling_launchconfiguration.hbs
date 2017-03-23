@@ -15,11 +15,7 @@
     {{#if this.CloudInit}}
       {{{ inject this.CloudInit }}}
     {{else}}
-      {{#startsWith "ami-" this.AMI}}
-        {{> "cfn_init_win2012_base" }}
-      {{else}}
-        {{> (concat "cfn_init_" this.AMI) }}
-      {{/startsWith}}
+      {{> (whichPartial "cfn_init_" this) }}
     {{/if}}
     }
   },
@@ -35,13 +31,10 @@
     {{/if}}
     {{#if this.KeyName}}"KeyName":"{{this.KeyName}}",{{/if}}
     {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
+
     {{#if this.UserData}}"UserData": "{{this.UserData}}"
     {{else}}
-      {{#startsWith "ami-" this.AMI}}
-        {{> "user_data_win2012_base" }}
-      {{else}}
-        {{> (concat "user_data_" this.AMI) }}
-      {{/startsWith}}
+      {{> (whichPartial "user_data_" this) }}
     {{/if}}
   }
 }{{#if this.Password}},
