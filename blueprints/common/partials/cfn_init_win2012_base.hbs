@@ -4,77 +4,97 @@
       "command":"$path='C:\\Program Files\\Amazon\\Ec2ConfigService\\Settings\\config.xml';$xml=[xml](Get-Content $path);$node=$xml.Ec2ConfigurationSettings.Plugins.Plugin | where {$_.Name -eq 'AWS.EC2.Windows.CloudWatch.PlugIn'};$node.State='Enabled';$xml.Save($path)"
     },
     "zRestartEc2Config":{
-      "command":"Restart-Service Ec2Config"
+      "command":"Restart-Service AmazonSSMAgent"
     }
   },
   "files":{
     "C:\\Program Files\\Amazon\\Ec2ConfigService\\Settings\\AWS.EC2.Windows.CloudWatch.json":{
       "content":{
-        "EngineConfiguration":{
-          "PollInterval":"00:00:15",
-          "Components":[
-            { "Id":"ApplicationEventLog",
-              "FullName":"AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"LogName":"Application", "Levels":"1"}
+        "IsEnabled": true,
+        "EngineConfiguration": {
+          "PollInterval": "00:00:15",
+          "Components": [
+            { "FullName": "AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "ApplicationEventLog", "Parameters": {"Levels": "1", "LogName": "Application"}
             },
-            { "Id":"SystemEventLog",
-              "FullName":"AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"LogName":"System", "Levels":"7"}
+            { "FullName": "AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "SystemEventLog", "Parameters": {"Levels": "7", "LogName": "System"}
             },
-            { "Id":"SecurityEventLog",
-              "FullName":"AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"LogName":"Security", "Levels":"7"}
+            { "FullName": "AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "SecurityEventLog", "Parameters": {"Levels": "7", "LogName": "Security"}
             },
-            { "Id":"ETW",
-              "FullName":"AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"LogName":"Microsoft-Windows-WinINet/Analytic", "Levels":"7"}
+            { "FullName": "AWS.EC2.Windows.CloudWatch.EventLog.EventLogInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "ETW", "Parameters": {"Levels": "7", "LogName": "Microsoft-Windows-WinINet/Analytic"}
             },
-            { "Id":"IISLogs",
-              "FullName":"AWS.EC2.Windows.CloudWatch.CustomLog.CustomLogInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{
-                "LogDirectoryPath":"C:\\inetpub\\logs\\LogFiles\\W3SVC1",
-                "TimestampFormat":"yyyy-MM-dd HH:mm:ss",
-                "Encoding":"UTF-8",
-                "Filter":"",
-                "CultureName":"en-US",
-                "TimeZoneKind":"UTC",
-                "LineCount":"3"
+            { "FullName": "AWS.EC2.Windows.CloudWatch.CustomLog.CustomLogInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "IISLogs",
+              "Parameters": {
+                "CultureName": "en-US",
+                "Encoding": "UTF-8",
+                "Filter": "",
+                "LineCount": "3",
+                "LogDirectoryPath": "C:\\inetpub\\logs\\LogFiles\\W3SVC1",
+                "TimeZoneKind": "UTC",
+                "TimestampFormat": "yyyy-MM-dd HH:mm:ss"
               }
             },
-            { "Id":"CustomLogs",
-              "FullName":"AWS.EC2.Windows.CloudWatch.CustomLog.CustomLogInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{
-                "LogDirectoryPath":"C:\\CustomLogs\\",
-                "TimestampFormat":"MM/dd/yyyy HH:mm:ss",
-                "Encoding":"UTF-8",
-                "Filter":"",
-                "CultureName":"en-US",
-                "TimeZoneKind":"Local"
+            { "FullName": "AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
+                "Id": "PCMemory",
+                "Parameters": {
+                    "CategoryName": "Memory",
+                    "CounterName": "Available MBytes",
+                    "DimensionName": "InstanceId",
+                    "DimensionValue": "{instance_id}",
+                    "InstanceName": "",
+                    "MetricName": "FreeMemory",
+                    "Unit": "Megabytes"
+                }
+            },
+            { "FullName": "AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "PCFreeDisk",
+              "Parameters": {
+                "CategoryName": "LogicalDisk",
+                "CounterName": "Free Megabytes",
+                "DimensionName": "InstanceId",
+                "DimensionValue": "{instance_id}",
+                "InstanceName": "C:",
+                "MetricName": "FreeDisk",
+                "Unit": "Megabytes"
               }
             },
-            { "Id":"PerformanceCounter",
-              "FullName":"AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{
-                "CategoryName":"Memory",
-                "CounterName":"Available MBytes",
-                "InstanceName":"",
-                "MetricName":"Memory",
-                "Unit":"Megabytes",
-                "DimensionName":"",
-                "DimensionValue":""
+            { "FullName": "AWS.EC2.Windows.CloudWatch.PerformanceCounterComponent.PerformanceCounterInputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "PCFreeDiskPct",
+              "Parameters": {
+                "CategoryName": "LogicalDisk",
+                "CounterName": "% Free Space",
+                "DimensionName": "InstanceId",
+                "DimensionValue": "{instance_id}",
+                "InstanceName": "C:",
+                "MetricName": "FreeDiskPct",
+                "Unit": "Percent"
               }
             },
-            { "Id":"CloudWatchLogs",
-              "FullName":"AWS.EC2.Windows.CloudWatch.CloudWatchLogsOutput,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"Region":"{{@root.Region.Id}}", "LogGroup":"{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}", "LogStream":"{instance_id}"}
+            { "FullName": "AWS.EC2.Windows.CloudWatch.CloudWatchLogsOutput,AWS.EC2.Windows.CloudWatch",
+              "Id": "CloudWatchLogs",
+              "Parameters": {
+                "LogGroup": "{{@root.EnvVersion}}{{@root.EnvName}}",
+                "LogStream": "{instance_id}_{{@root.ProjectName}}",
+                "Region": "{{@root.Region.Id}}"
+              }
             },
-            { "Id":"CloudWatch",
-              "FullName":"AWS.EC2.Windows.CloudWatch.CloudWatch.CloudWatchOutputComponent,AWS.EC2.Windows.CloudWatch",
-              "Parameters":{"Region":"{{@root.Region.Id}}", "NameSpace":"{{@root.ProjectName}}/{{@root.EnvVersion}}{{@root.EnvName}}"}
+            { "FullName": "AWS.EC2.Windows.CloudWatch.CloudWatch.CloudWatchOutputComponent,AWS.EC2.Windows.CloudWatch",
+              "Id": "CloudWatch",
+              "Parameters": {
+                "NameSpace": "Windows/Default",
+                "Region": "{{@root.Region.Id}}"
+              }
             }
           ],
-          "Flows":{
-            "Flows":["(ApplicationEventLog,SystemEventLog,SecurityEventLog),CloudWatchLogs", "PerformanceCounter,CloudWatch"]
+          "Flows": {
+            "Flows": [
+              "(ApplicationEventLog,SystemEventLog),CloudWatchLogs",
+              "(PCMemory, PCFreeDisk, PCFreeDiskPct),CloudWatch"
+            ]
           }
         }
       }
