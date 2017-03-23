@@ -6,7 +6,7 @@
  "53rs{{this.Name}}":{
   "Type":"AWS::Route53::RecordSet",
   "Properties":{
-    "Comment":"{{@root.ProjectName}}: {{@root.EnvVersion}}{{@root.EnvType}}",
+    "Comment":"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
     {{#is this.Scheme "internal"}}
     {{#with (lookupById @root.DNS @root.Route53::RecordSet.Internal.Domain)}}
     "HostedZoneId":"{{this.PrivateHostedZoneId}}",

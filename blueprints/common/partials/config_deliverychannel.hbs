@@ -1,0 +1,17 @@
+{{!--
+  Describes where AWS Config stores configuration changes to an AWS resource.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-deliverychannel.html
+ --}}
+"condc{{this.Name}}" : {
+  "Type" : "AWS::Config::DeliveryChannel",
+  "Properties" : {
+    "Name" : "{{this.Name}}",
+    {{#if this.ConfigSnapshotDeliveryProperties}}
+    "ConfigSnapshotDeliveryProperties" : { "DeliveryFrequency" : "{{this.ConfigSnapshotDeliveryProperties.DeliveryFrequency}}" },
+    {{/if}}
+    {{#if this.S3KeyPrefix}}"S3KeyPrefix" : "{{this.S3KeyPrefix}}",{{/if}}
+    {{#if this.SnsTopicARN}}"SnsTopicARN" : "{{this.SnsTopicARN}}",{{/if}}
+    "S3BucketName" : "{{this.S3BucketName}}"
+  }
+}

@@ -4,9 +4,10 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html
  --}}
-"loggrp{{this.Name}}" : {
-  "Type" : "AWS::Logs::LogGroup",
-  "Properties" : {
-    "RetentionInDays" : {{this.RetentionInDays}}
+"loggrp{{sanitize this.Name ''}}": {
+  "Type": "AWS::Logs::LogGroup",
+  "Properties": {
+    "LogGroupName": "{{this.Name}}",
+    "RetentionInDays": {{this.RetentionInDays}}
   }
 }

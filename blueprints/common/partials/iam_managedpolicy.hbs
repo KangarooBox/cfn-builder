@@ -14,4 +14,5 @@
     {{#if this.Users}}"Users": [ {{#each this.Users}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
     "PolicyDocument": { {{{inject this.PolicyDocument}}} }
   }
+  {{#if this.Groups}},"DependsOn": [ {{#each this.Groups}}"iamg{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]{{/if}}
 }

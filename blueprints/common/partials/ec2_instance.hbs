@@ -7,7 +7,7 @@
   "Type":"AWS::EC2::Instance",
   "Properties":{
     {{#if this.Affinity}}"Affinity":"{{this.Affinity}}",{{/if}}
-    {{#if this.SubnetIndex}}"AvailabilityZone":"{{this.AvailabilityZone}}",{{/if}}
+    {{#if this.AvailabilityZone}}"AvailabilityZone":"{{this.AvailabilityZone}}",{{/if}}
     {{#if this.BlockDeviceMappings}}
     "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
@@ -15,7 +15,7 @@
     "EbsOptimized":{{default this.EbsOptimized false}},
     {{#if this.HostId}}"HostId":"{{this.HostId}}",{{/if}}
     {{#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"iamip{{this.IamInstanceProfile}}"},{{/if}}
-    "ImageId":"{{findAMI this.ImageId @root.Region.AMIs}}",
+    "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
     {{#if this.InstanceInitiatedShutdownBehavior}}"InstanceInitiatedShutdownBehavior":"{{this.InstanceInitiatedShutdownBehavior}}",{{/if}}
     "InstanceType":"{{this.InstanceType}}",
     {{#if this.KernelId}}"KernelId":"{{this.KernelId}}",{{/if}}
@@ -48,17 +48,16 @@
     {{#if this.AdditionalInfo}}"AdditionalInfo":"{{this.AdditionalInfo}}",{{/if}}
 
     "Tags":[
-      {{#startsWith 'linux_ubuntu' this.ImageId}}
-      { "Key":"Name",         "Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
-      {{else is this.ImageId 'linux_amazon'}}
-      { "Key":"Name",         "Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
-      {{else is this.ImageId 'windows_core'}}
-      { "Key":"Name",         "Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
-      {{else is this.ImageId 'windows_base'}}
-      { "Key":"Name",         "Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
-      {{else}}
-      { "Key":"Name",         "Value":"awunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },
-      {{/startsWith}}
+      {{#switch this.AMI}}
+        {{#case 'linux_amazon'}}{ "Key":"Name", "Value":"ala-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'linux_trusty'}}{ "Key":"Name", "Value":"alt-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'linux_zenial'}}{ "Key":"Name", "Value":"alz-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'win2012_base'}}{ "Key":"Name", "Value":"awb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'win2012_core'}}{ "Key":"Name", "Value":"awc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'win2016_full'}}{ "Key":"Name", "Value":"awf-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'win2016_nano'}}{ "Key":"Name", "Value":"awn-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{!-- {{#default}}{ "Key":"Name", "Value":"aunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },{{/default}} --}}
+      {{/switch}}
       { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
       { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
       { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
@@ -67,3 +66,22 @@
     ]
   }
 }
+{{#if this.AutoRecovery}}
+,"cldwalrm{{this.Name}}": {
+  "Type":"AWS::CloudWatch::Alarm",
+  "Properties": {
+    "AlarmDescription": "AutoRecovery for {{this.Name}}",
+    "AlarmActions": [ "arn:aws:automate:{{@root.Region.Id}}:ec2:recover" ],
+    "ComparisonOperator": "GreaterThanThreshold",
+    "EvaluationPeriods": 1,
+    "MetricName": "StatusCheckFailed_System",
+    "Namespace": "AWS/EC2",
+    "Period": 60,
+    "Statistic": "Minimum",
+    "Threshold": 0,
+    "Dimensions": [
+      { "Name": "InstanceId", "Value": {"Ref":"ec2{{this.Name}}"} }
+    ]
+  }
+}
+{{/if}}

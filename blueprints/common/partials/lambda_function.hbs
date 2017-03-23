@@ -17,10 +17,18 @@
     },
     "Description":"{{this.Description}}",
     "Handler":"{{this.Handler}}",
-    "MemorySize":{{this.MemorySize}},
+    {{#if this.Environment}}"Environment": { "Variables": { {{{inject this.Environment}}} } },{{/if}}
+    {{#if this.KmsKeyArn}}"KmsKeyArn":
+      {{#startsWith "arn:aws:" this.KmsKeyArn}}
+      "{{this.KmsKeyArn}}"
+      {{else}}
+      {"Fn::GetAtt":["kms{{this.KmsKeyArn}}","Arn"]}
+      {{/startsWith}},
+    {{/if}}
+    {{#if this.MemorySize}}"MemorySize":{{this.MemorySize}},{{/if}}
+    {{#if this.Timeout}}"Timeout":{{this.Timeout}},{{/if}}
     "Role":{ "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] },
     "Runtime":"{{this.Runtime}}",
-    "FunctionName":"{{this.Name}}",
-    "Timeout":{{this.Timeout}}
+    "FunctionName":"{{this.Name}}"
   }
 }

@@ -4,20 +4,30 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html
  --}}
-"evtrule{{this.Name}}":{
+"evtrule{{sanitize this.Name ''}}":{
   "Type":"AWS::Events::Rule",
   "Properties":{
     {{#if this.EventPattern}}"EventPattern":{ {{{inject this.EventPattern}}} },{{/if}}
-    {{#if this.RoleArn}}"RoleArn":{{#startsWith "arn:aws:" this}}"{{this}}"{{else}}{"Ref":"{{this}}"}{{/startsWith}},{{/if}}
+    {{#if this.Role}}
+    "RoleArn":{{#startsWith "arn:aws:" this.Role}}
+      "{{this.Role}}"
+    {{else}}
+      { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] }
+    {{/startsWith}},
+    {{/if}}
     {{#if this.ScheduleExpression}}"ScheduleExpression":"{{this.ScheduleExpression}}",{{/if}}
     {{#if this.State}}"State":"{{this.State}}",{{/if}}
     {{#if this.Targets}}"Targets":[{{#each this.Targets}}
-      { {{#if this.Input}}"Input":"{{this.Input}}",{{/if}}
+      { {{#if this.Input}}"Input":"{ {{{inject this.Input true}}} }",{{/if}}
         {{#if this.InputPath}}"InputPath":"{{this.InputPath}}",{{/if}}
-        "Arn":{{#startsWith "arn:aws:" this.Arn}}"{{this.Arn}}"{{else}}{"Ref":"{{this.Arn}}"}{{/startsWith}},
+        "Arn":{{#startsWith "arn:aws:" this.Arn}}
+        "{{this.Arn}}"
+        {{else}}
+        { "Fn::GetAtt":[ "{{this.Arn}}", "Arn"] }
+        {{/startsWith}},
         "Id":"{{this.Id}}"
       }{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-    "Description":"{{this.Description}} [{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.VPCName}}]",
+    {{#if this.Description}}"Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
     "Name":"{{this.Name}}"
   }
 }

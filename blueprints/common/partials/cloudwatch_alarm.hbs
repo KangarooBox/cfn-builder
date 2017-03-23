@@ -8,10 +8,10 @@
    "Properties": {
       {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
       {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
-        {{#startsWith "arn: aws: " this}}"{{this}}"{{else}}{"Ref":"snst{{this}}"}{{/startsWith}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"{{else}}{"Ref":"snst{{this}}"}{{/startsWith}}
       {{#unless @last}},{{/unless}}{{/each}}
       ],{{/if}}
-      {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} [{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.VPCName}}]",{{/if}}
+      {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
       {{#if this.Dimensions}}"Dimensions": [{{#each this.Dimensions}}
         { "Name": "{{this.Name}}",
          "Value": "{{this.Value}}"

@@ -7,14 +7,14 @@
 "ctt{{this.Name}}":{
   "Type":"AWS::CloudTrail::Trail",
   "Properties":{
-    {{~#if this.CloudWatchLogsLogGroupArn}}"CloudWatchLogsLogGroupArn":{{#startsWith "arn:aws:" this.CloudWatchLogsLogGroupArn}}"{{this.CloudWatchLogsLogGroupArn}}"{{else}}{"Fn::GetAtt":["loggrp{{this.CloudWatchLogsLogGroupArn}}","Arn"]}{{/startsWith}},{{/if}}
-    {{~#if this.CloudWatchLogsRoleArn}}"CloudWatchLogsRoleArn":{{#startsWith "arn:aws:" this.CloudWatchLogsRoleArn}}"{{this.CloudWatchLogsRoleArn}}"{{else}}{"Fn::GetAtt":["iamr{{this.CloudWatchLogsRoleArn}}","Arn"]}{{/startsWith}},{{/if}}
-    {{~#if this.EnableLogFileValidation}}"EnableLogFileValidation":{{this.EnableLogFileValidation}},{{/if}}
-    {{~#if this.IncludeGlobalServiceEvents}}"IncludeGlobalServiceEvents":{{this.IncludeGlobalServiceEvents}},{{/if}}
-    {{~#if this.IsMultiRegionTail}}"IsMultiRegionTrail":{{this.IsMultiRegionTail}},{{/if}}
-    {{~#if this.KMSKeyId}}"KMSKeyId":"{{this.KMSKeyId}}",{{/if}}
-    {{~#if this.S3KeyPrefix}}"S3KeyPrefix":"{{this.S3KeyPrefix}}",{{/if}}
-    {{~#if this.SnsTopicName}}"SnsTopicName":"{{this.SnsTopicName}}",{{/if}}
+    {{#if this.CloudWatchLogsLogGroupArn}}"CloudWatchLogsLogGroupArn":{{#startsWith "arn:aws:" this.CloudWatchLogsLogGroupArn}}"{{this.CloudWatchLogsLogGroupArn}}"{{else}}{"Fn::GetAtt":["loggrp{{this.CloudWatchLogsLogGroupArn}}","Arn"]}{{/startsWith}},{{/if}}
+    {{#if this.CloudWatchLogsRoleArn}}"CloudWatchLogsRoleArn":{{#startsWith "arn:aws:" this.CloudWatchLogsRoleArn}}"{{this.CloudWatchLogsRoleArn}}"{{else}}{"Fn::GetAtt":["iamr{{this.CloudWatchLogsRoleArn}}","Arn"]}{{/startsWith}},{{/if}}
+    {{#if this.EnableLogFileValidation}}"EnableLogFileValidation":{{this.EnableLogFileValidation}},{{/if}}
+    {{#if this.IncludeGlobalServiceEvents}}"IncludeGlobalServiceEvents":{{this.IncludeGlobalServiceEvents}},{{/if}}
+    {{#if this.IsMultiRegionTail}}"IsMultiRegionTrail":{{this.IsMultiRegionTail}},{{/if}}
+    {{#if this.KMSKeyId}}"KMSKeyId":"{{this.KMSKeyId}}",{{/if}}
+    {{#if this.S3KeyPrefix}}"S3KeyPrefix":"{{this.S3KeyPrefix}}",{{/if}}
+    {{#if this.SnsTopicName}}"SnsTopicName":"{{this.SnsTopicName}}",{{/if}}
     "IsLogging":{{default this.IsLogging false}},
     "S3BucketName":"{{this.S3BucketName}}",
     {{> tags}}

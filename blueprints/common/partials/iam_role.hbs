@@ -7,16 +7,16 @@
 "iamr{{this.Name}}" : {
   "Type" : "AWS::IAM::Role",
   "Properties" : {
-    {{~#if this.ManagedPolicyArns}}"ManagedPolicyArns" : [
+    {{#if this.ManagedPolicyArns}}"ManagedPolicyArns" : [
     {{#each this.ManagedPolicyArns}}
     {{#startsWith "arn:aws:iam::aws:policy" this}}"{{this}}"{{else}}{ "Ref" : "mp{{this}}" }{{/startsWith}}{{#unless @last}}, {{/unless}}
     {{/each}}
     ],{{/if}}
-    {{~#if this.Path}}"Path" : "{{this.Path}}",{{/if}}
-    {{~#if this.Policies}}
+    {{#if this.Path}}"Path" : "{{this.Path}}",{{/if}}
+    {{#if this.Policies}}
     "Policies" : [ {{#each Policies}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
-    {{~#if this.AssumeRolePolicyDocument}}
+    {{#if this.AssumeRolePolicyDocument}}
     "AssumeRolePolicyDocument" : { {{{inject this.AssumeRolePolicyDocument}}} }
     {{else}}
     "AssumeRolePolicyDocument" : {"Version": "2012-10-17", "Statement": [{ "Effect": "Allow", "Principal": { "Service": ["ec2.amazonaws.com"]}, "Action": [ "sts:AssumeRole" ] } ] }
