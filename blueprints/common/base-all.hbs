@@ -65,8 +65,12 @@
     {{> codepipeline_pipeline}},
     {{/each~}}
 
+    {{#each ConfigConfigurationRecorders}}
+    {{> config_configurationrecorder}},
+    {{/each~}}
+
     {{#each ConfigDeliveryChannels}}
-    {{> config_delivery_channel}},
+    {{> config_deliverychannel}},
     {{/each~}}
 
     {{#each ConfigRules}}
@@ -137,6 +141,10 @@
     {{> elasticloadbalancingv2_targetgroup}},
     {{/each~}}
 
+    {{#each EventsRules}}
+    {{> events_rule}},
+    {{/each~}}
+
     {{#each EventSourceMappings}}
     {{> lambda_event_source_mapping}},
     {{/each~}}
@@ -155,6 +163,10 @@
 
     {{#each IAMUsers}}
     {{> iam_user}},
+    {{/each~}}
+
+    {{#each IAMUsersToGroups}}
+    {{> iam_usertogroupaddition}},
     {{/each~}}
 
     {{#each IAMGroups}}
@@ -249,6 +261,7 @@
   },
 
   "Outputs" : {
+{{!--
     {{#each AccessKeys}}
     {{> iam_accesskey_output}},
     {{/each}}
@@ -266,7 +279,8 @@
     {{/each}}
     {{#each SSMDocuments}}
     {{> ssm_document_output}},
-    {{/each~}}
+    {{/each}}
+ --}}
     "StackId" : { "Value" : { "Ref" : "AWS::StackId" }, "Description" : "CloudFormation stack id" }
   }
 }
