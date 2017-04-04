@@ -12,11 +12,21 @@
       {{#unless @last}},{{/unless}}{{/each}}
       ],{{/if}}
       {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
+
       {{#if this.Dimensions}}"Dimensions": [{{#each this.Dimensions}}
-        { "Name": "{{this.Name}}",
-         "Value": "{{this.Value}}"
-        }{{#unless @last}},{{/unless}}{{/each}}
-      ],{{/if}}
+        {{#switch this.Name}}
+          {{#case "AutoScalingGroupName" break=true}}
+          { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
+          {{/case}}
+          {{#case "InstanceId" break=true}}
+          { "Name": "{{this.Name}}", "Value": {"Ref":"ec2{{this.Value}}"} }
+          {{/case}}
+          {{#sdefault}}
+          { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
+          {{/sdefault}}
+        {{/switch}}
+      {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+
       {{#if this.InsufficientDataActions}}"InsufficientDataActions": [ "{{this.}}", ... ],{{/if}}
       {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}{"Ref":"snst{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
       {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
