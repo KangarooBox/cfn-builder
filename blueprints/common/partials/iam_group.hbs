@@ -12,7 +12,7 @@
       {{/each}}
     ],{{/if}}
     {{#if this.Policies}}
-    "Policies": [ {{#each this.Policies}}{{{inject this}}}{{#unless @last}},{{/unless}}{{/each}} ],
+    "Policies": [ {{#each this.Policies}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
     "GroupName": "{{this.Name}}"
   }
