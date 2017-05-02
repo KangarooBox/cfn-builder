@@ -12,6 +12,7 @@
     {{#if this.Path}}"Path": "{{this.Path}}",{{/if}}
     {{#if this.Roles}}"Roles": [ {{#each this.Roles}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
     {{#if this.Users}}"Users": [ {{#each this.Users}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+    {{#if this.ManagedPolicyName}}"ManagedPolicyName": "{{this.ManagedPolicyName}}",{{/if}}
     "PolicyDocument": { {{{inject this.PolicyDocument}}} }
   }
   {{#if this.Groups}},"DependsOn": [ {{#each this.Groups}}"iamg{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]{{/if}}
