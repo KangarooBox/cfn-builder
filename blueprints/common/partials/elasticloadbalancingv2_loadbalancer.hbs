@@ -2,8 +2,9 @@
   Creates a new Amazon ElasticLoadBalancer.
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
  --}}
-"elbv2{{this.Name}}": {
+"elbv2{{sanitize this.Name ''}}": {
   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
   "Properties": {
     "Name": "{{this.Name}}-{{@root.EnvName}}",
@@ -21,29 +22,22 @@
     ],
     {{/if}}
     "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
-    "Tags":[
-      { "Key":"Name",         "Value":"{{@root.ProjectName}} {{@root.EnvName}}" },
-      { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
-      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
-      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
-      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
-      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
-    ]
+    {{> tags}}
   }
 },
 
 {{#each this.Listeners}}
-"elbv2lis{{../Name}}{{@index}}": {
+"elbv2lis{{sanitize ../Name ''}}{{@index}}": {
   "Type": "AWS::ElasticLoadBalancingV2::Listener",
   "Properties": {
-    {{!-- "Certificates": [ Certificates, ... ], --}}
-    "SslPolicy": "{{this.SslPolicy}}",
+    {{#if this.Certificates}}"Certificates": [{{#each this.Certificates}}{"CertificateArn":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.SslPolicy}}"SslPolicy": "{{this.SslPolicy}}",{{/if}}
     "DefaultActions": [
       {{#each this.DefaultActions}}
       { "TargetGroupArn": {"Ref":"elbv2tg{{this.TargetGroupArn}}"}, "Type":"{{this.Type}}"}
       {{#unless @last}},{{/unless}}{{/each}}
     ],
-    "LoadBalancerArn": { "Ref": "elbv2{{../Name}}" },
+    "LoadBalancerArn": { "Ref": "elbv2{{sanitize ../Name ''}}" },
     "Port": "{{this.Port}}",
     "Protocol": "{{uppercase this.Protocol}}"
   }
