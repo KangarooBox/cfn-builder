@@ -22,15 +22,25 @@
     {{#if this.KeyName}}"KeyName":"{{this.KeyName}}",{{/if}}
     "Monitoring":{{default this.InstanceMonitoring false}},
     {{#if this.NetworkInterfaces}}
-    "NetworkInterfaces":[
-      {{#each this.NetworkInterfaces}}{
-        "Description":"{{this.Description}}",
-        "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
-        "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
-        {{!-- "DeleteOnTermination":{{#if this.DeleteOnTermination}}true{{else}}false{{/if}}, --}}
-        "DeviceIndex":"{{default this.DeviceIndex 0}}",
-        "GroupSet":[{{#each this.GroupSet}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
-      }{{#unless @last}},{{/unless}}{{/each}}],
+      {{#if this.NetworkInterfaces.Name}}
+        "NetworkInterfaces":[{{#each this.NetworkInterfaces}}
+        { "NetworkInterfaceId": {"Ref":"neti{{this.Name}}"}, "DeviceIndex":"{{this.DeviceIndex}}" }
+        {{#unless @last}},{{/unless}}{{/each}}],
+      {{else}}
+        "NetworkInterfaces":[
+          {{#each this.NetworkInterfaces}}{
+            "Description":"{{this.Description}}",
+            "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
+            "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
+            "DeleteOnTermination":{{default this.DeleteOnTermination true}},
+            {{#if this.Ipv6Addresses}}
+            "Ipv6AddressCount": {{this.Ipv6Addresses.length}},
+            "Ipv6Addresses": [{{#each this.Ipv6Addresses}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+            {{/if}}
+            "DeviceIndex":"{{default this.DeviceIndex 0}}",
+            "GroupSet":[{{#each this.GroupSet}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
+          }{{#unless @last}},{{/unless}}{{/each}}],
+      {{/if}}
     {{/if}}
 
     {{#if this.PlacementGroupName}}"PlacementGroupName":"{{this.PlacementGroupName}}",{{/if}}
@@ -50,6 +60,7 @@
     "Tags":[
       {{#switch this.AMI}}
         {{#case 'linux_amazon'}}{ "Key":"Name", "Value":"ala-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
+        {{#case 'linux_ubuntu'}}{ "Key":"Name", "Value":"alu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'linux_trusty'}}{ "Key":"Name", "Value":"alt-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'linux_zenial'}}{ "Key":"Name", "Value":"alz-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'win2012_base'}}{ "Key":"Name", "Value":"awb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
