@@ -3,16 +3,17 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html
  --}}
-{{#each this.AZ}}
-"ec2sn{{../Type}}{{this}}":{
+
+{{#each this.AZs}}
+"e2sn{{../Name}}{{this}}":{
   "Type":"AWS::EC2::Subnet",
   "Properties":{
-    {{#with (lookupById (lookupByNode @root.Region.SubnetAddresses ../Type) this)}}
-    "CidrBlock":"{{this.value}}",
+    "AvailabilityZone": "{{@root.Region.Id}}{{this}}",
+    "VpcId": "{{@root.Region.VPCId}}",
+    {{#with (lookupByAZ (lookupByNode @root.Region.SubnetAddresses ../Name) this)}}
+    "CidrBlock":"{{this.CidrBlock}}",
     {{/with}}
-    "AvailabilityZone":"{{@root.Region.Id}}{{this}}",
-    "VpcId":{ "Ref":"VPC" },
-    {{> tags Name=(concat @root.EnvVersion @root.EnvName " " ../Type " " this)}}
+    {{> tags Name=(concat @root.EnvVersion @root.EnvName " " ../Name " " this)}}
   }
 }{{#unless @last}},{{/unless}}
 {{/each}}
