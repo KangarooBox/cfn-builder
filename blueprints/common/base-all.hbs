@@ -97,6 +97,14 @@
     {{> ec2_eip}},
     {{/each~}}
 
+    {{#each EC2NetworkInterfaces}}
+    {{> ec2_networkinterface}},
+    {{/each~}}
+
+    {{#each EC2NetworkInterfaceAttachments}}
+    {{> ec2_networkinterfaceattachment}},
+    {{/each~}}
+
     {{#each EC2VPCEndpoints}}
     {{> ec2_vpcendpoint}},
     {{/each~}}
@@ -119,6 +127,14 @@
 
     {{#each EC2Volumes}}
     {{> ec2_volume}},
+    {{/each~}}
+
+    {{#each EFSFilesystems}}
+    {{> efs_filesystem}},
+    {{/each~}}
+
+    {{#each EFSMountTargets}}
+    {{> efs_mounttarget}},
     {{/each~}}
 
     {{#each ElastiCacheClusters}}
@@ -214,6 +230,10 @@
 
     {{#each RedshiftClusters}}
     {{> redshift_cluster}},
+    {{/each~}}
+
+    {{#each Route53HealthChecks}}
+    {{> route53_healthcheck}},
     {{/each~}}
 
     {{#each Route53RecordSets}}
