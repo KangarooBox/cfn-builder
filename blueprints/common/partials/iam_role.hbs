@@ -4,22 +4,23 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
  --}}
-"iamr{{this.Name}}" : {
-  "Type" : "AWS::IAM::Role",
-  "Properties" : {
-    {{#if this.ManagedPolicyArns}}"ManagedPolicyArns" : [
+"iamr{{this.Name}}": {
+  "Type": "AWS::IAM::Role",
+  "Properties": {
+    {{#if this.RoleName}}"RoleName": "{{this.RoleName}}",{{/if}}
+    {{#if this.ManagedPolicyArns}}"ManagedPolicyArns": [
     {{#each this.ManagedPolicyArns}}
-    {{#startsWith "arn:aws:iam::aws:policy" this}}"{{this}}"{{else}}{ "Ref" : "mp{{this}}" }{{/startsWith}}{{#unless @last}}, {{/unless}}
+    {{#startsWith "arn:aws:iam::aws:policy" this}}"{{this}}"{{else}}{ "Ref": "iammp{{this}}" }{{/startsWith}}{{#unless @last}}, {{/unless}}
     {{/each}}
     ],{{/if}}
-    {{#if this.Path}}"Path" : "{{this.Path}}",{{/if}}
+    {{#if this.Path}}"Path": "{{this.Path}}",{{/if}}
     {{#if this.Policies}}
-    "Policies" : [ {{#each Policies}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
+    "Policies": [ {{#each Policies}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
     {{#if this.AssumeRolePolicyDocument}}
-    "AssumeRolePolicyDocument" : { {{{inject this.AssumeRolePolicyDocument}}} }
+    "AssumeRolePolicyDocument": { {{{inject this.AssumeRolePolicyDocument}}} }
     {{else}}
-    "AssumeRolePolicyDocument" : {"Version": "2012-10-17", "Statement": [{ "Effect": "Allow", "Principal": { "Service": ["ec2.amazonaws.com"]}, "Action": [ "sts:AssumeRole" ] } ] }
+    "AssumeRolePolicyDocument": {"Version": "2012-10-17", "Statement": [{ "Effect": "Allow", "Principal": { "Service": ["ec2.amazonaws.com"]}, "Action": [ "sts:AssumeRole" ] } ] }
     {{/if}}
   }
 }
