@@ -3,9 +3,10 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html
  --}}
-"elb{{this.Name}}":{
+"elb{{sanitize this.Name ''}}": {
   "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
   "Properties": {
+    {{#if this.LoadBalancerName}}"LoadBalancerName": "{{this.LoadBalancerName}}",{{/if}}
     "CrossZone":{{default (toString this.CrossZone) true}},
     "Scheme":"{{this.Scheme}}",
     "Subnets":[
@@ -13,6 +14,9 @@
       "{{this}}"{{#unless @last}},{{/unless}}
       {{/each}}
     ],
+    {{#if this.Instances}}
+    "Instances": [ {{#each this.Instances}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
+    {{/if}}
     {{#if this.HealthCheck}}
     "HealthCheck":{
     {{#with this.HealthCheck}}
@@ -44,14 +48,7 @@
     },
     {{/with}}
     {{/if}}
-    "Tags":[
-      { "Key":"Name",         "Value":"{{@root.ProjectName}} {{@root.EnvType}}" },
-      { "Key":"Environment",  "Value":"{{@root.EnvType}}" },
-      { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
-      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
-      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
-      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
-    ]
+    {{> tags}}
   }
 }
 
