@@ -3,7 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
  --}}
-"cldwalrm{{this.Name}}": {
+"cldwalrm{{sanitize this.Name ''}}": {
    "Type":"AWS::CloudWatch::Alarm",
    "Properties": {
       {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
@@ -19,7 +19,13 @@
           { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
           {{/case}}
           {{#case "InstanceId" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Ref":"ec2{{this.Value}}"} }
+          { "Name": "{{this.Name}}", "Value":
+            {{#startsWith "i-" this.Value}}
+            "{{this.Value}}"
+            {{else}}
+            {"Ref":"ec2{{this.Value}}"}
+            {{/startsWith}}
+          }
           {{/case}}
           {{#sdefault}}
           { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
