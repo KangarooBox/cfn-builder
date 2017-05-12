@@ -3,7 +3,7 @@
   ".../blueprints/common/partial/" directory.
 --}}
 
-"Tags": [
+"{{default this.PropertyID 'Tags'}}": [
   {{#if @root.EnvName}}{ "Key": "Environment", "Value": "{{@root.EnvName}}" },{{/if}}
   {{#if @root.EnvVersion}}{ "Key": "Version", "Value": "{{@root.EnvVersion}}" },{{/if}}
   {{#if @root.ProjectName}}{ "Key": "Project", "Value": "{{@root.ProjectName}}" },{{/if}}
