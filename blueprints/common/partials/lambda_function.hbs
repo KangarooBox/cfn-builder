@@ -29,6 +29,7 @@
     {{#if this.Timeout}}"Timeout":{{this.Timeout}},{{/if}}
     "Role":{ "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] },
     "Runtime":"{{this.Runtime}}",
-    "FunctionName":"{{this.Name}}"
+    "FunctionName":"{{this.Name}}",
+    {{> tags}}
   }
 }
