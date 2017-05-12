@@ -53,7 +53,7 @@
     "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
     {{#isnt this.Engine "sqlserver-web"}}"DBName":"{{lowercase this.Name}}",{{/isnt}}
     "MasterUsername":"{{this.MasterUsername}}",
-    "MasterUserPassword":"{{this.MasterUserPassword}}",
+    "MasterUserPassword":"{{{this.MasterUserPassword}}}",
     {{/isnt}}
     {{/if}}
     {{> tags}}
