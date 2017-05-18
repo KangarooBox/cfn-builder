@@ -3,6 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html
  --}}
 "elbv2{{sanitize this.Name ''}}": {
   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
@@ -34,7 +35,7 @@
     {{#if this.SslPolicy}}"SslPolicy": "{{this.SslPolicy}}",{{/if}}
     "DefaultActions": [
       {{#each this.DefaultActions}}
-      { "TargetGroupArn": {"Ref":"elbv2tg{{this.TargetGroupArn}}"}, "Type":"{{this.Type}}"}
+      { "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}
       {{#unless @last}},{{/unless}}{{/each}}
     ],
     "LoadBalancerArn": { "Ref": "elbv2{{sanitize ../Name ''}}" },
@@ -42,4 +43,19 @@
     "Protocol": "{{uppercase this.Protocol}}"
   }
 }
+
+  {{#each this.Rules}}
+  ,"elbv2lisrul{{sanitize ../../Name ''}}{{@index}}": {
+    "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+    "Properties": {
+      "Actions": [ {{#each this.Actions}}{ "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}{{#unless @last}},{{/unless}}{{/each}}],
+      "Conditions": [
+      {{#each this.Conditions}}{ "Field": "{{this.Field}}", "Values":[
+        {{#each this.Values}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+        ]}{{#unless @last}},{{/unless}}{{/each}}
+      ],
+      "ListenerArn": {"Ref": "elbv2lis{{sanitize ../../Name ''}}{{@../index}}" },
+      "Priority": {{this.Priority}}
+    }
+  }{{/each}}
 {{#unless @last}},{{/unless}}{{/each}}
