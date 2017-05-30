@@ -67,13 +67,13 @@
         {{#case 'win2012_core'}}{ "Key":"Name", "Value":"awc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'win2016_full'}}{ "Key":"Name", "Value":"awf-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'win2016_nano'}}{ "Key":"Name", "Value":"awn-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
-        {{!-- {{#default}}{ "Key":"Name", "Value":"aunk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },{{/default}} --}}
+        {{#sdefault}}{ "Key":"Name", "Value":"unk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },{{/sdefault}}
       {{/switch}}
+      {{#if @root.Role}} { "Key":"Role",  "Value":"{{@root.Role}}" },{{/if}}
+      {{#if @root.Owner}}{ "Key":"Owner", "Value":"{{@root.Owner}}" },{{/if}}
       { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
       { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
-      { "Key":"Project",      "Value":"{{@root.ProjectName}}" },
-      { "Key":"Role",         "Value":"{{@root.ProjectName}}" },
-      { "Key":"Owner",        "Value":"{{@root.Owner}}" }
+      { "Key":"Project",      "Value":"{{@root.ProjectName}}" }
     ]
   }
 }
@@ -81,8 +81,12 @@
 ,"cldwalrm{{this.Name}}": {
   "Type":"AWS::CloudWatch::Alarm",
   "Properties": {
-    "AlarmDescription": "AutoRecovery for {{this.Name}}",
-    "AlarmActions": [ "arn:aws:automate:{{@root.Region.Id}}:ec2:recover" ],
+    "AlarmName": "EC2 AutoRecover: {{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",
+    "AlarmDescription": "Automatically recover this EC2 instance if something goes wrong.",
+    "AlarmActions": [
+      {{#each this.AutoRecovery.AlarmActions}}"{{this}}",{{/each}}
+      "arn:aws:automate:{{@root.Region.Id}}:ec2:recover"
+    ],
     "ComparisonOperator": "GreaterThanThreshold",
     "EvaluationPeriods": 1,
     "MetricName": "StatusCheckFailed_System",
