@@ -28,7 +28,7 @@
 },
 
 {{#each this.Listeners}}
-"elbv2lis{{sanitize ../Name ''}}{{@index}}": {
+"elbv2lis{{sanitize ../Name ''}}{{this.Port}}": {
   "Type": "AWS::ElasticLoadBalancingV2::Listener",
   "Properties": {
     {{#if this.Certificates}}"Certificates": [{{#each this.Certificates}}{"CertificateArn":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
@@ -45,7 +45,7 @@
 }
 
   {{#each this.Rules}}
-  ,"elbv2lisrul{{sanitize ../../Name ''}}{{@index}}": {
+  ,"elbv2lisrul{{sanitize ../../Name ''}}{{../this.Port}}{{@index}}": {
     "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
     "Properties": {
       "Actions": [ {{#each this.Actions}}{ "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}{{#unless @last}},{{/unless}}{{/each}}],
@@ -54,7 +54,7 @@
         {{#each this.Values}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
         ]}{{#unless @last}},{{/unless}}{{/each}}
       ],
-      "ListenerArn": {"Ref": "elbv2lis{{sanitize ../../Name ''}}{{@../index}}" },
+      "ListenerArn": {"Ref": "elbv2lis{{sanitize ../../Name ''}}{{../this.Port}}" },
       "Priority": {{this.Priority}}
     }
   }{{/each}}
