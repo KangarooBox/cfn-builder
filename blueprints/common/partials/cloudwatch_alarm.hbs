@@ -6,6 +6,7 @@
 "cldwalrm{{sanitize this.Name ''}}": {
    "Type":"AWS::CloudWatch::Alarm",
    "Properties": {
+      {{#if this.AlarmName}}"AlarmName": "{{this.AlarmName}}",{{/if}}
       {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
       {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
         {{#startsWith "arn:aws:" this}}"{{this}}"{{else}}{"Ref":"snst{{this}}"}{{/startsWith}}
@@ -36,7 +37,6 @@
       {{#if this.InsufficientDataActions}}"InsufficientDataActions": [ "{{this.}}", ... ],{{/if}}
       {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}{"Ref":"snst{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
       {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
-      "AlarmName": "{{this.Name}}",
       "ComparisonOperator": "{{this.ComparisonOperator}}",
       "EvaluationPeriods": "{{this.EvaluationPeriods}}",
       "MetricName": "{{this.MetricName}}",
