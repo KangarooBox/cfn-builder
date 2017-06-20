@@ -32,7 +32,7 @@
             "Description":"{{this.Description}}",
             "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
             "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
-            "DeleteOnTermination":{{default this.DeleteOnTermination true}},
+            "DeleteOnTermination":{{default (toString this.DeleteOnTermination) true}},
             {{#if this.Ipv6Addresses}}
             "Ipv6AddressCount": {{this.Ipv6Addresses.length}},
             "Ipv6Addresses": [{{#each this.Ipv6Addresses}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
