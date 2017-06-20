@@ -5,18 +5,21 @@
     "cfn-deploy": "./scripts/deploy.js",
     "cfn-diff": "./scripts/diff.js",
     "cfn-update": "./scripts/update-amis.sh",
-    "cfn-watch": "./scripts/watch.js"
+    "cfn-watch": "./scripts/watch.js",
+    "cfn-sync": "./scripts/sync.js"
   },
   "bugs": {
     "url": "https://github.com/rnhurt/cfn-builder/issues"
   },
   "dependencies": {
     "async": "^2.4.0",
-    "aws-sdk": "^2.53.0",
+    "aws-sdk": "^2.65.0",
     "fs-extra": "^3.0.0",
+    "glob": "^7.1.2",
     "handlebars": "^4.0.5",
     "json-stringify-pretty-compact": "^1.0.2",
     "jsondiffpatch": "^0.2.0",
+    "md5": "^2.2.1",
     "swag": "^0.7.0"
   },
   "description": "A command line application that builds AWS CloudFormation templates our of JSON 'blueprints'.",
