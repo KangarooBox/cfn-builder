@@ -8,7 +8,11 @@
   "Type": "AWS::IAM::ManagedPolicy",
   "Properties": {
     "Description": "{{this.Description}}",
-    {{#if this.ManagedPolicyName}}"ManagedPolicyName": "{{this.ManagedPolicyName}}",{{/if}}
+    {{#if this.ManagedPolicyName}}
+      "ManagedPolicyName": "{{this.ManagedPolicyName}}",
+    {{else}}
+      "ManagedPolicyName": "{{this.Name}}",
+    {{/if}}
     {{#if this.Groups}}"Groups": [ {{#each this.Groups}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
     {{#if this.Path}}"Path": "{{this.Path}}",{{/if}}
     {{#if this.Roles}}"Roles": [ {{#each this.Roles}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
