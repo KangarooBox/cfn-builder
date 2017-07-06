@@ -105,6 +105,10 @@
     {{> ec2_networkinterfaceattachment}},
     {{/each~}}
 
+    {{#each EC2VPCs}}
+    {{> ec2_vpc}},
+    {{/each~}}
+
     {{#each EC2VPCEndpoints}}
     {{> ec2_vpcendpoint}},
     {{/each~}}
