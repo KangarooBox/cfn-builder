@@ -3,13 +3,13 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html
  --}}
-"ec2vpc{{this.Name}}":{
+"ec2vpc{{sanitize this.Name ''}}":{
   "Type":"AWS::EC2::VPC",
   "Properties":{
     "CidrBlock": "{{@root.Region.CidrBlock}}",
     "EnableDnsSupport": {{default (toString this.EnableDnsSupport) true}},
     "EnableDnsHostnames": {{default (toString this.EnableDnsHostnames) true}},
     {{#if this.InstanceTenancy}}"InstanceTenancy": "{{this.InstanceTenancy}}",{{/if}}
-    "Tags": {{> tags}}
+    {{> tags}}
   }
 }
