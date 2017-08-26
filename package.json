@@ -6,7 +6,8 @@
     "cfn-diff": "./scripts/diff.js",
     "cfn-update": "./scripts/update-amis.sh",
     "cfn-watch": "./scripts/watch.js",
-    "cfn-sync": "./scripts/sync.js"
+    "cfn-sync": "./scripts/sync.js",
+    "cfn-refresh": "./scripts/refresh.js"
   },
   "bugs": {
     "url": "https://github.com/rnhurt/cfn-builder/issues"
