@@ -1,11 +1,12 @@
 {{!--
- Creates a new EC2 security group.
+  Creates a new EC2 security group.
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
  --}}
 "ec2sg{{this.Name}}" : {
   "Type" : "AWS::EC2::SecurityGroup",
   "Properties" : {
+    {{#if this.GroupName}}"GroupName": "{{this.GroupName}}",{{/if}}
     "GroupDescription" : "{{this.GroupDescription}}",
     "VpcId" : "{{@root.Region.VPCId}}",
     "SecurityGroupIngress" : [
@@ -22,7 +23,7 @@
       { "IpProtocol" : "{{this.IpProtocol}}",
         {{~#if this.FromPort}}"FromPort" : {{this.FromPort}}, "ToPort" : {{this.ToPort}}, {{/if}}
         {{~#if this.CidrIp}}"CidrIp" : "{{this.CidrIp}}" }{{/if}}
-        {{~#if this.SourceSecurityGroupId}} "SourceSecurityGroupId" : { "Ref" : "ec2sg{{this.SourceSecurityGroupId}}" }}{{/if}}
+        {{~#if this.DestinationSecurityGroupId}} "DestinationSecurityGroupId" : { "Ref" : "ec2sg{{this.DestinationSecurityGroupId}}" }}{{/if}}
         {{~#unless @last}},{{/unless}}
       {{/each}}
     ],
