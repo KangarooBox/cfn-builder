@@ -5,6 +5,20 @@
  --}}
 "ec2{{this.Name}}":{
   "Type":"AWS::EC2::Instance",
+  "Metadata":{
+    {{#if this.S3AccessRole}}
+    "AWS::CloudFormation::Authentication":{
+      "S3AccessCreds":{"type":"S3","roleName":{"Ref":"iamr{{this.S3AccessRole}}"}}
+    },
+    {{/if}}
+    "AWS::CloudFormation::Init":{
+    {{#if this.CloudInit}}
+      {{{ inject this.CloudInit }}}
+    {{else}}
+      {{> (whichPartial "cfn_init_" this) }}
+    {{/if}}
+    }
+  },
   "Properties":{
     {{#if this.Affinity}}"Affinity":"{{this.Affinity}}",{{/if}}
     {{#if this.AvailabilityZone}}"AvailabilityZone":"{{this.AvailabilityZone}}",{{/if}}
@@ -53,12 +67,16 @@
     {{#if this.SubnetId}}"SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},{{/if}}
 
     {{#if this.Tenancy}}"Tenancy":"{{this.Tenancy}}",{{/if}}
-    {{#if this.UserData}}"UserData":{ {{{inject this.UserData}}} },{{/if}}
+    {{#if this.UserData}}"UserData": { {{{inject this.UserData}}} },
+    {{else}}
+      {{> (whichPartial "user_data_" this) }},
+    {{/if}}
     {{!-- "Volumes":[ EC2 MountPoint, ... ], --}}
     {{#if this.AdditionalInfo}}"AdditionalInfo":"{{this.AdditionalInfo}}",{{/if}}
 
     "Tags":[
       {{#switch this.AMI}}
+        {{#sdefault}}{ "Key":"Name", "Value":"unk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },{{/sdefault}}
         {{#case 'linux_amazon'}}{ "Key":"Name", "Value":"ala-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'linux_ubuntu'}}{ "Key":"Name", "Value":"alu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'linux_trusty'}}{ "Key":"Name", "Value":"alt-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
@@ -67,8 +85,8 @@
         {{#case 'win2012_core'}}{ "Key":"Name", "Value":"awc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'win2016_full'}}{ "Key":"Name", "Value":"awf-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'win2016_nano'}}{ "Key":"Name", "Value":"awn-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
-        {{#sdefault}}{ "Key":"Name", "Value":"unk-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" },{{/sdefault}}
       {{/switch}}
+      {{#if this.InstanceName}}{ "Key":"Name", "Value":"{{this.InstanceName}}"},{{/if}}
       {{#if @root.Role}} { "Key":"Role",  "Value":"{{@root.Role}}" },{{/if}}
       {{#if @root.Owner}}{ "Key":"Owner", "Value":"{{@root.Owner}}" },{{/if}}
       { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
