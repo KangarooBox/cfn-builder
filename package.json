@@ -12,14 +12,16 @@
     "url": "https://github.com/rnhurt/cfn-builder/issues"
   },
   "dependencies": {
-    "async": "^2.4.0",
-    "aws-sdk": "^2.65.0",
+    "async": "^2.5.0",
+    "aws-sdk": "^2.78.0",
     "fs-extra": "^3.0.0",
     "glob": "^7.1.2",
     "handlebars": "^4.0.5",
+    "install": "^0.10.1",
     "json-stringify-pretty-compact": "^1.0.2",
     "jsondiffpatch": "^0.2.0",
     "md5": "^2.2.1",
+    "semaphore": "^1.1.0",
     "swag": "^0.7.0"
   },
   "description": "A command line application that builds AWS CloudFormation templates our of JSON 'blueprints'.",
