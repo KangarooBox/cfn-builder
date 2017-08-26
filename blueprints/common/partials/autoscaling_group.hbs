@@ -31,6 +31,11 @@
     {{#if this.LoadBalancerNames}}
     "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
+
+    {{#if this.TargetGroupARNs}}
+    "TargetGroupARNs":[{{#each this.TargetGroupARNs}}{"Ref":"elbv2tg{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
+    {{/if}}
+
     "MinSize":{{default this.MinSize 0}},
     "MaxSize":{{default this.MaxSize 0}},
     "DesiredCapacity":{{default this.DesiredCapacity 0}},
