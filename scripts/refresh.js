@@ -6,5 +6,4 @@ var cwd = process.cwd();
 
 refresh(cwd, function(err) {
   if (err) { console.error(err); return; }
-  console.log("Done.");
 });
