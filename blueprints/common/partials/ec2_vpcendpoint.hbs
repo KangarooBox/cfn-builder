@@ -11,6 +11,8 @@
     {{#if this.PolicyDocument}}"PolicyDocument":{ {{{inject this.PolicyDocument}}} },{{/if}}
     {{#if this.RouteTableIds}}"RouteTableIds":[{{#each this.RouteTableIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
     "ServiceName":"{{this.ServiceName}}",
-    "VpcId":"{{@root.Region.VPCId}}"
+    {{#if this.VpcId}}"VpcId": {"Ref":"{{this.VpcId}}"}
+    {{else}}"VpcId":"{{@root.Region.VPCId}}"
+    {{/if}}
   }
 }

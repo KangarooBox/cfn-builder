@@ -21,6 +21,8 @@
   "Type":"AWS::EC2::VPCDHCPOptionsAssociation",
   "Properties":{
     "DhcpOptionsId":{"Ref":"ec2dhcp{{sanitize this.Name ""}}"},
-    "VpcId":"{{@root.Region.VPCId}}"
+    {{#if this.VpcId}}"VpcId": {"Ref":"{{this.VpcId}}"}
+    {{else}}"VpcId":"{{@root.Region.VPCId}}"
+    {{/if}}
   }
 }
