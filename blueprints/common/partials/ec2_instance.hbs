@@ -64,7 +64,19 @@
     {{#if this.SsmAssociations}}"SsmAssociations":[{{#each this.SsmAssociations}}{"Ref":"ssmd{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]{{/if}}
 
     "SourceDestCheck":{{default (toString this.SourceDestCheck) true}},
-    {{#if this.SubnetId}}"SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},{{/if}}
+    {{#if this.SubnetId}}
+      {{#startsWith "subnet-" this.SubnetId}}
+      "SubnetId": "{{this.SubnetId}}",
+      {{else}}
+      {{#if this.SubnetIndex}}
+      "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}
+        "{{lookup this ../SubnetIndex}}"
+      {{/with}},
+      {{else}}
+      "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
+      {{/if}}
+      {{/startsWith}}
+    {{/if}}
 
     {{#if this.Tenancy}}"Tenancy":"{{this.Tenancy}}",{{/if}}
     {{#if this.UserData}}"UserData": { {{{inject this.UserData}}} },
