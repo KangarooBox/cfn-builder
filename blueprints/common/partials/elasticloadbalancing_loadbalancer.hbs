@@ -15,7 +15,13 @@
       {{/each}}
     ],
     {{#if this.Instances}}
-    "Instances": [ {{#each this.Instances}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
+    "Instances": [
+      {{#each this.Instances}}
+        {{#startsWith "i-" this}}"{{this}}"
+        {{else}}{"Ref":"ec2{{this}}"}
+        {{/startsWith}}
+      {{#unless @last}},{{/unless}}{{/each}}
+    ],
     {{/if}}
     {{#if this.HealthCheck}}
     "HealthCheck":{
