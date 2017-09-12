@@ -4,6 +4,10 @@
 var refresh = require("../lib/refresh");
 var cwd = process.cwd();
 
-refresh(cwd, function(err) {
-  if (err) { console.error(err); return; }
-});
+refresh(cwd)
+.then(function(data){
+  console.log(util.inspect(data, {depth: null}));
+})
+.catch(function(err){
+  console.error(err);
+})
