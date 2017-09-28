@@ -3,7 +3,7 @@
   "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvName}})",
 
   "Metadata" : {
-    {{#each Metadata}}{{{this}}},{{/each~}}
+    {{#each Metadata}}{{{this}}},{{/each}}
     "Environment" : "{{EnvName}}",
     "Version"     : "{{EnvVersion}}",
     "ProjectName" : "{{ProjectName}}",
@@ -19,27 +19,27 @@
   "Resources" : {
     {{#each AccessKeys}}
     {{> iam_accesskey}},
-    {{/each~}}
+    {{/each}}
 
     {{#each APIs}}
     {{> apigateway_restapi}},
-    {{/each~}}
+    {{/each}}
 
     {{#each APIResources}}
     {{> apigateway_resource}},
-    {{/each~}}
+    {{/each}}
 
     {{#each APIMethods}}
     {{> apigateway_method}}
-    {{/each~}}
+    {{/each}}
 
     {{#each APIModels}}
     {{> apigateway_model}},
-    {{/each~}}
+    {{/each}}
 
     {{#each APIDomainNames}}
     {{> apigateway_domain_name}},
-    {{/each~}}
+    {{/each}}
 
     {{#each AutoscalingGroups}}
     {{> autoscaling_group}},
@@ -51,83 +51,83 @@
 
     {{#each CloudTrailTrails}}
     {{> cloudtrail_trail}},
-    {{/each~}}
+    {{/each}}
 
     {{#each CloudWatchAlarms}}
     {{> cloudwatch_alarm}},
-    {{/each~}}
+    {{/each}}
 
     {{#each CodeCommitRepositories}}
     {{> codecommit_repository}},
-    {{/each~}}
+    {{/each}}
 
     {{#each CodePipelinePipelines}}
     {{> codepipeline_pipeline}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ConfigConfigurationRecorders}}
     {{> config_configurationrecorder}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ConfigDeliveryChannels}}
     {{> config_deliverychannel}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ConfigRules}}
     {{> config_rule}},
-    {{/each~}}
+    {{/each}}
 
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
-    {{/each~}}
+    {{/each}}
 
     {{#each DirectoryServiceMicrosoftADs}}
     {{> directoryservice_microsoftad}},
-    {{/each~}}
+    {{/each}}
 
     {{#each DirectoryServiceSimpleADs}}
     {{> directoryservice_simplead}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2DHCPOptions}}
     {{> ec2_dhcpoptions}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2EIPs}}
     {{> ec2_eip}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2NetworkInterfaces}}
     {{> ec2_networkinterface}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2NetworkInterfaceAttachments}}
     {{> ec2_networkinterfaceattachment}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2VPCs}}
     {{> ec2_vpc}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2VPCEndpoints}}
     {{> ec2_vpcendpoint}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2NATGateways}}
     {{> ec2_natgateway}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2Instances}}
     {{> ec2_instance}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2Routes}}
     {{> ec2_route}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2RouteTables}}
     {{> ec2_routetable}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2SecurityGroups}}
     {{> ec2_securitygroup}},
@@ -135,47 +135,47 @@
 
     {{#each EC2Subnets}}
     {{> ec2_subnet}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EC2Volumes}}
     {{> ec2_volume}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EFSFilesystems}}
     {{> efs_filesystem}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EFSMountTargets}}
     {{> efs_mounttarget}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ElastiCacheClusters}}
     {{> elasticache_cachecluster}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ElastiCacheParameterGroups}}
     {{> elasticache_parametergroup}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ElasticLoadBalancers}}
     {{> elasticloadbalancing_loadbalancer}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ElasticLoadBalancersV2}}
     {{> elasticloadbalancingv2_loadbalancer}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ElasticLoadBalancerV2TargetGroups}}
     {{> elasticloadbalancingv2_targetgroup}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EventsRules}}
     {{> events_rule}},
-    {{/each~}}
+    {{/each}}
 
     {{#each EventSourceMappings}}
     {{> lambda_event_source_mapping}},
-    {{/each~}}
+    {{/each}}
 
     {{#each IAMInstanceProfiles}}
     {{> iam_instanceprofile}},
@@ -191,76 +191,76 @@
 
     {{#each IAMUsers}}
     {{> iam_user}},
-    {{/each~}}
+    {{/each}}
 
     {{#each IAMUsersToGroups}}
     {{> iam_usertogroupaddition}},
-    {{/each~}}
+    {{/each}}
 
     {{#each IAMGroups}}
     {{> iam_group}},
-    {{/each~}}
+    {{/each}}
 
     {{#each KinesisStreams}}
     {{> kinesis_stream}},
-    {{/each~}}
+    {{/each}}
     {{#each KinesisFirehoses}}
     {{> kinesis_firehose}},
-    {{/each~}}
+    {{/each}}
 
     {{#each LambdaFunctions}}
     {{> lambda_function}},
-    {{/each~}}
+    {{/each}}
 
     {{#each LambdaPermissions}}
     {{> lambda_permission}},
-    {{/each~}}
+    {{/each}}
 
     {{#each LogsLogGroups}}
     {{> logs_loggroup}},
-    {{/each~}}
+    {{/each}}
 
     {{#each LogsMetricFilters}}
     {{> logs_metricfilter}},
-    {{/each~}}
+    {{/each}}
 
     {{#each OpsWorksELBAttachments}}
     {{> opsworks_elasticloadbalancerattachment}},
-    {{/each~}}
+    {{/each}}
 
     {{#each OpsWorksLayers}}
     {{> opsworks_layer}},
-    {{/each~}}
+    {{/each}}
 
     {{#each OpsWorksStacks}}
     {{> opsworks_stack}},
-    {{/each~}}
+    {{/each}}
 
     {{#each RDSInstances}}
     {{> rds_instance}},
-    {{/each~}}
+    {{/each}}
 
     {{#each RedshiftClusters}}
     {{> redshift_cluster}},
-    {{/each~}}
+    {{/each}}
 
     {{#each Route53HealthChecks}}
     {{> route53_healthcheck}},
-    {{/each~}}
+    {{/each}}
 
     {{#each Route53RecordSets}}
     {{> route53_recordset}},
-    {{/each~}}
+    {{/each}}
 
     {{#each S3Buckets}}
     {{#ifEq this.Region @root.Region.Id}}
     {{> s3_bucket}},
     {{/ifEq}}
-    {{/each~}}
+    {{/each}}
 
     {{#each S3BucketPolicies}}
     {{> s3_bucketpolicy}},
-    {{/each~}}
+    {{/each}}
 
     {{#each ScheduledActions}}
     {{> autoscaling_scheduledaction}},
@@ -268,23 +268,27 @@
 
     {{#each SNSTopics}}
     {{> sns_topic}},
-    {{/each~}}
+    {{/each}}
 
     {{#each SNSTopicPolicies}}
     {{> sns_topicpolicy}},
-    {{/each~}}
+    {{/each}}
+
+    {{#each SSMAssociations}}
+    {{> ssm_association}},
+    {{/each}}
 
     {{#each SSMDocuments}}
     {{> ssm_document}},
-    {{/each~}}
+    {{/each}}
 
     {{#each SQSQueues}}
     {{> sqs_queue}},
-    {{/each~}}
+    {{/each}}
 
     {{#each SQSQueuePolicies}}
     {{> sqs_queue_policy}},
-    {{/each~}}
+    {{/each}}
 
     "JSONTerminator" : {
       "Type" : "AWS::CloudFormation::WaitConditionHandle",

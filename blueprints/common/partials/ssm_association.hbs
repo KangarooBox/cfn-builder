@@ -1,0 +1,29 @@
+{{!--
+  Associates an Amazon EC2 Systems Manager (SSM) document with EC2 instances that contain a configuration agent to
+  process the document.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html
+ --}}
+"ssmd{{sanitize this.Name ""}}":{
+  "Type": "AWS::SSM::Association",
+  "Properties": {
+    {{#if this.DocumentVersion}}"DocumentVersion": "{{this.DocumentVersion}}",{{/if}}
+    {{#if this.InstanceId}}"InstanceId":
+      {{#startsWith "i-" this.InstanceId}}"{{this.InstanceId}}"
+      {{else}}{"Ref":"ec2{{this.InstanceId}}"}{{/startsWith}},
+    {{/if}}
+
+    {{#if this.Targets}}"Targets": [{"Key": "InstanceIds", "Values":[
+    {{#each this.Targets}}
+      {{#startsWith "i-" this}}"{{this}}"{{else}}{"Ref":"ec2{{this}}"}{{/startsWith}}{{#unless @last}},{{/unless}}
+    {{/each}}
+    ]}],{{/if}}
+
+    {{#if this.Parameters}}"Parameters": { {{{inject this.Parameters }}} },{{/if}}
+
+
+    {{#if this.ScheduleExpression}}"ScheduleExpression": "{{this.}}",{{/if}}
+    "Name": "{{this.Name}}"
+  }
+}
+
