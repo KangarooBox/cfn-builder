@@ -98,6 +98,7 @@
         {{#case 'win2016_full'}}{ "Key":"Name", "Value":"awf-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
         {{#case 'win2016_nano'}}{ "Key":"Name", "Value":"awn-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}" }, {{/case}}
       {{/switch}}
+      {{#if this.PatchGroup}}{ "Key": "Patch Group", "Value": "{{this.PatchGroup}}" },{{/if}}
       {{#if this.InstanceName}}{ "Key":"Name", "Value":"{{this.InstanceName}}"},{{/if}}
       {{#if @root.Role}} { "Key":"Role",  "Value":"{{@root.Role}}" },{{/if}}
       {{#if @root.Owner}}{ "Key":"Owner", "Value":"{{@root.Owner}}" },{{/if}}
