@@ -1,0 +1,13 @@
+{{!--
+  Adds AWS Identity and Access Management (IAM) users to a group.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-addusertogroup.html
+ --}}
+"iamu2g{{this.GroupName}}" : {
+   "Type": "AWS::IAM::UserToGroupAddition",
+   "Properties": {
+      "GroupName": "{{this.GroupName}}",
+      "Users": [ {{#each this.Users}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]
+   },
+   "DependsOn": [ "iamg{{this.GroupName}}" ]
+}
