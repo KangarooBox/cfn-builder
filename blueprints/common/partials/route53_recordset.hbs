@@ -16,12 +16,19 @@
     {{#with (lookupById @root.DNS @root.Route53::RecordSet.External.Domain)}}
     "HostedZoneId":"{{this.HostedZoneId}}",
     {{/with}}
-    "Name":"{{#if this.DNSName}}{{this.DNSName}}{{else}}{{lowercase @root.ProjectName}}.{{lowercase @root.Region.Name}}.{{@root.EnvVersion}}.{{@root.EnvType}}.{{@root.Route53::RecordSet.External.Domain}}.{{/if}}",
+    "Name":"{{#if this.DNSName}}{{this.DNSName}}{{else}}{{lowercase @root.ProjectName}}.{{lowercase @root.Region.Name}}.{{@root.EnvVersion}}.{{@root.EnvName}}.{{@root.Route53::RecordSet.External.Domain}}.{{/if}}",
     {{/is}}
     "Type":"{{default this.Type "CNAME"}}",
     "TTL":{{default this.TTL 300}},
-    "ResourceRecords":[ {{#if this.ResourceRecord}}{"Fn::GetAtt":["elb{{this.ResourceRecord}}","DNSName"]}{{/if}}
-      {{#each this.ResourceRecords}}{"Fn::GetAtt":["elb{{this}}","DNSName"]}{{#unless @last}},{{/unless}}{{/each}}
+    "ResourceRecords":[
+      {{!-- {{#if this.ResourceRecord}}{"Fn::GetAtt":["elb{{this.ResourceRecord}}","DNSName"]}{{/if}} --}}
+      {{#each this.ResourceRecords}}
+        {{#ifObject this}}
+          { {{{inject this}}} }
+        {{else}}
+        {"Fn::GetAtt":["elb{{this}}","DNSName"]}
+        {{/ifObject}}
+      {{#unless @last}},{{/unless}}{{/each}}
     ]
   }
 }
