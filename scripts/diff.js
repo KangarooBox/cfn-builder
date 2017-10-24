@@ -1,18 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-var diff = require('../lib/diff');
+// Local
+var utilities = require("../lib/utilities");
+var diff      = require('../lib/diff');
 
-if (process.argv.length != 4) {
-  console.error("Usage: diff <environment_name> <project_name>");
-  return;
-}
+var args  = utilities.parseArguments();
+var cwd   = process.cwd();
 
-var cwd = process.cwd();
-var env_name = process.argv[2];
-var project_name = process.argv[3];
-
-diff(cwd, env_name, project_name, function(err){
+diff(cwd, args.envName, args.projectName, function(err){
   if (err) {
     console.error(err);
     return;
