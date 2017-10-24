@@ -10,21 +10,15 @@ var prompt  = require('prompt');
 
 // Local
 var utilities = require("../lib/utilities");
+var changeSet = require("../lib/changeSet");
 
 const SAFE    = 20;
 const UNSAFE  = 21;
 const ERROR   = 22;
 
-if (process.argv.length != 4) {
-  console.error("Usage: cnf-changeSet <environment_name> <project_name>");
-  return;
-}
+const args = utilities.parseArguments();
 
-var envName = process.argv[2];
-var projectName = process.argv[3];
-var changeSet = require("../lib/changeSet");
-
-changeSet.create(envName, projectName)
+changeSet.create(args.envName, args.projectName, args.region)
   .then(function(data){
     switch(typeof(data)) {
       // We got back a string which is probably a status update
@@ -81,68 +75,71 @@ function displayResults(cs) {
 
   // If this changeset is safe to deploy, ask the user if they actually want to deploy it
   if(isSafe){
-    prompt.get({ properties: {deploy: {
-      type: 'boolean',
-      required: true,
-      description: "Would you like to deploy this changeset? (true/false)".green,
-      message: "Please answer True or False",
-      default: true
-    }}}, function(err, result){
-      if(result.deploy) {
-        changeSet.execute(cs)
-        .then(function(data){
-          console.log(data);
-          process.exitCode = SAFE;
-        })
-        .catch(function(err){
-          console.error("Changeset not executed: %s", err);
-          process.exitCode = ERROR;
-        })
-      } else {
-        changeSet.delete(cs)
-        .then(function(data){
-          console.log("Changeset deleted.");
-          process.exitCode = SAFE;
-        })
-        .catch(function(err){
-          console.error("Changeset not deleted: %s", err);
-          process.exitCode = ERROR;
-        })
-      }
-    })
-
+    if(args.unattended){
+      deployChangeSet(cs);
+    } else {
+      prompt.get({ properties: {deploy: {
+        type: 'boolean',
+        required: true,
+        description: "Would you like to deploy this changeset? (true/false)".green,
+        message: "Please answer True or False",
+        default: true
+      }}}, function(err, result){
+        if(result.deploy) {
+          deployChangeSet(cs);
+        } else {
+          deleteChangeSet(cs);
+        }
+      })
+    }
   } else {
-    prompt.get({ properties: {deploy: {
-      type: 'boolean',
-      required: true,
-      description: "This changeset is NOT safe to deploy.  Are you sure you want to deploy this changeset? (true/false)".red,
-      message: "Please answer True or False",
-      default: false
-    }}}, function(err, result){
-      if(result.deploy) {
-        changeSet.execute(cs)
-        .then(function(data){
-          console.log(data);
-          process.exitCode = UNSAFE;
-        })
-        .catch(function(err){
-          console.error("Changeset not executed: %s", err);
-          process.exitCode = ERROR;
-        })
-      } else {
-        changeSet.delete(cs)
-        .then(function(data){
-          console.log("Changeset deleted.");
-          process.exitCode = UNSAFE;
-        })
-        .catch(function(err){
-          console.error("Changeset not deleted: %s", err);
-          process.exitCode = ERROR;
-        })
-      }
+    if(args.unattended){
+      deleteChangeSet(cs);
+    } else {
+      prompt.get({ properties: {deploy: {
+        type: 'boolean',
+        required: true,
+        description: "This changeset is NOT safe to deploy.  Are you sure you want to deploy this changeset? (true/false)".red,
+        message: "Please answer True or False",
+        default: false
+      }}}, function(err, result){
+        if(result.deploy) {
+          deployChangeSet(cs);
+        } else {
+          deleteChangeSet(cs);
+        }
 
-      console.log("https://console.aws.amazon.com/cloudformation/home?#/changeset/detail?changeSetId=%s", cs.ChangeSetId);
-      console.log(util.inspect(cs, {depth:null}));
-    })
+        console.log("https://console.aws.amazon.com/cloudformation/home?#/changeset/detail?changeSetId=%s", cs.ChangeSetId);
+        // console.log(util.inspect(cs, {depth:null}));
+      })
+    }
   }
 }
+
+
+// Try to deploy the changeset
+function deployChangeSet(cs){
+  changeSet.execute(cs)
+  .then(function(data){
+    console.log(data);
+    process.exitCode = SAFE;
+  })
+  .catch(function(err){
+    console.error("Changeset not executed: %s", err);
+    process.exitCode = ERROR;
+  })
+}
+
+// Try to delete the changeset
+function deleteChangeSet(cs){
+  changeSet.delete(cs)
+  .then(function(data){
+    console.log("Changeset deleted.");
+    process.exitCode = UNSAFE;
+  })
+  .catch(function(err){
+    console.error("Changeset not deleted: %s", err);
+    process.exitCode = ERROR;
+  })
+}
+
