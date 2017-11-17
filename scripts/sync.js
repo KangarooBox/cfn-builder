@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 "use strict";
 
 var sync = require("../lib/sync");

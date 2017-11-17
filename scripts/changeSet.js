@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 "use strict";
 
 // NPM
@@ -20,7 +21,7 @@ const args = utilities.parseArguments();
 
 changeSet.create(args.envName, args.projectName, args.region)
   .then(function(data){
-    switch(typeof(data)) {
+    switch(typeof (data)) {
       // We got back a string which is probably a status update
       case 'string':
         console.log(data);
@@ -49,9 +50,7 @@ changeSet.create(args.envName, args.projectName, args.region)
 
 
 function printTable(cs) {
-  var table = new Table({
-    head: ['Action', 'Logical ID', 'Resource Type', 'Replacment?']
-  });
+  var table = new Table({head: ['Action', 'Logical ID', 'Resource Type', 'Replacement?']});
 
   _.each(cs.Changes, function(change){
     table.push([
@@ -78,13 +77,17 @@ function displayResults(cs) {
     if(args.unattended){
       deployChangeSet(cs);
     } else {
-      prompt.get({ properties: {deploy: {
+      prompt.get({
+ properties: {
+deploy: {
         type: 'boolean',
         required: true,
-        description: "Would you like to deploy this changeset? (true/false)".green,
+        description: "Would you like to deploy this ChangeSet? (true/false)".green,
         message: "Please answer True or False",
         default: true
-      }}}, function(err, result){
+      }
+}
+}, function(err, result){
         if(result.deploy) {
           deployChangeSet(cs);
         } else {
@@ -92,17 +95,20 @@ function displayResults(cs) {
         }
       })
     }
-  } else {
-    if(args.unattended){
+  } else if(args.unattended){
       deleteChangeSet(cs);
     } else {
-      prompt.get({ properties: {deploy: {
+      prompt.get({
+ properties: {
+deploy: {
         type: 'boolean',
         required: true,
-        description: "This changeset is NOT safe to deploy.  Are you sure you want to deploy this changeset? (true/false)".red,
+        description: "This ChangeSet is NOT safe to deploy.  Are you sure you want to deploy this ChangeSet? (true/false)".red,
         message: "Please answer True or False",
         default: false
-      }}}, function(err, result){
+      }
+}
+}, function(err, result){
         if(result.deploy) {
           deployChangeSet(cs);
         } else {
@@ -113,7 +119,6 @@ function displayResults(cs) {
         // console.log(util.inspect(cs, {depth:null}));
       })
     }
-  }
 }
 
 
@@ -125,7 +130,7 @@ function deployChangeSet(cs){
     process.exitCode = SAFE;
   })
   .catch(function(err){
-    console.error("Changeset not executed: %s", err);
+    console.error("ChangeSet not executed: %s", err);
     process.exitCode = ERROR;
   })
 }
@@ -134,11 +139,11 @@ function deployChangeSet(cs){
 function deleteChangeSet(cs){
   changeSet.delete(cs)
   .then(function(data){
-    console.log("Changeset deleted.");
+    console.log("ChangeSet deleted.");
     process.exitCode = UNSAFE;
   })
   .catch(function(err){
-    console.error("Changeset not deleted: %s", err);
+    console.error("ChangeSet not deleted: %s", err);
     process.exitCode = ERROR;
   })
 }
