@@ -1,0 +1,17 @@
+{{!--
+  Creates a hosted zone, which can contain a collection of record sets for a domain.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html
+ --}}
+ "r53hz{{sanitize this.Name ""}}":{
+  "Type": "AWS::Route53::HostedZone",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.HostedZoneConfig}}"HostedZoneConfig": {{{inject this.HostedZoneConfig}}},{{/if}}
+    {{#if this.VPCs}}"VPCs": [
+      {{#each this.VPCs}}
+      {{/each}}
+    ],{{/if}}
+    {{> tags PropertyID="HostedZoneTags"}}
+  }
+}

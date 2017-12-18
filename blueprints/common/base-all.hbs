@@ -45,6 +45,10 @@
     {{> autoscaling_group}},
     {{/each}}
 
+    {{#each AutoScalingScalingPolicies}}
+    {{> autoscaling_scalingpolicy}},
+    {{/each}}
+
     {{#each AutoscalingLaunchConfigurations}}
     {{> autoscaling_launchconfiguration}},
     {{/each}}
@@ -246,6 +250,10 @@
 
     {{#each Route53HealthChecks}}
     {{> route53_healthcheck}},
+    {{/each}}
+
+    {{#each Route53HostedZones}}
+    {{> route53_hostedzone}},
     {{/each}}
 
     {{#each Route53RecordSets}}
