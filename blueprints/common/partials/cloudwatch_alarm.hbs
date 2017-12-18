@@ -9,7 +9,12 @@
       {{#if this.AlarmName}}"AlarmName": "{{this.AlarmName}}",{{/if}}
       {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
       {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
-        {{#startsWith "arn:aws:" this}}"{{this}}"{{else}}{"Ref":"snst{{this}}"}{{/startsWith}}
+        {{#ifObject this}} { {{{inject this}}} }
+        {{else}}
+          {{#startsWith "arn:aws:" this}}"{{this}}"
+          {{else}} {"Ref":"snst{{this}}"}
+          {{/startsWith}}
+        {{/ifObject}}
       {{#unless @last}},{{/unless}}{{/each}}
       ],{{/if}}
       {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
@@ -37,6 +42,7 @@
       {{#if this.InsufficientDataActions}}"InsufficientDataActions": [ "{{this.}}", ... ],{{/if}}
       {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}{"Ref":"snst{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
       {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
+      {{#if this.TreatMissingData}}"TreatMissingData": "{{this.TreatMissingData}}",{{/if}}
       "ComparisonOperator": "{{this.ComparisonOperator}}",
       "EvaluationPeriods": "{{this.EvaluationPeriods}}",
       "MetricName": "{{this.MetricName}}",
