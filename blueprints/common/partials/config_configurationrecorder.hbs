@@ -1,0 +1,25 @@
+{{!--
+  Describes the AWS resource types for which AWS Config records configuration changes. The configuration recorder
+  stores the configurations of the supported resources in your account as configuration items.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-configurationrecorder.html
+ --}}
+"concr{{this.Name}}": {
+  "Type": "AWS::Config::ConfigurationRecorder",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.RecordingGroup}}"RecordingGroup":
+    {{#with this.RecordingGroup}}
+      { "AllSupported": {{default this.AllSupported false}},
+        "IncludeGlobalResourceTypes": {{default this.IncludeGlobalResourceTypes false}},
+        "ResourceTypes": [ {{#each this.ResourceTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]
+      },
+    {{/with}}
+    {{/if}}
+    "RoleARN":{{#startsWith "arn:aws:" this.Role}}
+      "{{this.Role}}"
+    {{else}}
+      { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] }
+    {{/startsWith}}
+  }
+}

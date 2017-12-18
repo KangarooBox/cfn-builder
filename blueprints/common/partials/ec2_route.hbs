@@ -1,0 +1,23 @@
+{{!--
+  Creates a new route in a route table within a VPC. The route's target can be either a gateway attached to
+  the VPC or a NAT instance in the VPC.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route.html
+ --}}
+"ec2route{{this.Name}}": {
+  "Type": "AWS::EC2::Route",
+  "Properties": {
+    {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
+    {{#if this.DestinationIpv6CidrBlock}}"DestinationIpv6CidrBlock": "{{this.DestinationIpv6CidrBlock}}",{{/if}}
+    {{#if this.EgressOnlyInternetGatewayId}}"EgressOnlyInternetGatewayId": "{{this.EgressOnlyInternetGateway}}",{{/if}}
+    {{#if this.GatewayId}}"GatewayId": "{{this.GatewayId}}",{{/if}}
+    {{#if this.InstanceId}}"InstanceId": "{{this.InstanceId}}",{{/if}}
+    {{#if this.NatGatewayId}}"NatGatewayId":
+      {{#startsWith "rtb-" this.NatGatewayId}}"{{this.NatGatewayId}}"
+      {{else}}{"Ref":"ec2nat{{sanitize this.NatGatewayId ''}}"}{{/startsWith}},
+    {{/if}}
+    {{#if this.NetworkInterfaceId}}"NetworkInterfaceId": "{{this.NetworkInterfaceId}}",{{/if}}
+    {{#if this.VpcPeeringConnectionId}}"VpcPeeringConnectionId": "{{this.VpcPeeringConnectionId}}",{{/if}}
+    "RouteTableId": "{{this.RouteTableId}}"
+  }
+}

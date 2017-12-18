@@ -1,0 +1,12 @@
+{{!--
+  Creates a new, empty file system in Amazon Elastic File System (Amazon EFS).
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-efs-filesystem.html
+ --}}
+"efsfs{{this.Name}}":{
+  "Type": "AWS::EFS::FileSystem",
+  "Properties": {
+    {{> tags PropertyID="FileSystemTags"}}
+    {{#if this.Perofrmanc}},"PerformanceMode": "{{this.PerformanceMode}}"{{/if}}
+  }
+}

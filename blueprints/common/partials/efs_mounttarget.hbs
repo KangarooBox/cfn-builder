@@ -1,0 +1,20 @@
+{{!--
+  Creates a mount target for an Amazon Elastic File System (Amazon EFS) file system.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-efs-mounttarget.html
+ --}}
+
+{{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
+"efsmt{{this.Name}}{{@index}}":{
+  "Type": "AWS::EFS::MountTarget",
+  "Properties": {
+    "FileSystemId": {"Ref": "efsfs{{../FileSystem}}"},
+    {{#if ../IpAddress}}"IpAddress": "{{../IpAddress}}",{{/if}}
+    "SecurityGroups":[{{#each ../SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    {{!-- "SubnetId": "{{first (lookupByNode @root.Region.SubnetIds this.SubnetId)}}" --}}
+    "SubnetId": "{{this}}"
+  }
+}{{#unless @last}},{{/unless}}
+
+
+{{/each}}

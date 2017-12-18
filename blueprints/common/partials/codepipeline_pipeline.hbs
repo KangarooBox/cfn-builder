@@ -1,0 +1,40 @@
+{{!--
+  Creates an AWS CodePipeline Pipeline
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codepipeline-pipeline.html
+ --}}
+"cpp{{this.Name}}": {
+  "Type": "AWS::CodePipeline::Pipeline",
+  "Properties": {
+    "ArtifactStore": {
+      {{#if this.ArtifactStore.EncryptionKey}}"EncryptionKey": {{this.ArtifactStore.EncryptionKey}},{{/if}}
+      "Location": "{{this.ArtifactStore.Location}}",
+      "Type": "S3"
+    },
+    {{#if this.DisableInboundStageTransitions}}
+    "DisableInboundStageTransitions": [
+      {{#each this.DisableInboundStageTransitions}}
+      { "Reason": "{{this.Reason}}", "StageName": "{{this.StageName}}"}{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    {{/if}}
+    "Name": "{{this.Name}}",
+    "RestartExecutionOnUpdate" : {{default this.RestartExecutionOnUpdate "false"}},
+    "Role": { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] },
+    "Stages": [
+      {{#each this.Stages}}
+      { "Actions": [
+        {{#each this.Actions}}
+
+        {{#unless @last}},{{/unless}}{{/each}}
+        ],
+        "Blockers": [
+        {{#each this.Blockers}}
+        {{#unless @last}},{{/unless}}{{/each}}
+        ],
+        "Name": "{{this.Name}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  }
+}

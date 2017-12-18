@@ -1,0 +1,26 @@
+{{!--
+  Describes a network interface in an Elastic Compute Cloud (EC2) instance for AWS CloudFormation.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html
+ --}}
+"neti{{this.Name}}":{
+   "Type": "AWS::EC2::NetworkInterface",
+   "Properties": {
+      "Description": "{{this.Description}}",
+      {{#if this.GroupSet}}
+      "GroupSet":[{{#each this.GroupSet}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+      {{/if}}
+
+      {{#if this.Ipv6Addresses}}
+      "Ipv6AddressCount": {{this.Ipv6Addresses.length}},
+      "Ipv6Addresses": [{{#each this.Ipv6Addresses}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+      {{/if}}
+
+      {{#if this.PrivateIpAddress}}"PrivateIpAddress": "{{this.PrivateIpAddress}}",{{/if}}
+      {{#if this.PrivateIpAddresses}}"PrivateIpAddresses": [ PrivateIpAddressSpecification, ... ],{{/if}}
+      {{#if this.SecondaryPrivateIpAddressCount}}"SecondaryPrivateIpAddressCount": Integer,{{/if}}
+      "SourceDestCheck": {{default this.SourceDestCheck true}},
+      "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
+      {{> tags }}
+   }
+}
