@@ -9,7 +9,7 @@
   "Type":"AWS::EC2::Subnet",
   "Properties":{
     "AvailabilityZone": "{{@root.Region.Id}}{{this}}",
-    "VpcId": "{{@root.Region.VPCId}}",
+    {{> vpcid ../this}},
     {{#with (lookupByAZ (lookupByNode @root.Region.SubnetAddresses ../Name) this)}}
     "CidrBlock":"{{this.CidrBlock}}",
     {{/with}}
