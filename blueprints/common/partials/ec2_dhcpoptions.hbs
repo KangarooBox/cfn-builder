@@ -7,7 +7,11 @@
   "Type":"AWS::EC2::DHCPOptions",
   "Properties":{
     "DomainName":"{{default this.DomainName 'ec2.internal'}}",
-    {{#if this.DomainNameServers}}"DomainNameServers":[{{#each this.DomainNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}], {{/if}}
+    {{#if this.DomainNameServers}}
+      "DomainNameServers":[{{#each this.DomainNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+    {{else}}
+      "DomainNameServers":["AmazonProvidedDNS"],
+    {{/if}}
     {{#if this.NetbiosNameServers}}
     "NetbiosNameServers":[{{#each this.NetbiosNameServers}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
     "NetbiosNodeType":{{this.NetbiosNodeType}},
@@ -21,8 +25,6 @@
   "Type":"AWS::EC2::VPCDHCPOptionsAssociation",
   "Properties":{
     "DhcpOptionsId":{"Ref":"ec2dhcp{{sanitize this.Name ""}}"},
-    {{#if this.VpcId}}"VpcId": {"Ref":"{{this.VpcId}}"}
-    {{else}}"VpcId":"{{@root.Region.VPCId}}"
-    {{/if}}
+    {{> vpcid}}
   }
 }

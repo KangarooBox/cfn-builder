@@ -1,0 +1,11 @@
+{{!--
+  Populates the VpcId resource.
+ --}}
+{{#if this.VPC}}
+  "VpcId": { "Ref":"ec2vpc{{sanitize this.VPC ''}}" }
+{{else}}
+  {{#if this.VpcId}}"VpcId": {"Ref":"{{this.VpcId}}"}
+  {{else}}
+    "VpcId":"{{@root.Region.VPCId}}"
+  {{/if}}
+{{/if}}
