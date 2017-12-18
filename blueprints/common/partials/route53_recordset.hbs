@@ -3,10 +3,14 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html
  --}}
- "53rs{{this.Name}}":{
+ "53rs{{sanitize this.Name ''}}":{
   "Type":"AWS::Route53::RecordSet",
   "Properties":{
-    "Comment":"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
+    "Comment":
+    {{#if this.Comment}}"{{this.Comment}}",
+    {{else}}"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
+    {{/if}}
+
     {{#is this.Scheme "internal"}}
     {{#with (lookupById @root.DNS @root.Route53::RecordSet.Internal.Domain)}}
     "HostedZoneId":"{{this.PrivateHostedZoneId}}",
@@ -26,7 +30,7 @@
         {{#ifObject this}}
           { {{{inject this}}} }
         {{else}}
-        {"Fn::GetAtt":["elb{{this}}","DNSName"]}
+          "{{this}}"
         {{/ifObject}}
       {{#unless @last}},{{/unless}}{{/each}}
     ]
