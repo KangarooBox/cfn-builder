@@ -5,10 +5,11 @@
  --}}
 {{> ec2_eip this}},
 
-"ec2nat{{this.Name}}" : {
+"ec2nat{{sanitize this.Name ''}}" : {
   "Type" : "AWS::EC2::NatGateway",
   "Properties" : {
-    "AllocationId" : {"Ref":"ec2nateip{{this.Name}}"},
-    "SubnetId" : "{{this.SubnetId}}"
+    "AllocationId" : {"Fn::GetAtt" : ["ec2eip{{sanitize this.Name ''}}", "AllocationId"]},
+    "SubnetId" : "{{this.SubnetId}}",
+    {{> tags}}
   }
 }
