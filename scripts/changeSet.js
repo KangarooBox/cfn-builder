@@ -50,14 +50,31 @@ changeSet.create(args.envName, args.projectName, args.region)
 
 
 function printTable(cs) {
-  var table = new Table({head: ['Action', 'Logical ID', 'Resource Type', 'Replacement?']});
+  var table = new Table({
+    head: ['Action', 'Logical ID', 'Resource Type', 'Replacement?'],
+    style: { head:[] }
+  });
 
   _.each(cs.Changes, function(change){
+    var style = null;
+    switch (change.ResourceChange.Action) {
+      case 'Add':
+        style = colors.blue;
+        break;
+      case 'Remove':
+        style = colors.red;
+        break;
+      case 'Modify':
+        style = colors.yellow;
+        break;
+      default:
+        style = colors.green;
+    }
     table.push([
-      change.ResourceChange.Action,
-      change.ResourceChange.LogicalResourceId,
-      change.ResourceChange.ResourceType,
-      _.isUndefined(change.ResourceChange.Replacement) ? '' : change.ResourceChange.Replacement
+      style(change.ResourceChange.Action),
+      style(change.ResourceChange.LogicalResourceId),
+      style(change.ResourceChange.ResourceType),
+      style(_.isUndefined(change.ResourceChange.Replacement) ? '' : change.ResourceChange.Replacement)
     ]);
   })
 
@@ -78,16 +95,16 @@ function displayResults(cs) {
       deployChangeSet(cs);
     } else {
       prompt.get({
- properties: {
-deploy: {
-        type: 'boolean',
-        required: true,
-        description: "Would you like to deploy this ChangeSet? (true/false)".green,
-        message: "Please answer True or False",
-        default: true
-      }
-}
-}, function(err, result){
+        properties: {
+          deploy: {
+            type: 'boolean',
+            required: true,
+            description: "Would you like to deploy this ChangeSet? (true/false)".green,
+            message: "Please answer True or False",
+            default: true
+          }
+        }
+      }, function(err, result){
         if(result.deploy) {
           deployChangeSet(cs);
         } else {
@@ -99,16 +116,16 @@ deploy: {
       deleteChangeSet(cs);
     } else {
       prompt.get({
- properties: {
-deploy: {
-        type: 'boolean',
-        required: true,
-        description: "This ChangeSet is NOT safe to deploy.  Are you sure you want to deploy this ChangeSet? (true/false)".red,
-        message: "Please answer True or False",
-        default: false
-      }
-}
-}, function(err, result){
+        properties: {
+          deploy: {
+            type: 'boolean',
+            required: true,
+            description: "This ChangeSet is NOT safe to deploy.  Are you sure you want to deploy this ChangeSet? (true/false)".red,
+            message: "Please answer True or False",
+            default: false
+          }
+        }
+      }, function(err, result){
         if(result.deploy) {
           deployChangeSet(cs);
         } else {
