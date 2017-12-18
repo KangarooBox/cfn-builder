@@ -1,0 +1,228 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "VPC {{@root.EnvVersion}}{{VPCName}}",
+
+  "Metadata" : {
+    {{#each Metadata}}{{{this}}},{{/each~}}
+    "Environment" : "{{@root.EnvName}}",
+    "Version"     : "{{@root.EnvVersion}}",
+    "ProjectName" : "{{@root.ProjectName}}",
+    "Region"      : "{{@root.Region.Id}}"
+  },
+
+  "Mappings" : {
+    {{#each Mappings}}{{{this}}}
+    {{/each}}
+  },
+
+  "Resources" : {
+    "VPC" : {
+      "Type" : "AWS::EC2::VPC",
+      "Properties" : {
+        "CidrBlock" : "{{@root.Region.CidrBlock}}",
+        "InstanceTenancy" : "default",
+        "EnableDnsSupport" : "true",
+        "EnableDnsHostnames" : "true",
+        {{> tags Name=(concat @root.EnvVersion @root.VPCName "-" @root.Region.CidrBlock) Role="VPC"}}
+      }
+    },
+
+    {{#each EC2DHCPOptions}}
+    {{> ec2_dhcpoptions VpcId="VPC" Name=""}},
+    {{/each}}
+
+    {{#each LogsLogGroups}}
+    {{> logs_loggroup}},
+    {{/each}}
+
+
+    {{!-- Gateways setup --}}
+    "VPNGateway" : {
+      "Type" : "AWS::EC2::VPNGateway",
+      "Properties" : {
+        "Type" : "ipsec.1",
+        {{> tags Name=(concat "VPC " @root.EnvVersion @root.VPCName) Role="VPN Gateway"}}
+      }
+    },
+    "InternetGateway" : {
+      "Type" : "AWS::EC2::InternetGateway",
+      "Properties" : {
+        {{> tags Name=(concat "VPC " @root.EnvVersion @root.VPCName) Role="Internet Gateway"}}
+      }
+    },
+    "iGatewayAttachment" : {
+      "Type" : "AWS::EC2::VPCGatewayAttachment",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VPC" },
+        "InternetGatewayId" : { "Ref" : "InternetGateway" }
+      }
+    },
+    "vpnGatewayAttachment" : {
+      "Type" : "AWS::EC2::VPCGatewayAttachment",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VPC" },
+        "VpnGatewayId" : { "Ref" : "VPNGateway" }
+      }
+    },
+    "ec2veS3": {
+      "Type": "AWS::EC2::VPCEndpoint",
+      "Properties": {
+        "RouteTableIds": [
+        {{#each @root.Region.SubnetAddresses as |subnets name|}}
+          {"Ref":"RouteTable{{name}}"}{{#unless @last}},{{/unless}}
+        {{/each}}
+        ],
+        "ServiceName": "com.amazonaws.{{@root.Region.Id}}.s3",
+        "VpcId": {"Ref":"VPC"}
+      }
+    },
+
+    {{!-- Routing Setup --}}
+    {{#each @root.Region.SubnetAddresses as |subnets name|}}
+    "NetworkACL{{name}}": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": { "Ref": "VPC" },
+        {{> tags Name=(concat name " (" @root.EnvVersion @root.VPCName ")") Role="VPC Network ACL"}}
+      }
+    },
+    "ACLEgress{{name}}": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": true,
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "NetworkACL{{name}}"
+        }
+      }
+    },
+    "ACLIngress{{name}}": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "NetworkACL{{name}}"
+        }
+      }
+    },
+    "RouteTable{{name}}": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "VPC" },
+        {{> tags Name=(concat @root.EnvVersion @root.VPCName " " name) Role="VPC Route Table"}}
+      }
+    },
+
+    {{#ifEq name "Public"}}
+    {{!-- Create a default route for the Public subnet --}}
+    "defrot{{name}}": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": { "Ref": "RouteTable{{name}}" },
+        "GatewayId": { "Ref": "InternetGateway" }
+      },
+      "DependsOn": "InternetGateway"
+    },
+    {{else}}
+
+    {{!-- Create a default route & NAT Gateway for non-Public subnets --}}
+    {{#unless @root.Features.DisableNATGateway}}
+    "ec2rout{{name}}": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": { "Ref": "RouteTable{{name}}" },
+        "NatGatewayId": { "Ref": "ec2ng{{name}}" }
+      }
+    },
+    "ec2eipNAT{{name}}": {
+       "Type": "AWS::EC2::EIP",
+       "Properties": {
+          "Domain": "vpc"
+       }
+    },
+    {{!-- Only create 1 NAT Gateway per subnet type; those things are expensive --}}
+    {{#with @root.Region.AvailabilityZones.[0]}}
+    "ec2ng{{name}}": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {"Fn::GetAtt":["ec2eipNAT{{name}}","AllocationId"]},
+        "SubnetId": {"Ref":"snPublic{{this}}"},
+        {{> tags Name=(concat @root.EnvVersion @root.VPCName "(" this ")") Role="NAT Gateway"}}
+      },
+      "DependsOn": ["sn{{name}}{{this}}","ec2eipNAT{{name}}"]
+    },
+    {{/with}}
+    {{!-- Give the NAT Gateway a DNS record so it can be whitelisted --}}
+    "r53rsNAT{{name}}":{
+      "Type":"AWS::Route53::RecordSet",
+      "Properties":{
+        "Comment":"VPC NAT ({{@root.EnvVersion}}{{@root.EnvName}})",
+        {{#if @root.DNS}}
+          {{#with (lookupById @root.DNS @root.Route53::RecordSet.External.Domain)}}
+          "HostedZoneId":"{{this.HostedZoneId}}",
+          {{/with}}
+        {{/if}}
+        "Name":"{{lowercase @root.ProjectName}}nat.{{lowercase @root.Region.Name}}.{{lowercase name}}.{{lowercase @root.EnvVersion}}.{{lowercase @root.EnvName}}.{{@root.Route53::RecordSet.External.Domain}}.",
+        "Type":"A",
+        "TTL":300,
+        "ResourceRecords":[{"Ref":"ec2eipNAT{{name}}"}]
+      }
+    },
+    {{/unless}}
+    {{/ifEq}}
+
+    {{#each subnets}}
+    "sn{{name}}{{this.AZ}}": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "{{this.CidrBlock}}",
+        "AvailabilityZone": "{{@root.Region.Id}}{{this.AZ}}",
+        "VpcId": { "Ref": "VPC" },
+        {{> tags Name=(concat @root.EnvVersion @root.VPCName " " name "(" this.AZ ")") Role="VPC Subnet"}}
+      }
+    },
+    "snACL{{name}}{{this.AZ}}": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": { "Ref": "NetworkACL{{name}}" },
+        "SubnetId": { "Ref": "sn{{name}}{{this.AZ}}" }
+      }
+    },
+    "snr{{name}}{{this.AZ}}": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": { "Ref": "RouteTable{{name}}" },
+        "SubnetId": { "Ref": "sn{{name}}{{this.AZ}}" }
+      }
+    }
+
+    {{#unless @last}},{{/unless}}
+    {{/each}}{{#unless @last}},{{/unless}}
+    {{/each}}
+  },
+
+  "Outputs": {
+    "VPC": {
+      "Description": "VPC ID",
+      "Value": { "Ref": "VPC" },
+      "Export": { "Name": "vpc{{@root.EnvName}}id"}
+    },
+    {{#each @root.Region.SubnetAddresses as |subnets name|}}
+    {{#each subnets}}
+    "Subnet{{name}}{{this.AZ}}": {
+      "Description": "{{name}} Subnet ID",
+      "Value": { "Ref": "sn{{name}}{{this.AZ}}" },
+      "Export": { "Name": "vpc{{@root.EnvName}}subnet{{name}}{{this.AZ}}" }
+    }{{#unless @last}},{{/unless}}
+    {{/each}}{{#unless @last}},{{/unless}}
+    {{/each}}
+  }
+}
