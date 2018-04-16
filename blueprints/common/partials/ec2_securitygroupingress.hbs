@@ -1,0 +1,22 @@
+{{!--
+  Creates a new ingress EC2 security group.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html
+ --}}
+"ec2isg{{this.Name}}": {
+  "Type" : "AWS::EC2::SecurityGroupIngress",
+  "Properties" : {
+    {{#if this.CidrIp}}"CidrIp": "{{this.CidrIp}}" }{{/if}}
+    {{#if this.CidrIpv6}}"CidrIpv6": "{{this.CidrIpv6}}" }{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.GroupName}}"GroupName": "{{this.GroupName}}",{{/if}}
+    {{#if this.SourceSecurityGroupName}}"SourceSecurityGroupName": "{{this.SourceSecurityGroupName}}",{{/if}}
+    {{#if this.SourceSecurityGroupId}}"SourceSecurityGroupId": "{{this.SourceSecurityGroupId}}",{{/if}}
+    {{#if this.SourceSecurityGroupOwnerId}}"SourceSecurityGroupOwnerId": "{{this.SourceSecurityGroupOwnerId}}",{{/if}}
+
+    "FromPort": {{this.FromPort}},
+    "ToPort": {{this.ToPort}},
+    "GroupId": "{{this.GroupId}}",
+    "IpProtocol": "{{this.IpProtocol}}",
+  }
+}

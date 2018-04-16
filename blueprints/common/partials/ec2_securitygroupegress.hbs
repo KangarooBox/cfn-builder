@@ -1,0 +1,20 @@
+{{!--
+  Creates a new egress EC2 security group.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-security-group-egress.html
+ --}}
+"ec2esg{{this.Name}}": {
+  "Type": "AWS::EC2::SecurityGroupEgress",
+  "Properties": {
+    {{#if this.CidrIp}}"CidrIp": "{{this.CidrIp}}" }{{/if}}
+    {{#if this.CidrIpv6}}"CidrIpv6": "{{this.CidrIpv6}}" }{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.DestinationPrefixListId}}"DestinationPrefixListId": "{{this.DestinationPrefixListId}}",{{/if}}
+    {{#if this.DestinationSecurityGroupId}}"DestinationSecurityGroupId": "{{this.DestinationSecurityGroupId}}",{{/if}}
+
+    "FromPort": {{this.FromPort}},
+    "ToPort": {{this.ToPort}},
+    "GroupId": "{{this.GroupId}}",
+    "IpProtocol": "{{this.IpProtocol}}",
+  }
+}
