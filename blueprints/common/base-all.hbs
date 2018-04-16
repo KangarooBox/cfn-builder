@@ -137,12 +137,28 @@
     {{> ec2_securitygroup}},
     {{/each}}
 
+    {{#each EC2SecurityGroupEgresses}}
+    {{> ec2_securitygroupegress}},
+    {{/each}}
+
+    {{#each EC2SecurityGroupIngresses}}
+    {{> ec2_securitygroupingress}},
+    {{/each}}
+
     {{#each EC2Subnets}}
     {{> ec2_subnet}},
     {{/each}}
 
     {{#each EC2Volumes}}
     {{> ec2_volume}},
+    {{/each}}
+
+    {{#each ECSServices}}
+    {{> ecs_service}},
+    {{/each}}
+
+    {{#each ECSTaskDefinitions}}
+    {{> ecs_taskdefinition}},
     {{/each}}
 
     {{#each EFSFilesystems}}

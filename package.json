@@ -2,7 +2,6 @@
   "author": "Richard Hurt",
   "bin": {
     "cfn-build": "./scripts/build.js",
-    "cfn-deploy": "./scripts/deploy.js",
     "cfn-diff": "./scripts/diff.js",
     "cfn-watch": "./scripts/watch.js",
     "cfn-sync": "./scripts/sync.js",

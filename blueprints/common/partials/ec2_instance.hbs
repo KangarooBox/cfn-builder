@@ -102,6 +102,7 @@
       {{#if this.InstanceName}}{ "Key":"Name", "Value":"{{this.InstanceName}}"},{{/if}}
       {{#if @root.Role}} { "Key":"Role",  "Value":"{{@root.Role}}" },{{/if}}
       {{#if @root.Owner}}{ "Key":"Owner", "Value":"{{@root.Owner}}" },{{/if}}
+      {{#each this.Tags}}{ {{{inject this}}} },{{/each}}
       { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
       { "Key":"Version",      "Value":"{{@root.EnvVersion}}" },
       { "Key":"Project",      "Value":"{{@root.ProjectName}}" }
@@ -118,6 +119,7 @@
       {{#each this.AutoRecovery.AlarmActions}}"{{this}}",{{/each}}
       "arn:aws:automate:{{@root.Region.Id}}:ec2:recover"
     ],
+    "TreatMissingData": "notBreaching",
     "ComparisonOperator": "GreaterThanThreshold",
     "EvaluationPeriods": 1,
     "MetricName": "StatusCheckFailed_System",

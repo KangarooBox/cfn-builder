@@ -1,0 +1,38 @@
+{{!--
+  Describes the configuration of an Amazon Elastic Container Service (Amazon ECS) container. The container
+  definitions are passed to the Docker daemon.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html
+ --}}
+{
+  {{#if this.Command}}"Command": [
+    {{#each this.Command}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+  ],{{/if}}
+  {{#if this.Cpu}}"Cpu": {{this.Cpu}},{{/if}}
+  {{#if this.DisableNetworking}}"DisableNetworking": true,{{/if}}
+  {{#if this.DnsSearchDomains}}"DnsSearchDomains": [ String, ... ],{{/if}}
+  {{#if this.DnsServers}}"DnsServers": [ String, ... ],{{/if}}
+  {{#if this.DockerLabels}}"DockerLabels": { String:String, ... },{{/if}}
+  {{#if this.DockerSecurityOptions}}"DockerSecurityOptions": [ String, ... ],{{/if}}
+  {{#if this.EntryPoint}}"EntryPoint": [ String, ... ],{{/if}}
+  {{#if this.Environment}}"Environment": [{{{inject this.Environment}}}],{{/if}}
+  {{#if this.Essential}}"Essential": {{default this.Essential false}},{{/if}}
+  {{#if this.ExtraHosts}}"ExtraHosts": [ HostEntry, ... ],{{/if}}
+  {{#if this.Hostname}}"Hostname": "{{this.Hostname}}",{{/if}}
+  {{#if this.Links}}"Links": [ String, ... ],{{/if}}
+  {{#if this.LinuxParameters}}"LinuxParameters": LinuxParameters,{{/if}}
+  {{#if this.LogConfiguration}}"LogConfiguration": { {{{inject this.LogConfiguration}}} },{{/if}}
+  {{#if this.Memory}}"Memory": {{this.Memory}},{{/if}}
+  {{#if this.MemoryReservation}}"MemoryReservation": {{this.MemoryReservation}},{{/if}}
+  {{#if this.MountPoints}}"MountPoints": [{{#each this.MountPoints}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+  {{#if this.PortMappings}}"PortMappings": [ PortMapping, ... ],{{/if}}
+  {{#if this.Privileged}}"Privileged": true,{{/if}}
+  {{#if this.ReadonlyRootFilesystem}}"ReadonlyRootFilesystem": true,{{/if}}
+  {{#if this.Ulimits}}"Ulimits": [ Ulimit, ... ],{{/if}}
+  {{#if this.User}}"User": "{{this.User}}",{{/if}}
+  {{#if this.VolumesFrom}}"VolumesFrom": [ VolumeFrom, ... ],{{/if}}
+  {{#if this.WorkingDirectory}}"WorkingDirectory": "{{this.WorkingDirectory}}",{{/if}}
+
+  "Image": "{{this.Image}}",
+  "Name": "{{this.Name}}"
+}
