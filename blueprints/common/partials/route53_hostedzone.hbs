@@ -7,10 +7,9 @@
   "Type": "AWS::Route53::HostedZone",
   "Properties": {
     "Name": "{{this.Name}}",
-    {{#if this.HostedZoneConfig}}"HostedZoneConfig": {{{inject this.HostedZoneConfig}}},{{/if}}
+    {{#if this.HostedZoneConfig}}"HostedZoneConfig": { {{{inject this.HostedZoneConfig}}} },{{/if}}
     {{#if this.VPCs}}"VPCs": [
-      {{#each this.VPCs}}
-      {{/each}}
+      {{#each this.VPCs}}{ {{{inject this}}} } {{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}
     {{> tags PropertyID="HostedZoneTags"}}
   }
