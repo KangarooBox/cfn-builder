@@ -1,0 +1,16 @@
+{{!--
+  Requests an AWS Certificate Manager certificate that you can use with aWS services to enable secure connections.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-certificatemanager-certificate.html
+ --}}
+"acmc{{sanitize this.Name ""}}": {
+  "Type": "AWS::CertificateManager::Certificate",
+  "Properties": {
+    "DomainName": "{{this.DomainName}}",
+    {{#if this.DomainValidationOptions}}"DomainValidationOptions": [
+      { "DomainName": "{{this.DomainName}}", "ValidationDomain": "{{this.ValidationDomain}}"}
+    ],{{/if}}
+    {{#if this.SubjectAlternativeNames}}"SubjectAlternativeNames": [ String, ... ],{{/if}}
+    {{> tags}}
+  }
+}

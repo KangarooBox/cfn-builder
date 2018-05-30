@@ -21,6 +21,10 @@
     {{> iam_accesskey}},
     {{/each}}
 
+    {{#each ACMCertificates}}
+    {{> certificatemanager_certificate}},
+    {{/each}}
+
     {{#each APIs}}
     {{> apigateway_restapi}},
     {{/each}}
@@ -161,7 +165,7 @@
     {{> ecs_taskdefinition}},
     {{/each}}
 
-    {{#each EFSFilesystems}}
+    {{#each EFSFileSystems}}
     {{> efs_filesystem}},
     {{/each}}
 

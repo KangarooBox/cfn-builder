@@ -6,7 +6,9 @@
 "efsfs{{this.Name}}":{
   "Type": "AWS::EFS::FileSystem",
   "Properties": {
+    {{#if this.Encrypted}}"Encrypted": "{{this.Encrypted}}",{{/if}}
+    {{#if this.KmsKeyId}}"KmsKeyId": "{{this.KmsKeyId}}",{{/if}}
+    {{#if this.PerformanceMode}}"PerformanceMode": "{{this.PerformanceMode}}",{{/if}}
     {{> tags PropertyID="FileSystemTags"}}
-    {{#if this.Perofrmanc}},"PerformanceMode": "{{this.PerformanceMode}}"{{/if}}
   }
 }
