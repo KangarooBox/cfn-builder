@@ -3,7 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html
  --}}
-"iamu{{this.Name}}" : {
+"iamu{{sanitize this.Name ''}}" : {
   "Type" : "AWS::IAM::User",
   "Properties" : {
     {{#if this.Groups}}"Groups":[{{#each this.Groups}}{"Ref":"iamg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
