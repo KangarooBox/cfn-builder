@@ -30,7 +30,11 @@
         {{#ifObject this}}
           { {{{inject this}}} }
         {{else}}
-          "{{this}}"
+          {{#ifEq ../Type "TXT"}}
+            "\"{{{this}}}\""
+          {{else}}
+            "{{this}}"
+          {{/ifEq}}
         {{/ifObject}}
       {{#unless @last}},{{/unless}}{{/each}}
     ]
