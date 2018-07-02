@@ -60,7 +60,16 @@
     {{#if this.PlacementGroupName}}"PlacementGroupName":"{{this.PlacementGroupName}}",{{/if}}
     {{#if this.PrivateIpAddress}}"PrivateIpAddress":"{{this.PrivateIpAddress}}",{{/if}}
     {{#if this.RamdiskId}}"RamdiskId":"{{this.RamdiskId}}",{{/if}}
-    {{#if this.SecurityGroups}}"SecurityGroupIds":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.SecurityGroups}}"SecurityGroupIds":[
+      {{#each this.SecurityGroups}}
+        {{#startsWith "sg" this}}
+          "{{this}}"
+        {{else}}
+          {"Ref":"ec2sg{{this}}"}
+        {{/startsWith}}
+        {{#unless @last}},{{/unless}}
+      {{/each}}],
+    {{/if}}
     {{#if this.SsmAssociations}}"SsmAssociations":[{{#each this.SsmAssociations}}{"Ref":"ssmd{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]{{/if}}
 
     "SourceDestCheck":{{default (toString this.SourceDestCheck) true}},
