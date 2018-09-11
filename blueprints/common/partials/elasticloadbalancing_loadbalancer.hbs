@@ -34,15 +34,16 @@
     {{/with}}
     },
     {{/if}}
-    "Listeners":[
-    {{#each this.Listeners}}
+    "Listeners":[{{#each this.Listeners}}
       { "LoadBalancerPort":"{{this.LoadBalancerPort}}",
         "InstancePort":"{{this.InstancePort}}",
         {{~#if this.SSLCertificateId}}"SSLCertificateId":"{{this.SSLCertificateId}}",{{/if}}
         "Protocol":"{{this.Protocol}}"
       }{{#unless @last}},{{/unless}}
-    {{/each}}
-    ],
+    {{/each}}],
+
+    {{#if this.Policies}}"Policies":[{{#each this.Policies}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+
     "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
     {{#if this.AccessLoggingPolicy}}
     {{#with this.AccessLoggingPolicy}}
