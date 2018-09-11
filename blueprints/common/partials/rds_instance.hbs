@@ -3,7 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html
  --}}
-"rdssng{{this.Name}}": {
+"rdssng{{sanitize this.Name ''}}": {
   "Type": "AWS::RDS::DBSubnetGroup",
   "Properties": {
     "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
@@ -18,7 +18,7 @@
   }
 },
 
-"rds{{this.Name}}{{this.AvailabilityZone}}":{
+"rds{{sanitize this.Name ''}}{{this.AvailabilityZone}}":{
   "Type":"AWS::RDS::DBInstance",
   {{~#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
   "Properties":{
@@ -35,7 +35,7 @@
       { "Ref":"ec2sg{{this}}" }
       {{/startsWith}}{{#unless @last}}, {{/unless}}
     {{/each}}],
-    "DBSubnetGroupName":{ "Ref": "rdssng{{this.Name}}" },
+    "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.Name ''}}" },
     "PubliclyAccessible":{{default this.PubliclyAccessible "false"}},
     {{~#if this.DBInstanceIdentifier}}
     "DBInstanceIdentifier": "{{this.DBInstanceIdentifier}}",
@@ -46,14 +46,15 @@
     "DBSnapshotIdentifier":"{{this.DBSnapshotIdentifier}}",
     {{else}}
     "Engine":"{{this.Engine}}",
+    {{#if this.EngineVersion}}"EngineVersion":"{{this.EngineVersion}}",{{/if}}
     {{#is this.Parent "dbcluster"}}
     "DBClusterIdentifier":{ "Ref":"dbc{{this.Name}}" },
     {{/is}}
     {{#isnt this.Parent "dbcluster"}}
-    "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
-    {{#isnt this.Engine "sqlserver-web"}}"DBName":"{{lowercase this.Name}}",{{/isnt}}
-    "MasterUsername":"{{this.MasterUsername}}",
-    "MasterUserPassword":"{{{this.MasterUserPassword}}}",
+      "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
+      {{#if this.DBName}}"DBName":"{{this.DBName}}",{{/if}}
+      "MasterUsername":"{{this.MasterUsername}}",
+      "MasterUserPassword":"{{{this.MasterUserPassword}}}",
     {{/isnt}}
     {{/if}}
     {{> tags}}
