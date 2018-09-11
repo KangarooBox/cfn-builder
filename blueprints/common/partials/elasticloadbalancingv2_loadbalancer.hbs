@@ -22,7 +22,10 @@
       {{#unless @last}},{{/unless}}{{/each}}
     ],
     {{/if}}
+    {{#if this.SecurityGroups}}
     "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+    {{/if}}
+    {{#if this.Type}}"Type": "{{this.Type}}",{{/if}}
     {{> tags}}
   }
 },
