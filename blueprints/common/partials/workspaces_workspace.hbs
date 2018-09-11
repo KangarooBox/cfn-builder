@@ -1,0 +1,20 @@
+{{!--
+ Creates an Amazon WorkSpaces workspace, which is a cloud-based desktop experience for end users.
+ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspaces-workspace.html
+ --}}
+"wsws{{sanitize this.Name ''}}": {
+  "Type": "AWS::WorkSpaces::Workspace",
+  "Properties": {
+    "BundleId": "{{this.BundleId}}",
+    "DirectoryId":
+    {{#startsWith "d-" this.DirectoryId}}
+      "{{this.DirectoryId}}"
+    {{else}}
+      { "Ref": "{{this.DirectoryId}}" }
+    {{/startsWith}},
+    "UserName": "{{this.UserName}}",
+    {{#if this.VolumeEncryptionKey}}"VolumeEncryptionKey": "{{this.VolumeEncryptionKey}}",{{/if}}
+    "RootVolumeEncryptionEnabled": {{default (toString this.RootVolumeEncryptionEnabled) false}},
+    "UserVolumeEncryptionEnabled": {{default (toString this.UserVolumeEncryptionEnabled) false}}
+  }
+}

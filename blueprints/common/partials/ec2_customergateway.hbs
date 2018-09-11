@@ -1,0 +1,14 @@
+{{!--
+  Provides information to AWS about your VPN customer gateway device.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customer-gateway.html
+ --}}
+"ec2cgw{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::CustomerGateway",
+  "Properties": {
+    "BgpAsn": "{{this.BgpAsn}}",
+    "IpAddress": "{{this.IpAddress}}",
+    "Type": "{{this.Type}}",
+    {{> tags}}
+  }
+}
