@@ -15,7 +15,13 @@
     "EnableSso":{{default this.EnableSso false}},
     "Size":"{{this.Size}}",
     "VpcSettings":{
-      "SubnetIds":[{{#each this.SubnetIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+      "SubnetIds":[{{#each this.SubnetIds}}
+      {{#startsWith "subnet-" this.SubnetId}}
+        "{{this}}"
+      {{else}}
+        {"Ref": "{{this}}"}
+      {{/startsWith}}
+      {{#unless @last}},{{/unless}}{{/each}}],
       "VpcId":"{{@root.Region.VPCId}}"
     }
   }
