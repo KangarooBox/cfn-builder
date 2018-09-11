@@ -76,6 +76,9 @@
         "VpcId": {"Ref":"VPC"}
       }
     },
+    {{#each EC2VPCEndpoints}}
+    {{> ec2_vpcendpoint VpcId="VPC" }},
+    {{/each}}
 
     {{!-- Routing Setup --}}
     {{#each @root.Region.SubnetAddresses as |subnets name|}}
@@ -161,6 +164,8 @@
     },
     {{/with}}
     {{!-- Give the NAT Gateway a DNS record so it can be whitelisted --}}
+    {{!-- {{> route53_recordset Name="NAT" Comment="VPC NAT Gateway" ResourceRecords=[{"Ref":"ec2eipNAT{{name}}"}]}}, --}}
+    {{#if @root.DNS}}
     "r53rsNAT{{name}}":{
       "Type":"AWS::Route53::RecordSet",
       "Properties":{
@@ -176,6 +181,7 @@
         "ResourceRecords":[{"Ref":"ec2eipNAT{{name}}"}]
       }
     },
+    {{/if}}
     {{/unless}}
     {{/ifEq}}
 
