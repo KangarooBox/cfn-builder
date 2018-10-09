@@ -141,6 +141,10 @@
     {{> ec2_vpcendpointservicepermission}},
     {{/each}}
 
+    {{#each EC2VPCPeeringConnections}}
+    {{> ec2_vpcpeeringconnection}},
+    {{/each}}
+
     {{#each EC2VPNConnections}}
     {{> ec2_vpnconnection}},
     {{/each}}
@@ -179,6 +183,10 @@
 
     {{#each EC2Subnets}}
     {{> ec2_subnet}},
+    {{/each}}
+
+    {{#each EC2SubnetRouteTableAssociations}}
+    {{> ec2_subnetroutetableassociation}},
     {{/each}}
 
     {{#each EC2Volumes}}

@@ -1,0 +1,13 @@
+{{!--
+  Associates a subnet with a route table.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html
+ --}}
+
+"e2snrta{{sanitize Name ''}}":{
+  "Type": "AWS::EC2::SubnetRouteTableAssociation",
+  "Properties": {
+    "RouteTableId": "{{this.RouteTableId}}",
+    "SubnetId": "{{this.SubnetId}}"
+  }
+}
