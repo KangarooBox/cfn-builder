@@ -4,7 +4,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route.html
  --}}
-"ec2route{{this.Name}}": {
+"ec2route{{sanitize this.Name ''}}": {
   "Type": "AWS::EC2::Route",
   "Properties": {
     {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
@@ -16,8 +16,11 @@
       {{#startsWith "rtb-" this.NatGatewayId}}"{{this.NatGatewayId}}"
       {{else}}{"Ref":"ec2nat{{sanitize this.NatGatewayId ''}}"}{{/startsWith}},
     {{/if}}
+    {{#if this.VpcPeeringConnectionId}}"VpcPeeringConnectionId":
+      {{#startsWith "pcx-" this.VpcPeeringConnectionId}}"{{this.VpcPeeringConnectionId}}"
+      {{else}}{"Ref":"ec2vpcpc{{sanitize this.VpcPeeringConnectionId ''}}"}{{/startsWith}},
+    {{/if}}
     {{#if this.NetworkInterfaceId}}"NetworkInterfaceId": "{{this.NetworkInterfaceId}}",{{/if}}
-    {{#if this.VpcPeeringConnectionId}}"VpcPeeringConnectionId": "{{this.VpcPeeringConnectionId}}",{{/if}}
     "RouteTableId": "{{this.RouteTableId}}"
   }
 }

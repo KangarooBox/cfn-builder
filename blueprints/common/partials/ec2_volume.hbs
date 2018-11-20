@@ -7,7 +7,7 @@
   "Type":"AWS::EC2::Volume",
     "Properties" : {
       "AvailabilityZone" : "{{this.AvailabilityZone}}",
-      "Size" : "{{this.Size}}",
+      {{#if this.Size}}"Size" : "{{this.Size}}",{{/if}}
       {{#if this.AutoEnableID}}"AutoEnableIO" : {{this.AutoEnableID}},{{~/if}}
       {{#if this.Encrypted}}"Encrypted" : {{this.Encrypted}},{{~/if}}
       {{#if this.Iops}}"Iops" : {{this.Iops}},{{~/if}}

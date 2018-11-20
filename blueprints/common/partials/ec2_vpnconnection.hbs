@@ -1,0 +1,26 @@
+{{!--
+  Creates a new VPN connection between an existing virtual private gateway and a VPN customer gateway.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection.html
+ --}}
+"ec2vpnc{{sanitize this.Name ''}}":{
+  "Type": "AWS::EC2::VPNConnection",
+  "Properties": {
+    "Type": "{{this.Type}}",
+    "CustomerGatewayId":
+    {{#startsWith "cgw-" this.CustomerGatewayId}}
+      "{{this.CustomerGatewayId}}",
+    {{else}}
+      { "Ref": "ec2cgw{{this.CustomerGatewayId}}" },
+    {{/startsWith}}
+    "StaticRoutesOnly": {{default (toString this.StaticRoutesOnly) false}},
+    "VpnGatewayId":
+    {{#startsWith "vgw-" this.VpnGatewayId}}
+      "{{this.VpnGatewayId}}",
+    {{else}}
+      { "Ref": "ec2cgw{{this.VpnGatewayId}}" },
+    {{/startsWith}}
+    {{!-- "VpnTunnelOptionsSpecifications": [ VpnTunnelOptionsSpecification, ... ], --}}
+    {{> tags}}
+  }
+}

@@ -1,0 +1,21 @@
+{{!--
+  Creates a VPC endpoint service configuration to which service consumers (AWS accounts, IAM users,
+  and IAM roles) can connect.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html
+ --}}
+"ec2ves{{this.Name}}":{
+  "Type": "AWS::EC2::VPCEndpointService",
+  "Properties": {
+    "NetworkLoadBalancerArns": [
+      {{#each this.NetworkLoadBalancerArns}}
+        {{#startsWith 'arn:aws:elasticloadbalancing:' this}}
+          "{{this}}"
+        {{else}}
+          { "Ref":"elbv2{{this}}" }
+        {{/startsWith}}
+      {{#unless @last}},{{/unless}}{{/each}}
+    ],
+    "AcceptanceRequired": {{default (toString this.AcceptanceRequired) true}}
+  }
+}

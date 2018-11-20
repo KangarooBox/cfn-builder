@@ -1,0 +1,19 @@
+{{!--
+  Grant or revoke permissions for service consumers (IAM users, IAM roles, and AWS accounts)
+  to connect to the VPC endpoint service.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservicepermissions.html
+ --}}
+"ec2vesp{{this.Name}}":{
+  "Type": "AWS::EC2::VPCEndpointServicePermissions",
+  "Properties": {
+    {{#if this.AllowedPrincipals}}"AllowedPrincipals": [
+      {{#each this.AllowedPrincipals}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#startsWith "com.amazonaws.vpce" this.ServiceId}}
+    "ServiceId": "{{this.ServiceId}}"
+    {{else}}
+    "ServiceId": {"Ref":"ec2ves{{this.ServiceId}}"}
+    {{/startsWith}}
+  }
+}

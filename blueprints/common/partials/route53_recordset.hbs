@@ -5,23 +5,20 @@
  --}}
  "53rs{{sanitize this.Name ''}}":{
   "Type":"AWS::Route53::RecordSet",
+  {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
   "Properties":{
     "Comment":
     {{#if this.Comment}}"{{this.Comment}}",
     {{else}}"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
     {{/if}}
 
-    {{#is this.Scheme "internal"}}
-    {{#with (lookupById @root.DNS @root.Route53::RecordSet.Internal.Domain)}}
-    "HostedZoneId":"{{this.PrivateHostedZoneId}}",
+    {{#with (lookupById @root.DNS this.DomainName)}}
+      {{#ifEq this.Type ../DomainType}}
+        "HostedZoneId":"{{this.HostedZoneId}}",
+        "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",
+      {{/ifEq}}
     {{/with}}
-    "Name":"{{#if this.DNSName}}{{this.DNSName}}{{else}}{{lowercase @root.ProjectName}}.{{@root.Route53::RecordSet.Internal.Domain}}.{{/if}}",
-    {{else}}
-    {{#with (lookupById @root.DNS @root.Route53::RecordSet.External.Domain)}}
-    "HostedZoneId":"{{this.HostedZoneId}}",
-    {{/with}}
-    "Name":"{{#if this.DNSName}}{{this.DNSName}}{{else}}{{lowercase @root.ProjectName}}.{{lowercase @root.Region.Name}}.{{@root.EnvVersion}}.{{@root.EnvName}}.{{@root.Route53::RecordSet.External.Domain}}.{{/if}}",
-    {{/is}}
+
     "Type":"{{default this.Type "CNAME"}}",
     "TTL":{{default this.TTL 300}},
     "ResourceRecords":[

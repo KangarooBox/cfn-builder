@@ -6,7 +6,11 @@
 "ec2vpc{{sanitize this.Name ''}}":{
   "Type":"AWS::EC2::VPC",
   "Properties":{
-    "CidrBlock": "{{@root.Region.CidrBlock}}",
+    {{#if this.CidrBlock}}
+      "CidrBlock": "{{this.CidrBlock}}",
+    {{else}}
+      "CidrBlock": "{{@root.Region.CidrBlock}}",
+    {{/if}}
     "EnableDnsSupport": {{default (toString this.EnableDnsSupport) true}},
     "EnableDnsHostnames": {{default (toString this.EnableDnsHostnames) true}},
     {{#if this.InstanceTenancy}}"InstanceTenancy": "{{this.InstanceTenancy}}",{{/if}}

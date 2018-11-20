@@ -1,6 +1,10 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvName}})",
+  {{#if this.Description}}
+    "Description": "{{this.Description}}",
+  {{else}}
+    "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvName}})",
+  {{/if}}
 
   "Metadata" : {
     {{#each Metadata}}{{{this}}},{{/each}}
@@ -14,6 +18,10 @@
   "Mappings" : {
     {{#each Mappings}}{{{this}}}
     {{/each}}
+  },
+
+  "Conditions":{
+    "Disabled": {"Fn::Equals":["true","false"]}
   },
 
   "Resources" : {
@@ -97,6 +105,10 @@
     {{> directoryservice_simplead}},
     {{/each}}
 
+    {{#each EC2CustomerGateways}}
+    {{> ec2_customergateway}},
+    {{/each}}
+
     {{#each EC2DHCPOptions}}
     {{> ec2_dhcpoptions}},
     {{/each}}
@@ -119,6 +131,26 @@
 
     {{#each EC2VPCEndpoints}}
     {{> ec2_vpcendpoint}},
+    {{/each}}
+
+    {{#each EC2VPCEndpointServices}}
+    {{> ec2_vpcendpointservice}},
+    {{/each}}
+
+    {{#each EC2VPCEndpointServicePermissions}}
+    {{> ec2_vpcendpointservicepermission}},
+    {{/each}}
+
+    {{#each EC2VPCPeeringConnections}}
+    {{> ec2_vpcpeeringconnection}},
+    {{/each}}
+
+    {{#each EC2VPNConnections}}
+    {{> ec2_vpnconnection}},
+    {{/each}}
+
+    {{#each EC2VPNConnectionRoutes}}
+    {{> ec2_vpnconnectionroute}},
     {{/each}}
 
     {{#each EC2NATGateways}}
@@ -151,6 +183,10 @@
 
     {{#each EC2Subnets}}
     {{> ec2_subnet}},
+    {{/each}}
+
+    {{#each EC2SubnetRouteTableAssociations}}
+    {{> ec2_subnetroutetableassociation}},
     {{/each}}
 
     {{#each EC2Volumes}}
@@ -316,6 +352,10 @@
 
     {{#each SQSQueuePolicies}}
     {{> sqs_queue_policy}},
+    {{/each}}
+
+    {{#each WorkspacesWorkspaces}}
+    {{> workspaces_workspace}},
     {{/each}}
 
     "JSONTerminator" : {

@@ -56,10 +56,12 @@
       {{/each}}
       {{#each this.Tags}}{ {{{inject this}}} },{{/each}}
       {"PropagateAtLaunch":true,"Key":"Environment","Value":"{{@root.EnvName}}"},
-      {"PropagateAtLaunch":true,"Key":"Version","Value":"{{@root.EnvVersion}}"},
       {"PropagateAtLaunch":true,"Key":"Project","Value":"{{@root.ProjectName}}"},
       {"PropagateAtLaunch":true,"Key":"Role","Value":"{{@root.ProjectName}}"},
-      {"PropagateAtLaunch":true,"Key":"Owner","Value":"{{@root.Owner}}"}
+      {{#if this.Role}}{"PropagateAtLaunch":true,"Key":"Role","Value":"{{this.Role}}"},{{/if}}
+      {"PropagateAtLaunch":true,"Key":"Owner","Value":"{{@root.Owner}}"},
+      {{#if this.Owner }}{"PropagateAtLaunch":true,"Key":"Owner","Value":"{{this.Owner}}"},{{/if}}
+      {"PropagateAtLaunch":true,"Key":"Version","Value":"{{@root.EnvVersion}}"}
     ]
   }
 }

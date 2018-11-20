@@ -1,0 +1,18 @@
+{{!--
+  Creates a static route that is associated with a VPN connection between an existing virtual
+  private gateway and a VPN customer gateway
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html
+ --}}
+"ec2vpncr{{sanitize this.Name ''}}":{
+  "Type": "AWS::EC2::VPNConnectionRoute",
+  "Properties": {
+    "DestinationCidrBlock": "{{this.DestinationCidrBlock}}",
+    "VpnConnectionId":
+    {{#startsWith "vpn-" this.VpnConnectionId}}
+      "{{this.VpnConnectionId}}"
+    {{else}}
+      { "Ref": "ec2vpnc{{sanitize this.VpnConnectionId ''}}" }
+    {{/startsWith}}
+  }
+}

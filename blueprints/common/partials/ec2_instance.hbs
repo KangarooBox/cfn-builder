@@ -5,6 +5,7 @@
  --}}
 "ec2{{this.Name}}":{
   "Type":"AWS::EC2::Instance",
+  {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
   "Metadata":{
     {{#if this.S3AccessRole}}
     "AWS::CloudFormation::Authentication":{
@@ -60,7 +61,16 @@
     {{#if this.PlacementGroupName}}"PlacementGroupName":"{{this.PlacementGroupName}}",{{/if}}
     {{#if this.PrivateIpAddress}}"PrivateIpAddress":"{{this.PrivateIpAddress}}",{{/if}}
     {{#if this.RamdiskId}}"RamdiskId":"{{this.RamdiskId}}",{{/if}}
-    {{#if this.SecurityGroups}}"SecurityGroupIds":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.SecurityGroups}}"SecurityGroupIds":[
+      {{#each this.SecurityGroups}}
+        {{#startsWith "sg" this}}
+          "{{this}}"
+        {{else}}
+          {"Ref":"ec2sg{{this}}"}
+        {{/startsWith}}
+        {{#unless @last}},{{/unless}}
+      {{/each}}],
+    {{/if}}
     {{#if this.SsmAssociations}}"SsmAssociations":[{{#each this.SsmAssociations}}{"Ref":"ssmd{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]{{/if}}
 
     "SourceDestCheck":{{default (toString this.SourceDestCheck) true}},
@@ -83,7 +93,15 @@
     {{else}}
       {{> (whichPartial "user_data_" this) }},
     {{/if}}
-    {{!-- "Volumes":[ EC2 MountPoint, ... ], --}}
+    {{#if this.Volumes}}"Volumes":[
+      {{#each this.Volumes}}{"Device":"{{this.Device}}", "VolumeId":
+        {{#startsWith "vol-" this.VolumeId}}
+          "{{this.VolumeId}}"
+        {{else}}
+          {"Ref":"ec2v{{this.VolumeId}}"}
+        {{/startsWith}}
+      }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
     {{#if this.AdditionalInfo}}"AdditionalInfo":"{{this.AdditionalInfo}}",{{/if}}
 
     "Tags":[
@@ -101,6 +119,7 @@
       {{#if this.PatchGroup}}{ "Key": "Patch Group", "Value": "{{this.PatchGroup}}" },{{/if}}
       {{#if this.InstanceName}}{ "Key":"Name", "Value":"{{this.InstanceName}}"},{{/if}}
       {{#if @root.Role}} { "Key":"Role",  "Value":"{{@root.Role}}" },{{/if}}
+      {{#if this.Role}} { "Key":"Role",  "Value":"{{this.Role}}" },{{/if}}
       {{#if @root.Owner}}{ "Key":"Owner", "Value":"{{@root.Owner}}" },{{/if}}
       {{#each this.Tags}}{ {{{inject this}}} },{{/each}}
       { "Key":"Environment",  "Value":"{{@root.EnvName}}" },
@@ -112,6 +131,7 @@
 {{#if this.AutoRecovery}}
 ,"cldwalrm{{this.Name}}": {
   "Type":"AWS::CloudWatch::Alarm",
+  {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
   "Properties": {
     "AlarmName": "EC2 AutoRecover: {{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",
     "AlarmDescription": "Automatically recover this EC2 instance if something goes wrong.",
