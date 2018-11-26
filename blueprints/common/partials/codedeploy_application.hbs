@@ -1,0 +1,12 @@
+{{!--
+  Creates an AWS CodeDeploy application.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codedeploy-application.html
+ --}}
+"cda{{sanitize this.Name ''}}": {
+  "Type": "AWS::CodeDeploy::Application",
+  "Properties": {
+    {{#if this.ComputePlatform}}"ComputePlatform": "{{this.ComputePlatform}}",{{/if}}
+    "ApplicationName": "{{sanitize this.Name '_'}}"
+  }
+}
