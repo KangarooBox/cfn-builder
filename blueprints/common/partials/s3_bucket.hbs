@@ -21,6 +21,16 @@
       "LogFilePrefix":"{{this.LoggingConfiguration.LogFilePrefix}}"
     },{{/if}}
 
+    {{#if this.PublicAccessBlockConfiguration}}
+    {{#with this.PublicAccessBlockConfiguration}}
+    "PublicAccessBlockConfiguration": { 
+      "BlockPublicAcls": {{default (toString this.BlockPublicAcls) true}},
+      "BlockPublicPolicy": {{default (toString this.BlockPublicPolicy) true}},
+      "IgnorePublicAcls": {{default (toString this.IgnorePublicAcls) true}},
+      "RestrictPublicBuckets": {{default (toString this.RestrictPublicBuckets) true}}
+    },
+    {{/with}}{{/if}}
+
     {{#if this.ReplicationConfiguration}}
     {{#with this.ReplicationConfiguration}}
     "ReplicationConfiguration":{
