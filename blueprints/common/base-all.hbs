@@ -77,6 +77,14 @@
     {{> codecommit_repository}},
     {{/each}}
 
+    {{#each CodeDeployApplications}}
+    {{> codedeploy_application}},
+    {{/each}}
+
+    {{#each CodeDeployDeploymentGroups}}
+    {{> codedeploy_deploymentgroup}},
+    {{/each}}
+
     {{#each CodePipelinePipelines}}
     {{> codepipeline_pipeline}},
     {{/each}}
