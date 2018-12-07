@@ -14,9 +14,13 @@
         {{#case "email"}}"Protocol":"email","Endpoint":"{{this.Endpoint}}"{{/case}}
         {{#case "sms"}}"Protocol":"sms","Endpoint":{"Fn::GetAtt":["sms{{this.Endpoint}}","Arn"]}{{/case}}
         {{#case "sqs"}}"Protocol":"sqs","Endpoint":{"Fn::GetAtt":["sqsq{{this.Endpoint}}","Arn"]}{{/case}}
-        {{#case "lambda"}}"Protocol":"lambda","Endpoint":{"Fn::GetAtt":["fun{{this.Endpoint}}","Arn"]}{{/case}}
+        {{#case "lambda"}}"Protocol":"lambda","Endpoint":
+          {{#startsWith "arn:aws:" this.Endpoint}}"{{this.Endpoint}}"{{else}}
+          {"Fn::GetAtt":["fun{{sanitize this.Endpoint ''}}","Arn"]}{{/startsWith}}
+        {{/case}}
       {{/switch}}
       }{{#unless @last}},{{/unless}}{{/each}}
     ]
   }
 }
+

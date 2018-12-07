@@ -10,7 +10,11 @@
     {{#if this.SourceAccount}}"SourceAccount": "{{this.SourceAccount}}",{{/if}}
     {{#if this.SourceArn}}"SourceArn": "{{this.SourceArn}}",{{/if}}
     "Action": "{{this.Action}}",
-    "FunctionName": {{#startsWith "arn:aws:" this.FunctionName}}"{{this.FunctionName}}"{{else}}{"Fn::GetAtt":["fun{{this.FunctionName}}","Arn"]}{{/startsWith}},
+    "FunctionName": {{#startsWith "arn:aws:" this.FunctionName}}
+      "{{this.FunctionName}}"
+    {{else}}
+      {"Fn::GetAtt":["fun{{sanitize this.FunctionName ''}}","Arn"]}
+    {{/startsWith}},
     "Principal": "{{this.Principal}}"
   }
 }
