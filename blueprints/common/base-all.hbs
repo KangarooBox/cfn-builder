@@ -6,6 +6,10 @@
     "Description" : "{{ProjectName}} ({{EnvVersion}}{{EnvName}})",
   {{/if}}
 
+  {{#ifObject this.Parameters}}
+    "Parameters": { {{{inject this.Parameters}}} },
+  {{/ifObject}}
+
   "Metadata" : {
     {{#each Metadata}}{{{this}}},{{/each}}
     "Environment" : "{{EnvName}}",
