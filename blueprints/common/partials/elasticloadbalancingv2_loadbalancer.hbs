@@ -38,7 +38,11 @@
     {{#if this.SslPolicy}}"SslPolicy": "{{this.SslPolicy}}",{{/if}}
     "DefaultActions": [
       {{#each this.DefaultActions}}
-      { "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}
+      {{#if this.RedirectConfig}}
+        { "Type":"{{this.Type}}", "RedirectConfig":{ {{{inject this.RedirectConfig}}} }}
+      {{else}}
+        { "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}
+      {{/if}}
       {{#unless @last}},{{/unless}}{{/each}}
     ],
     "LoadBalancerArn": { "Ref": "elbv2{{sanitize ../Name ''}}" },
