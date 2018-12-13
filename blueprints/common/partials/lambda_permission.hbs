@@ -4,7 +4,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-permission.html
  --}}
-"lamp{{this.Name}}": {
+"lamp{{sanitize this.Name ''}}": {
   "Type": "AWS::Lambda::Permission",
   "Properties": {
     {{#if this.SourceAccount}}"SourceAccount": "{{this.SourceAccount}}",{{/if}}
