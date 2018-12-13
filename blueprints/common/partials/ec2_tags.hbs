@@ -1,0 +1,33 @@
+{{!--
+  Build a set of default tags for EC2 autoscaling instances.  These tags can be overridden 
+  by coping this file to the projects ".../blueprints/common/partial/" directory.
+--}}
+
+"Tags":[
+  {{#each @root.AutoscalingLaunchConfigurations}}
+    {{#is this.Name ../LaunchConfigurationName}}
+      {{#is this.AMI 'linux_amazon'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else startsWith 'linux_ubuntu' this.AMI}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'windows_core'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwc-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'windows_base'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwb-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'win2016_full'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwf-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else is this.AMI 'win2016_nano'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awwn-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{else}}{"PropagateAtLaunch":true,"Key":"Name","Value":"aw-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
+      {{/is~}}
+    {{/is~}}
+  {{/each}}
+  {{#each this.Tags}}{ {{{inject this}}} },{{/each}}
+  {"PropagateAtLaunch":true,"Key":"Environment","Value":"{{@root.EnvName}}"},
+  {"PropagateAtLaunch":true,"Key":"Project","Value":"{{@root.ProjectName}}"},
+  {{#if this.Role}}
+    {"PropagateAtLaunch":true,"Key":"Role","Value":"{{this.Role}}"},
+  {{else}}
+    {"PropagateAtLaunch":true,"Key":"Role","Value":"{{@root.ProjectName}}"},
+  {{/if}}
+  {{#if this.Owner }}
+    {"PropagateAtLaunch":true,"Key":"Owner","Value":"{{this.Owner}}"},
+  {{else}}
+    {"PropagateAtLaunch":true,"Key":"Owner","Value":"{{@root.Owner}}"},
+  {{/if}}
+  {"PropagateAtLaunch":true,"Key":"Version","Value":"{{@root.EnvVersion}}"}
+]
