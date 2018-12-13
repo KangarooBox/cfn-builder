@@ -30,6 +30,6 @@
     "Role":{ "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] },
     "Runtime":"{{this.Runtime}}",
     "FunctionName":"{{this.Name}}",
-    {{> tags}}
+    {{> tags Role=''}}
   }
 }
