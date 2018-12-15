@@ -11,7 +11,9 @@
     {{#if this.DestinationIpv6CidrBlock}}"DestinationIpv6CidrBlock": "{{this.DestinationIpv6CidrBlock}}",{{/if}}
     {{#if this.EgressOnlyInternetGatewayId}}"EgressOnlyInternetGatewayId": "{{this.EgressOnlyInternetGateway}}",{{/if}}
     {{#if this.GatewayId}}"GatewayId": "{{this.GatewayId}}",{{/if}}
-    {{#if this.InstanceId}}"InstanceId": "{{this.InstanceId}}",{{/if}}
+    {{#if this.InstanceId}}"InstanceId":{{#startsWith "i-" this.InstanceId}}"{{this.InstanceId}}"
+      {{else}}{"Ref":"ec2{{this.InstanceId}}"}{{/startsWith}},
+    {{/if}}
     {{#if this.NatGatewayId}}"NatGatewayId":
       {{#startsWith "rtb-" this.NatGatewayId}}"{{this.NatGatewayId}}"
       {{else}}{"Ref":"ec2nat{{sanitize this.NatGatewayId ''}}"}{{/startsWith}},
