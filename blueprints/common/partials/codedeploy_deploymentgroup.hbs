@@ -1,5 +1,5 @@
 {{!--
-  Creates an AWS CodeDeploy deployment group that specifies which instances your application 
+  Creates an AWS CodeDeploy deployment group that specifies which instances your application
   revisions are deployed to, along with other deployment options
 
   https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codedeploy-deploymentgroup.html
@@ -19,7 +19,7 @@
     {{!-- "TriggerConfigurations": [ TriggerConfig, ... ] --}}
     {{#if this.Deployment}}"Deployment": { {{{inject this.Deployment}}} },{{/if}}
     "AutoScalingGroups": [
-      {{#each this.AutoScalingGroups}}{"Ref":"asg{{this}}"}{{#unless @last}},{{/unless}}{{/each}} 
+      {{#each this.AutoScalingGroups}}{"Ref":"asg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}
     ],
     "ServiceRoleArn": {{#startsWith "arn:aws:" this.ServiceRoleArn}}"{{this.ServiceRoleArn}}"
       {{else}}{"Fn::GetAtt":["iamr{{this.ServiceRoleArn}}","Arn"]}
