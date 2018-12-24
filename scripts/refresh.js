@@ -2,8 +2,11 @@
 
 "use strict";
 
+var utilities = require("../lib/utilities");
 var refresh = require("../lib/refresh");
 var cwd = process.cwd();
+
+const args = utilities.parseProfileArgument();
 
 refresh(cwd)
 .then(function(data){
