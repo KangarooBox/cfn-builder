@@ -1,0 +1,29 @@
+{{!--
+  An AWS Config resource type that collects AWS Config data from multiple accounts and regions.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-configurationaggregator.html
+ --}}
+"concag{{sanitize this.Name ''}}": {
+  "Type": "AWS::Config::ConfigurationAggregator",
+  "Properties": {
+    {{#if this.AccountAggregationSources}}"AccountAggregationSources": [
+      {{#each AccountAggregationSources}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.OrganizationAggregationSource}}"OrganizationAggregationSource": {
+      {{#with this.OrganizationAggregationSource}}
+        {{#if this.AllAwsRegions}}"AllAwsRegions": {{this.AllAwsRegions}},{{/if}}
+
+        {{#if this.AwsRegions}}"AwsRegions": [
+          {{#each this.AwsRegions}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+        ],{{/if}}
+        "RoleArn":{{#startsWith "arn:aws:" this.RoleArn}}
+          "{{this.RoleArn}}"
+        {{else}}
+          { "Fn::GetAtt":[ "iamr{{this.RoleArn}}", "Arn"] }
+        {{/startsWith}}
+      {{/with}}
+    },
+    {{/if}}
+    "ConfigurationAggregatorName": "{{this.Name}}"
+  }
+}
