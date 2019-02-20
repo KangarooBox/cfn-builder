@@ -9,17 +9,16 @@
   "Properties": {
     "Name": "{{this.Name}}",
     {{#if this.RecordingGroup}}"RecordingGroup":
-    {{#with this.RecordingGroup}}
-      { "AllSupported": {{default this.AllSupported false}},
-        "IncludeGlobalResourceTypes": {{default this.IncludeGlobalResourceTypes false}},
-        "ResourceTypes": [ {{#each this.ResourceTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]
-      },
-    {{/with}}
+    {{#with this.RecordingGroup}} {
+      {{#if this.IncludeGlobalResourceTypes}}"IncludeGlobalResourceTypes": {{default this.IncludeGlobalResourceTypes false}}{{/if}}
+      {{#if this.AllSupported}},"AllSupported": {{this.AllSupported}}{{/if}}
+      {{#if this.ResourceTypes}},"ResourceTypes": [ {{#each this.ResourceTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ]{{/if}}
+    },{{/with}}
     {{/if}}
-    "RoleARN":{{#startsWith "arn:aws:" this.Role}}
-      "{{this.Role}}"
+    "RoleARN":{{#startsWith "arn:aws:" this.RoleARN}}
+      "{{this.RoleARN}}"
     {{else}}
-      { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] }
+      { "Fn::GetAtt":[ "iamr{{this.RoleARN}}", "Arn"] }
     {{/startsWith}}
   }
 }
