@@ -8,11 +8,14 @@
   "Properties": {
     "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
     "SubnetIds": [
-      {{#if this.SubnetId}}
-      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
-      {{else}}
-      {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
-      {{/if}}
+      {{#each @root.Region.Subnets as |subnet name|}}
+        {{#each subnet.addresses}}
+          {{#ifEq ../../SubnetId name}}
+            "{{this.Id}}"
+          {{#unless @last}},{{/unless}}
+          {{/ifEq}}
+        {{/each}}
+      {{/each}}
     ],
     {{> tags Name=(concat @root.ProjectName " DB subnet group")}}
   }
