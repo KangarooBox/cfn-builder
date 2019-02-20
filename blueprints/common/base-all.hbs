@@ -93,6 +93,14 @@
     {{> codepipeline_pipeline}},
     {{/each}}
 
+    {{#each ConfigConfigurationAggregators}}
+    {{> config_configurationaggregator}},
+    {{/each}}
+
+    {{#each ConfigAggregationAuthorizations}}
+    {{> config_aggregationauthorization}},
+    {{/each}}
+
     {{#each ConfigConfigurationRecorders}}
     {{> config_configurationrecorder}},
     {{/each}}
@@ -127,6 +135,10 @@
 
     {{#each EC2EIPs}}
     {{> ec2_eip}},
+    {{/each}}
+
+    {{#each EC2FlowLogs}}
+    {{> ec2_flowlog}},
     {{/each}}
 
     {{#each EC2NetworkInterfaces}}
@@ -340,6 +352,10 @@
 
     {{#each ScheduledActions}}
     {{> autoscaling_scheduledaction}},
+    {{/each}}
+
+    {{#each SecretsManagerSecrets}}
+    {{> secretsmanager_secret}},
     {{/each}}
 
     {{#each SNSTopics}}

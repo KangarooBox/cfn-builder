@@ -9,20 +9,39 @@
   "Properties":{
     "Name":"{{this.Name}}",
     "Description":"{{this.Description}}",
-    "Password":"{{this.Password}}",
+    {{#if this.Password}}
+      "Password":"{{this.Password}}",
+    {{else}}
+      "Password":{"Ref":"secms{{sanitize this.Name ""}}"},
+    {{/if}}
     {{#if this.ShortName}}"ShortName":"{{this.ShortName}}",{{/if}}
     "CreateAlias":{{default this.CreateAlias false}},
     "EnableSso":{{default this.EnableSso false}},
     "Size":"{{this.Size}}",
     "VpcSettings":{
-      "SubnetIds":[{{#each this.SubnetIds}}
-      {{#startsWith "subnet-" this.SubnetId}}
-        "{{this}}"
+      {{#if this.VpcSettings.Subnet}}
+        {{#with (lookup @root.Region.Subnets this.VpcSettings.Subnet)}}
+          "SubnetIds":[
+            {{!-- There must be exactly 2 subnets --}}
+            "{{this.addresses.0.Id}}","{{this.addresses.1.Id}}"
+          ],
+        {{/with}}
       {{else}}
-        {"Ref": "{{this}}"}
-      {{/startsWith}}
-      {{#unless @last}},{{/unless}}{{/each}}],
+        "SubnetIds":[
+        {{#each this.VpcSettings.SubnetIds}}
+          {{#startsWith "subnet-" this.SubnetId}}
+            "{{this}}"
+          {{else}}
+            {"Ref": "{{this}}"}
+          {{/startsWith}}
+          {{#unless @last}},{{/unless}}
+        {{/each}}],
+      {{/if}}
       "VpcId":"{{@root.Region.VPCId}}"
     }
   }
 }
+
+{{#unless this.Password}}
+  ,{{> secretsmanager_secret this}}
+{{/unless}}

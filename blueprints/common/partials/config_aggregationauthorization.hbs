@@ -1,0 +1,12 @@
+{{!--
+  Grants permission to an aggregator account to collect your AWS Config data.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-aggregationauthorization.html
+ --}}
+"conagau{{sanitize this.Name ''}}": {
+  "Type": "AWS::Config::AggregationAuthorization",
+  "Properties": {
+    "AuthorizedAccountId": "{{this.AuthorizedAccountId}}",
+    "AuthorizedAwsRegion": "{{this.AuthorizedAwsRegion}}"
+  }
+}

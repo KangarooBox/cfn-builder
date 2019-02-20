@@ -7,11 +7,14 @@
 "ec2fl{{this.Name}}": {
   "Type":"AWS::EC2::FlowLog",
   "Properties":{
-    "DeliverLogsPermissionArn": {{#startsWith "arn:aws:" this.DeliverLogsPermissionArn}}"{{this.DeliverLogsPermissionArn}}"{{else}}
-    { "Fn::GetAtt":["{{this.DeliverLogsPermissionArn}}","Arn"]}{{/startsWith}},
-    "LogGroupName":"{{this.LogGroupName}}",
-    "ResourceId":"{{this.ResourceId}}",
+    {{#if this.DeliverLogsPermissionArn}}"DeliverLogsPermissionArn":
+      {{#startsWith "arn:aws:" this.DeliverLogsPermissionArn}}"{{this.DeliverLogsPermissionArn}}"
+    {{else}}
+      { "Fn::GetAtt":["iamr{{this.DeliverLogsPermissionArn}}","Arn"]}
+    {{/startsWith}},{{/if}}
+    {{#if this.LogGroupName}}"LogGroupName":"{{this.LogGroupName}}",{{/if}}
     "ResourceType":"{{this.ResourceType}}",
+    "ResourceId":"{{this.ResourceId}}",
     "TrafficType":"{{this.TrafficType}}"
   }
 }
