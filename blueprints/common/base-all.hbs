@@ -57,7 +57,7 @@
     {{> apigateway_domain_name}},
     {{/each}}
 
-    {{#each AutoscalingGroups}}
+    {{#each AutoScalingGroups}}
     {{> autoscaling_group}},
     {{/each}}
 
@@ -65,7 +65,11 @@
     {{> autoscaling_scalingpolicy}},
     {{/each}}
 
-    {{#each AutoscalingLaunchConfigurations}}
+    {{#each AutoScalingScheduledActions}}
+    {{> autoscaling_scheduledaction}},
+    {{/each}}
+
+    {{#each AutoScalingLaunchConfigurations}}
     {{> autoscaling_launchconfiguration}},
     {{/each}}
 
@@ -348,10 +352,6 @@
 
     {{#each S3BucketPolicies}}
     {{> s3_bucketpolicy}},
-    {{/each}}
-
-    {{#each ScheduledActions}}
-    {{> autoscaling_scheduledaction}},
     {{/each}}
 
     {{#each SecretsManagerSecrets}}

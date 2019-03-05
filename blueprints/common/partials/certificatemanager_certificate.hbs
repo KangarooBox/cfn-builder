@@ -11,6 +11,7 @@
       { "DomainName": "{{this.DomainName}}", "ValidationDomain": "{{this.ValidationDomain}}"}
     ],{{/if}}
     {{#if this.SubjectAlternativeNames}}"SubjectAlternativeNames": [ String, ... ],{{/if}}
+    {{#if this.ValidationMethod}}"ValidationMethod": "{{this.ValidationMethod}}",{{/if}}
     {{> tags}}
   }
 }

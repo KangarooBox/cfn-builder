@@ -25,11 +25,11 @@
   "Type":"AWS::RDS::DBInstance",
   {{~#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
   "Properties":{
-    {{~#if this.DBParameterGroupName}}"DBParameterGroupName":{ "Ref":"rdsPG{{this.DBParameterGroupName}}" }, {{/if}}
-    {{~#if this.OptionGroupName}}"OptionGroupName":"{{this.OptionGroupName}}",{{/if}}
-    {{~#if this.AllocatedStorage}}"AllocatedStorage":"{{this.AllocatedStorage}}",{{/if}}
-    {{~#if this.StorageType}}"StorageType":"{{this.StorageType}}",{{/if}}
-    {{~#if this.Iops}}"Iops":{{this.Iops}},{{/if}}
+    {{#if this.DBParameterGroupName}}"DBParameterGroupName":{ "Ref":"rdsPG{{this.DBParameterGroupName}}" }, {{/if}}
+    {{#if this.OptionGroupName}}"OptionGroupName":"{{this.OptionGroupName}}",{{/if}}
+    {{#if this.AllocatedStorage}}"AllocatedStorage":"{{this.AllocatedStorage}}",{{/if}}
+    {{#if this.StorageType}}"StorageType":"{{this.StorageType}}",{{/if}}
+    {{#if this.Iops}}"Iops":{{this.Iops}},{{/if}}
     "DBInstanceClass":"{{this.DBInstanceClass}}",
     "VPCSecurityGroups":[{{#each SecurityGroups}}
       {{#startsWith "sg-" this}}
@@ -40,25 +40,28 @@
     {{/each}}],
     "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.Name ''}}" },
     "PubliclyAccessible":{{default this.PubliclyAccessible "false"}},
+    "CopyTagsToSnapshot":{{default this.CopyTagsToSnapshot "false"}},
     {{~#if this.DBInstanceIdentifier}}
     "DBInstanceIdentifier": "{{this.DBInstanceIdentifier}}",
     {{else}}
     "DBInstanceIdentifier":"{{truncate this.Name (subtract 14 (add (length @root.EnvVersion) (length @root.EnvName)))}}-{{@root.EnvVersion}}{{@root.EnvName}}",
     {{/if}}
-    {{~#if this.DBSnapshotIdentifier}}
-    "DBSnapshotIdentifier":"{{this.DBSnapshotIdentifier}}",
+    {{#if this.DBSnapshotIdentifier}}
+      "DBSnapshotIdentifier":"{{this.DBSnapshotIdentifier}}",
+      "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 0}},
     {{else}}
-    "Engine":"{{this.Engine}}",
-    {{#if this.EngineVersion}}"EngineVersion":"{{this.EngineVersion}}",{{/if}}
-    {{#is this.Parent "dbcluster"}}
-    "DBClusterIdentifier":{ "Ref":"dbc{{this.Name}}" },
-    {{/is}}
-    {{#isnt this.Parent "dbcluster"}}
-      "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
-      {{#if this.DBName}}"DBName":"{{this.DBName}}",{{/if}}
-      "MasterUsername":"{{this.MasterUsername}}",
-      "MasterUserPassword":"{{{this.MasterUserPassword}}}",
-    {{/isnt}}
+      "Engine":"{{this.Engine}}",
+      {{#if this.EngineVersion}}"EngineVersion":"{{this.EngineVersion}}",{{/if}}
+      {{#if this.Parent}}
+        {{#is this.Parent "dbcluster"}}
+          "DBClusterIdentifier":{ "Ref":"dbc{{this.Name}}" },
+        {{/is}}
+      {{else}}
+        "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
+        {{#if this.DBName}}"DBName":"{{this.DBName}}",{{/if}}
+        "MasterUsername":"{{this.MasterUsername}}",
+        "MasterUserPassword":"{{{this.MasterUserPassword}}}",
+      {{/if}}
     {{/if}}
     {{> tags}}
   }

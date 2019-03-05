@@ -11,20 +11,24 @@
     "VPCZoneIdentifier":[
     {{!-- Restrict the instance to a specific subnet group (a,b,c,d,e,etc.) --}}
     {{#if this.SubnetIndex}}
-    {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
-    {{!--
-      JSON considers 0 to be false but NodeJS arrays are zero based, so we have
-      to do some adjustments here.
-    --}}
-    {{#ifEq @index (subtract ../SubnetIndex 1)}}
-    "{{this}}"
-    {{/ifEq}}
-    {{/each}}
+      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
+        {{!--
+          JSON considers 0 to be false but NodeJS arrays are zero based, so we have
+          to do some adjustments here.
+        --}}
+        {{#ifEq @index (subtract ../SubnetIndex 1)}}
+          "{{this}}"
+        {{/ifEq}}
+      {{/each}}
     {{else}}
-    {{!-- Launch an instance into any subnet group --}}
-    {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
-    "{{this}}"{{#unless @last}},{{/unless}}
-    {{/each}}
+      {{!-- Launch an instance into any subnet group --}}
+      {{#each @root.Region.Subnets as |subnet name|}}
+        {{#each subnet.addresses}}
+          {{#ifEq ../../SubnetId name}}
+            "{{this.Id}}"{{#unless @last}},{{/unless}}
+          {{/ifEq}}
+        {{/each}}
+      {{/each}}
     {{/if}}
     ],
 

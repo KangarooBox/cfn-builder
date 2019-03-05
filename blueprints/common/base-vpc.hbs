@@ -35,6 +35,10 @@
     {{> logs_loggroup}},
     {{/each}}
 
+    {{#each EC2VPCPeeringConnections}}
+    {{> ec2_vpcpeeringconnection}},
+    {{/each}}
+
 
     {{!-- Gateways setup --}}
     "VPNGateway" : {
