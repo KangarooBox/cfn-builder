@@ -8,7 +8,7 @@
   "Type": "AWS::CodeDeploy::DeploymentGroup",
   "Properties": {
     {{!-- "AlarmConfiguration": AlarmConfiguration, --}}
-    {{!-- "AutoRollbackConfiguration": AutoRollbackConfiguration, --}}
+    {{#if this.AutoRollbackConfiguration}}"AutoRollbackConfiguration": { {{{inject this.AutoRollbackConfiguration}}} },{{/if}}
     {{#if this.DeploymentConfigName}}"DeploymentConfigName": "{{this.DeploymentConfigName}}",{{/if}}
     {{#if this.DeploymentStyle}} "DeploymentStyle": {
       "DeploymentOption": "{{this.DeploymentStyle.DeploymentOption}}",
@@ -22,7 +22,12 @@
         "ElbInfoList": [{{#each this.ElbInfoList}}{"Name": "elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
       {{/if}}
       {{#if this.TargetGroupInfoList}}
-        "TargetGroupInfoList": [{{#each this.TargetGroupInfoList}}{"Name":"elbv2tg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}]
+        "TargetGroupInfoList": [
+          {{#each this.TargetGroupInfoList}}
+            {"Name": {"Fn::GetAtt": ["elbv2tg{{this}}", "TargetGroupName"] }}
+            {{#unless @last}},{{/unless}}
+          {{/each}}
+        ]
       {{/if}}
     },{{/with}}{{/if}}
     {{!-- "OnPremisesInstanceTagFilters": [ OnPremisesInstanceTagFilter, ... ], --}}

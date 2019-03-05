@@ -11,8 +11,12 @@
     "Name": "{{this.Name}}-{{@root.EnvName}}",
     "Scheme": "{{this.Scheme}}",
     "Subnets":[
-      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
-      "{{this}}"{{#unless @last}},{{/unless}}
+      {{#each @root.Region.Subnets as |subnet name|}}
+        {{#each subnet.addresses}}
+          {{#ifEq ../../SubnetId name}}
+            "{{this.Id}}"{{#unless @last}},{{/unless}}
+          {{/ifEq}}
+        {{/each}}
       {{/each}}
     ],
     {{#if this.LoadBalancerAttributes}}
@@ -34,7 +38,15 @@
 "elbv2lis{{sanitize ../Name ''}}{{this.Port}}": {
   "Type": "AWS::ElasticLoadBalancingV2::Listener",
   "Properties": {
-    {{#if this.Certificates}}"Certificates": [{{#each this.Certificates}}{"CertificateArn":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.Certificates}}"Certificates": [
+      {{#each this.Certificates}}
+        {{#startsWith this.Certificates "arn:aws:acm:"}}
+          { "CertificateArn":"{{this}}" }
+        {{else}}
+          { "CertificateArn": { "Ref":"acmc{{sanitize this ''}}" }}
+        {{/startsWith}}
+      {{#unless @last}},{{/unless}}{{/each}}],
+    {{/if}}
     {{#if this.SslPolicy}}"SslPolicy": "{{this.SslPolicy}}",{{/if}}
     "DefaultActions": [
       {{#each this.DefaultActions}}

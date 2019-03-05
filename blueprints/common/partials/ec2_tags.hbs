@@ -1,10 +1,10 @@
 {{!--
-  Build a set of default tags for EC2 autoscaling instances.  These tags can be overridden 
+  Build a set of default tags for EC2 autoscaling instances.  These tags can be overridden
   by coping this file to the projects ".../blueprints/common/partial/" directory.
 --}}
 
 "Tags":[
-  {{#each @root.AutoscalingLaunchConfigurations}}
+  {{#each @root.AutoScalingLaunchConfigurations}}
     {{#is this.Name ../LaunchConfigurationName}}
       {{#is this.AMI 'linux_amazon'}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awla-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
       {{else startsWith 'linux_ubuntu' this.AMI}}{"PropagateAtLaunch":true,"Key":"Name","Value":"awlu-{{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}}"},
