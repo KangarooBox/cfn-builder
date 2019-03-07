@@ -153,6 +153,14 @@
     {{> ec2_networkinterfaceattachment}},
     {{/each}}
 
+    {{#each EC2TransitGateways}}
+    {{> ec2_transitgateway}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRoutes}}
+    {{> ec2_transitgatewayroute}},
+    {{/each}}
+
     {{#each EC2VPCs}}
     {{> ec2_vpc}},
     {{/each}}
