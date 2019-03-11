@@ -5,8 +5,7 @@
 var utilities = require("../lib/utilities");
 var refresh = require("../lib/refresh");
 var cwd = process.cwd();
-
-const args = utilities.parseProfileArgument();
+var util  = require('util');
 
 refresh(cwd)
 .then(function(data){
