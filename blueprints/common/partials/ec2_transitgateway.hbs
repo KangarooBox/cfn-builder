@@ -16,24 +16,4 @@
     {{#if this.VpnEcmpSupport}}"VpnEcmpSupport": "{{this.VpnEcmpSupport}}",{{/if}}
     {{> tags }}
   }
-},
-
-"trgwyat{{sanitize this.Name ''}}": {
-  "Type": "AWS::EC2::TransitGatewayAttachment",
-  "Properties": {
-    "TransitGatewayId": {"Ref": "trgwy{{sanitize this.Name ''}}"},
-    "VpcId": "{{@root.Region.VPCId}}",
-    "SubnetIds":[
-      {{#each this.Subnets}}
-        {{#each @root.Region.Subnets as |subnet name|}}
-          {{#each subnet.addresses}}
-            {{#ifEq ../../this name}}
-              "{{this.Id}}"{{#unless @last}},{{/unless}}
-            {{/ifEq}}
-          {{/each}}
-        {{/each}}
-      {{/each}}
-    ],
-    {{> tags }}
-  }
 }

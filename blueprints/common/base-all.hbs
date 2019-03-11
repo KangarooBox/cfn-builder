@@ -157,6 +157,14 @@
     {{> ec2_transitgateway}},
     {{/each}}
 
+    {{#each EC2TransitGatewayAttachments}}
+    {{> ec2_transitgatewayattachment}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRouteTables}}
+    {{> ec2_transitgatewayroutetable}},
+    {{/each}}
+
     {{#each EC2TransitGatewayRoutes}}
     {{> ec2_transitgatewayroute}},
     {{/each}}
@@ -330,6 +338,10 @@
 
     {{#each OpsWorksStacks}}
     {{> opsworks_stack}},
+    {{/each}}
+
+    {{#each RAMResourceShares}}
+    {{> ram_resourceshare}},
     {{/each}}
 
     {{#each RDSInstances}}
