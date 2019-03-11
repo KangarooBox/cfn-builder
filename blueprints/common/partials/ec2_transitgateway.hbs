@@ -1,0 +1,19 @@
+{{!--
+  Creates a transit gateway and attaches it to the VPC
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html
+ --}}
+"trgwy{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::TransitGateway",
+  "Properties": {
+    {{#if this.AmazonSideAsn}}"AmazonSideAsn": {{this.AmazonSideAsn}},{{/if}}
+    {{#if this.AutoAcceptSharedAttachments}}"AutoAcceptSharedAttachments": "{{this.AutoAcceptSharedAttachments}}",{{/if}}
+    {{#if this.DefaultRouteTableAssociation}}"DefaultRouteTableAssociation": "{{this.DefaultRouteTableAssociation}}",{{/if}}
+    {{#if this.DefaultRouteTablePropagation}}"DefaultRouteTablePropagation": "{{this.DefaultRouteTablePropagation}}",{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.DnsSupport}}"DnsSupport": "{{this.DnsSupport}}",{{/if}}
+    {{#if this.VpnEcmpSupport}}"VpnEcmpSupport": "{{this.VpnEcmpSupport}}",{{/if}}
+    {{> tags }}
+  }
+}

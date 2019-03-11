@@ -1,0 +1,21 @@
+{{!--
+  Used to create, update, and delete an Amazon ResourceShare resources.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html
+ --}}
+"ramrs{{sanitize this.Name ''}}": {
+  "Type": "AWS::RAM::ResourceShare",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    "AllowExternalPrincipals": {{default (toString this.AllowExternalPrincipals) false}},
+    "Principals": [ {{#each this.Principals}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
+    "ResourceArns": [ {{#each this.ResourceArns}}
+      {{#ifObject this}} { {{{inject this}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"
+        {{/startsWith}}
+      {{/ifObject}}
+    {{#unless @last}},{{/unless}}{{/each}}],
+    {{> tags }}
+  }
+}

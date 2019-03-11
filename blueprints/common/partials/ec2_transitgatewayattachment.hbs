@@ -1,0 +1,29 @@
+{{!--
+  Attaches a TransitGateway to a VPC
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html
+ --}}
+"trgwyat{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::TransitGatewayAttachment",
+  "Properties": {
+    "TransitGatewayId":
+      {{#startsWith 'tgw-' this.TransitGatewayId}}
+        "{{this.TransitGatewayId}}",
+      {{else}}
+        {"Ref": "trgwy{{sanitize this.Name ''}}"},
+      {{/startsWith}}
+    "VpcId": "{{@root.Region.VPCId}}",
+    "SubnetIds":[
+      {{#each this.Subnets}}
+        {{#each @root.Region.Subnets as |subnet name|}}
+          {{#each subnet.addresses}}
+            {{#ifEq ../../this name}}
+              "{{this.Id}}"{{#unless @last}},{{/unless}}
+            {{/ifEq}}
+          {{/each}}
+        {{/each}}
+      {{/each}}
+    ],
+    {{> tags }}
+  }
+}
