@@ -25,6 +25,7 @@
     "prompt": "^1.0.0",
     "semaphore": "^1.1.0",
     "swag": "^0.7.0",
+    "uglify-js": "^3.4.9",
     "yargs": "^13.2.2"
   },
   "description": "A command line application that builds AWS CloudFormation templates our of JSON 'blueprints'.",
