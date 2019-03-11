@@ -3,7 +3,6 @@
 "use strict";
 
 // NPM
-var util    = require('util');
 var _       = require('lodash');
 var Table   = require('cli-table');
 var colors  = require('colors');
@@ -19,35 +18,31 @@ const ERROR   = 22;
 
 const args = utilities.parseArguments();
 
-changeSet.create(args.envName, args.projectName, args.region)
+// Try to deploy the changeset
+function deployChangeSet(cs){
+  changeSet.execute(cs)
   .then(function(data){
-    switch(typeof (data)) {
-      // We got back a string which is probably a status update
-      case 'string':
-        console.log(data);
-        break;
-
-      // We got back a CFN object, do something with it
-      case 'object':
-        if(data.ChangeSetId) {
-          displayResults(data);
-        } else {
-          // This is not a valid ChangeSet, ignore it
-          process.exitCode = SAFE;
-        }
-        break;
-
-      // We don't know what we got back
-      default:
-        console.log("ERROR: Unknown return from createChangeSet: %s".red.underline, data);
-        process.exitCode = ERROR
-    }
+    console.log(data);
+    process.exitCode = SAFE;
   })
   .catch(function(err){
-    console.error(err);
+    console.error("ChangeSet not executed: %s", err);
     process.exitCode = ERROR;
-})
+  })
+}
 
+// Try to delete the changeset
+function deleteChangeSet(cs){
+  changeSet.delete(cs)
+  .then(function(data){
+    console.log("ChangeSet deleted.");
+    process.exitCode = UNSAFE;
+  })
+  .catch(function(err){
+    console.error("ChangeSet not deleted: %s", err);
+    process.exitCode = ERROR;
+  })
+}
 
 function printTable(cs) {
   var table = new Table({
@@ -139,29 +134,31 @@ function displayResults(cs) {
 }
 
 
-// Try to deploy the changeset
-function deployChangeSet(cs){
-  changeSet.execute(cs)
+changeSet.create(args.envName, args.projectName, args.region)
   .then(function(data){
-    console.log(data);
-    process.exitCode = SAFE;
+    switch(typeof (data)) {
+      // We got back a string which is probably a status update
+      case 'string':
+        console.log(data);
+        break;
+
+      // We got back a CFN object, do something with it
+      case 'object':
+        if(data.ChangeSetId) {
+          displayResults(data);
+        } else {
+          // This is not a valid ChangeSet, ignore it
+          process.exitCode = SAFE;
+        }
+        break;
+
+      // We don't know what we got back
+      default:
+        console.log("ERROR: Unknown return from createChangeSet: %s".red.underline, data);
+        process.exitCode = ERROR
+    }
   })
   .catch(function(err){
-    console.error("ChangeSet not executed: %s", err);
+    console.error(err);
     process.exitCode = ERROR;
-  })
-}
-
-// Try to delete the changeset
-function deleteChangeSet(cs){
-  changeSet.delete(cs)
-  .then(function(data){
-    console.log("ChangeSet deleted.");
-    process.exitCode = UNSAFE;
-  })
-  .catch(function(err){
-    console.error("ChangeSet not deleted: %s", err);
-    process.exitCode = ERROR;
-  })
-}
-
+})
