@@ -29,6 +29,10 @@
   },
 
   "Resources" : {
+    {{#each CustomResources}}
+      {{{inject this}}},
+    {{/each}}
+
     {{#each AccessKeys}}
     {{> iam_accesskey}},
     {{/each}}
