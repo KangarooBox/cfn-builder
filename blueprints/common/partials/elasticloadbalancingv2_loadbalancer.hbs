@@ -40,7 +40,7 @@
   "Properties": {
     {{#if this.Certificates}}"Certificates": [
       {{#each this.Certificates}}
-        {{#startsWith this.Certificates "arn:aws:acm:"}}
+        {{#startsWith "arn:aws:acm:" this}}
           { "CertificateArn":"{{this}}" }
         {{else}}
           { "CertificateArn": { "Ref":"acmc{{sanitize this ''}}" }}
