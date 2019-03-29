@@ -1,0 +1,18 @@
+{{!--
+  Creates a lifecycle policy for Amazon Data Lifecycle Manager.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dlm-lifecyclepolicy.html
+ --}}
+"dlmlp{{sanitize this.Name ''}}": {
+  "Type": "AWS::DLM::LifecyclePolicy",
+  "Properties": {
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.PolicyDetails}}"PolicyDetails": { {{{inject this.PolicyDetails}}} },{{/if}}
+    "ExecutionRoleArn": {{#startsWith "arn:aws:" this.ExecutionRoleArn}}
+      "{{this.ExecutionRoleArn}}"
+    {{else}}
+      { "Fn::GetAtt":[ "iamr{{this.ExecutionRoleArn}}", "Arn"] }
+    {{/startsWith}},
+    "State": "{{this.State}}"
+  }
+}

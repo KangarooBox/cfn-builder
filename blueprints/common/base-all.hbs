@@ -121,6 +121,10 @@
     {{> config_rule}},
     {{/each}}
 
+    {{#each CognitoUserPools}}
+    {{> cognito_userpool}},
+    {{/each}}
+
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
     {{/each}}
@@ -131,6 +135,10 @@
 
     {{#each DirectoryServiceSimpleADs}}
     {{> directoryservice_simplead}},
+    {{/each}}
+
+    {{#each DLMLifecyclePolicies}}
+    {{> dlm_lifecyclepolicy}},
     {{/each}}
 
     {{#each EC2CustomerGateways}}
@@ -362,6 +370,10 @@
 
     {{#each Route53HostedZones}}
     {{> route53_hostedzone}},
+    {{/each}}
+
+    {{#each Route53RecordSetGroups}}
+    {{> route53_recordsetgroup}},
     {{/each}}
 
     {{#each Route53RecordSets}}

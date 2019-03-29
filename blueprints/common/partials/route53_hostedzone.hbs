@@ -3,10 +3,10 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html
  --}}
- "r53hz{{sanitize this.Name ""}}":{
+ "r53hz{{sanitize this.Name ''}}":{
   "Type": "AWS::Route53::HostedZone",
   "Properties": {
-    "Name": "{{this.Name}}",
+    "Name":{{#if this.DomainName}}"{{this.DomainName}}"{{else}}"{{this.Name}}"{{/if}},
     {{#if this.HostedZoneConfig}}"HostedZoneConfig": { {{{inject this.HostedZoneConfig}}} },{{/if}}
     {{#if this.VPCs}}"VPCs": [
       {{#each this.VPCs}}{ {{{inject this}}} } {{#unless @last}},{{/unless}}{{/each}}
