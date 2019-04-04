@@ -8,7 +8,15 @@
   "Type": "AWS::Lambda::Permission",
   "Properties": {
     {{#if this.SourceAccount}}"SourceAccount": "{{this.SourceAccount}}",{{/if}}
-    {{#if this.SourceArn}}"SourceArn": "{{this.SourceArn}}",{{/if}}
+    {{#if this.SourceArn}}"SourceArn":
+      {{#ifObject this.SourceArn}}
+        { {{{inject this.SourceArn}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this.SourceArn}}"{{this.SourceArn}}"
+        {{else}}{ "Ref": "{{this.SourceArn}}" }
+        {{/startsWith}}
+      {{/ifObject}},
+    {{/if}}
     "Action": "{{this.Action}}",
     "FunctionName": {{#startsWith "arn:aws:" this.FunctionName}}
       "{{this.FunctionName}}"

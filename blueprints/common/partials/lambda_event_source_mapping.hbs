@@ -8,10 +8,10 @@
   "Type" : "AWS::Lambda::EventSourceMapping",
   "Properties" : {
     {{#if this.BatchSize}}"BatchSize" : {{this.BatchSize}},{{/if}}
-    "Enabled"           : {{default this.Enabled "false"}},
-    "EventSourceArn"    : {{#startsWith "arn:aws:" this.EventSourceArn}}"{{this.EventSourceArn}}"{{else}}
-    { "Fn::GetAtt" : [ "{{#is this.EventSource "Kinesis"}}ks{{/is}}{{this.EventSourceArn}}", "Arn" ]}{{/startsWith}},
-    "StartingPosition"  : "{{this.StartingPosition}}",
-    "FunctionName"      : { "Fn::GetAtt" : [ "fun{{this.FunctionName}}", "Arn"] }
+    {{#if this.StartingPosition}}"StartingPosition"  : "{{this.StartingPosition}}",{{/if}}
+    "Enabled": {{default this.Enabled "false"}},
+    "EventSourceArn": {{#startsWith "arn:aws:" this.EventSourceArn}}"{{this.EventSourceArn}}"{{else}}
+    { "Fn::GetAtt": [ "{{#is this.EventSource "Kinesis"}}ks{{/is}}{{this.EventSourceArn}}", "Arn" ]}{{/startsWith}},
+    "FunctionName": { "Fn::GetAtt" : [ "fun{{sanitize this.FunctionName ''}}", "Arn"] }
   }
 }
