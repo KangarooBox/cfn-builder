@@ -1,0 +1,15 @@
+{{!--
+  Creates an SSM parameter in the AWS Systems Manager Parameter Store.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
+ --}}
+"ssmp{{sanitize this.Name ''}}":{
+  "Type": "AWS::SSM::Parameter",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.AllowedPattern}}"AllowedPattern": "{{this.AllowedPattern}}",{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "Type": "{{this.Type}}",
+    "Value": "{{this.Value}}"
+  }
+}
