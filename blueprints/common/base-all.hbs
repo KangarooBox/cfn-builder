@@ -165,6 +165,10 @@
     {{> ec2_networkinterfaceattachment}},
     {{/each}}
 
+    {{#each EC2SpotFleets}}
+    {{> ec2_spotfleet}},
+    {{/each}}
+
     {{#each EC2TransitGateways}}
     {{> ec2_transitgateway}},
     {{/each}}
@@ -324,6 +328,10 @@
     {{> kinesis_firehose}},
     {{/each}}
 
+    {{#each LambdaEventSourceMappings}}
+    {{> lambda_event_source_mapping}},
+    {{/each}}
+
     {{#each LambdaFunctions}}
     {{> lambda_function}},
     {{/each}}
@@ -408,6 +416,10 @@
 
     {{#each SSMDocuments}}
     {{> ssm_document}},
+    {{/each}}
+
+    {{#each SSMParameters}}
+    {{> ssm_parameter}},
     {{/each}}
 
     {{#each SQSQueues}}

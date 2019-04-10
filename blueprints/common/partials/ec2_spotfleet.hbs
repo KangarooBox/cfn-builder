@@ -1,0 +1,87 @@
+{{!--
+  Creates a request for a collection of Spot instances. The Spot fleet attempts to launch the number
+  of Spot instances to meet the target capacity that you specified.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-spotfleet.html
+ --}}
+"ec2sf{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::SpotFleet",
+  "Properties": {
+    "SpotFleetRequestConfigData": {
+    {{#with this.SpotFleetRequestConfigData}}
+      {{#if this.AllocationStrategy}}"AllocationStrategy": "{{this.AllocationStrategy}}",{{/if}}
+      {{#if this.ExcessCapacityTerminationPolicy}}"ExcessCapacityTerminationPolicy": "{{this.ExcessCapacityTerminationPolicy}}",{{/if}}
+      {{#if this.InstanceInterruptionBehavior}}"InstanceInterruptionBehavior": "{{this.InstanceInterruptionBehavior}}",{{/if}}
+      {{#if this.LoadBalancersConfig}}"LoadBalancersConfig": LoadBalancersConfig,{{/if}}
+      {{#if this.ReplaceUnhealthyInstances}}"ReplaceUnhealthyInstances": Boolean,{{/if}}
+      {{#if this.SpotPrice}}"SpotPrice": "{{this.SpotPrice}}",{{/if}}
+      {{#if this.TerminateInstancesWithExpiration}}"TerminateInstancesWithExpiration": Boolean,{{/if}}
+      {{#if this.Type}}"Type": "{{this.Type}}",{{/if}}
+      {{#if this.ValidFrom}}"ValidFrom": "{{this.ValidFrom}}",{{/if}}
+      {{#if this.ValidUntil}}"ValidUntil": "{{this.ValidUntil}}"{{/if}}
+
+      {{#if this.LaunchSpecifications}}"LaunchSpecifications": [
+        {{#each this.LaunchSpecifications}} {
+          {{#if this.BlockDeviceMappings}}"BlockDeviceMappings": [ BlockDeviceMapping, ... ],{{/if}}
+          {{#if this.EbsOptimized}}"EbsOptimized": Boolean,{{/if}}
+
+          {{#if this.IamInstanceProfile}}"IamInstanceProfile": {"Arn":
+            {{#startsWith "arn:aws:iam:" this.IamInstanceProfile}}
+              "{{this.IamInstanceProfile}}"
+            {{else}}
+              {"Fn::GetAtt":["iamip{{this.IamInstanceProfile}}", "Arn"]}
+            {{/startsWith}}
+          },{{/if}}
+
+          {{#if this.KernelId}}"KernelId": "{{this.KernelId}}",{{/if}}
+          {{#if this.KeyName}}"KeyName": "{{this.KeyName}}",{{/if}}
+          {{#if this.Monitoring}}"Monitoring": Boolean,{{/if}}
+          {{#if this.NetworkInterfaces}}"NetworkInterfaces": [ NetworkInterface, ... ],{{/if}}
+          {{#if this.Placement}}"Placement": Placement,{{/if}}
+          {{#if this.RamdiskId}}"RamdiskId": "{{this.RamdiskId}}",{{/if}}
+          {{#if this.SecurityGroups}}"SecurityGroups":
+            [{{#each this.SecurityGroups}}{"GroupId":{"Ref":"ec2sg{{this}}"}}{{#unless @last}},{{/unless}}{{/each}}],
+          {{/if}}
+          {{#if this.SpotPrice}}"SpotPrice": "{{this.SpotPrice}}",{{/if}}
+
+
+          {{#if this.Subnet}}"SubnetId":
+            {{#with (lookup @root.Region.Subnets this.Subnet.Name)}}
+              {{#each this.addresses}}
+                {{#ifEq this.AZ ../../Subnet.AZ}}"{{this.Id}}"{{/ifEq}}
+              {{/each}}
+            {{/with}}
+          ,{{/if}}
+
+
+
+          {{#if this.UserData}}"UserData": { {{{inject this.UserData}}} },
+          {{else}}
+            {{> (whichPartial "user_data_" this 'ImageId') }},
+          {{/if}}
+
+          {{#if this.WeightedCapacity}}"WeightedCapacity": Number{{/if}}
+
+          "ImageId": "{{findAMI this.ImageId @root.Region.AMIs}}",
+          "InstanceType": "{{this.InstanceType}}",
+          "TagSpecifications": [{
+            "ResourceType": "instance",
+            {{> tags}}
+          }]
+        }
+        {{#unless @last}},{{/unless}}{{/each}}
+      ],{{/if}}
+
+      {{#if this.LaunchTemplateConfigs}}"LaunchTemplateConfigs": [ LaunchTemplateConfigs, ... ],{{/if}}
+
+      "IamFleetRole": {{#startsWith "arn:aws:iam:" this.IamFleetRole}}
+        "{{this.IamFleetRole}}"
+      {{else}}
+        { "Fn::GetAtt":[ "iamr{{this.IamFleetRole}}", "Arn"] }
+      {{/startsWith}},
+
+      "TargetCapacity": {{this.TargetCapacity}}
+    {{/with}}
+    }
+  }
+}
