@@ -165,6 +165,10 @@
     {{> ec2_networkinterfaceattachment}},
     {{/each}}
 
+    {{#each EC2SpotFleets}}
+    {{> ec2_spotfleet}},
+    {{/each}}
+
     {{#each EC2TransitGateways}}
     {{> ec2_transitgateway}},
     {{/each}}
