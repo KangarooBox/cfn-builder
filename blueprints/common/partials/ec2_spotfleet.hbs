@@ -57,7 +57,7 @@
 
           {{#if this.UserData}}"UserData": { {{{inject this.UserData}}} },
           {{else}}
-            {{> (whichPartial "user_data_" this 'ImageId') }},
+            {{> (whichPartial "ImageId" "user_data_" this) }},
           {{/if}}
 
           {{#if this.WeightedCapacity}}"WeightedCapacity": Number{{/if}}

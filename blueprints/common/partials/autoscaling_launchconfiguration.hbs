@@ -15,7 +15,7 @@
     {{#if this.CloudInit}}
       {{{ inject this.CloudInit }}}
     {{else}}
-      {{> (whichPartial "cfn_init_" this) }}
+      {{> (whichPartial "AMI" "cfn_init_" this) }}
     {{/if}}
     }
   },
@@ -34,7 +34,7 @@
 
     {{#if this.UserData}}"UserData": "{{this.UserData}}"
     {{else}}
-      {{> (whichPartial "user_data_" this) }}
+      {{> (whichPartial "AMI" "user_data_" this) }}
     {{/if}}
   }
 }{{#if this.Password}},
