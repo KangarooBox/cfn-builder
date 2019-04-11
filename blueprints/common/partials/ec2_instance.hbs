@@ -16,7 +16,7 @@
     {{#if this.CloudInit}}
       {{{ inject this.CloudInit }}}
     {{else}}
-      {{> (whichPartial "cfn_init_" this) }}
+      {{> (whichPartial "AMI" "cfn_init_" this) }}
     {{/if}}
     }
   },
