@@ -125,6 +125,10 @@
     {{> cognito_userpool}},
     {{/each}}
 
+    {{#each CognitoUserPoolClients}}
+    {{> cognito_userpoolclient}},
+    {{/each}}
+
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
     {{/each}}

@@ -7,9 +7,16 @@
   "Type": "AWS::Cognito::UserPool",
   "Properties": {
     "UserPoolName": "{{this.Name}}",
-    {{#if this.AdminCreateUserConfig}}"AdminCreateUserConfig": AdminCreateUserConfig,{{/if}}
-    {{#if this.AliasAttributes}}"AliasAttributes": [ String ],{{/if}}
-    {{#if this.AutoVerifiedAttributes}}"AutoVerifiedAttributes": [ String ],{{/if}}
+    {{#if this.AdminCreateUserConfig}}"AdminCreateUserConfig": { {{{inject this.AdminCreateUserConfig}}} },{{/if}}
+
+    {{#if this.AliasAttributes}}"AliasAttributes":[
+      {{#each this.AliasAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+
+    {{#if this.AutoVerifiedAttributes}}"AutoVerifiedAttributes":[
+      {{#each this.AutoVerifiedAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+
     {{#if this.DeviceConfiguration}}"DeviceConfiguration": DeviceConfiguration,{{/if}}
     {{#if this.EmailConfiguration}}"EmailConfiguration": { {{{inject this.EmailConfiguration}}} },{{/if}}
     {{#if this.EmailVerificationMessage}}"EmailVerificationMessage": "{{this.EmailVerificationMessage}}",{{/if}}
@@ -17,11 +24,20 @@
     {{#if this.LambdaConfig}}"LambdaConfig": LambdaConfig,{{/if}}
     {{#if this.MfaConfiguration}}"MfaConfiguration": "{{this.MfaConfiguration}}",{{/if}}
     {{#if this.Policies}}"Policies": { {{{inject this.Policies}}} },{{/if}}
-    {{#if this.Schema}}"Schema": [ SchemaAttribute ],{{/if}}
+
+    {{#if this.Schema}}"Schema":[
+      {{#each this.Schema}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+
     {{#if this.SmsAuthenticationMessage}}"SmsAuthenticationMessage": "{{this.SmsAuthenticationMessage}}",{{/if}}
     {{#if this.SmsConfiguration}}"SmsConfiguration": { {{{inject this.SmsConfiguration}}} },{{/if}}
     {{#if this.SmsVerificationMessage}}"SmsVerificationMessage": "{{this.SmsVerificationMessage}}",{{/if}}
-    {{#if this.UsernameAttributes}}"UsernameAttributes": [ String ],{{/if}}
+
+    {{#if this.UsernameAttributes}}"UsernameAttributes":[
+      {{#each this.UsernameAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+
+    {{#if this.UserPoolAddOns}}"UserPoolAddOns": { {{{inject this.UserPoolAddOns}}} },{{/if}}
     "UserPoolTags": {
       {{#if @root.EnvName}}"Environment": "{{@root.EnvName}}",{{/if}}
       {{#if @root.EnvVersion}}"Version": "{{@root.EnvVersion}}",{{/if}}
