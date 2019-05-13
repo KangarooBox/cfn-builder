@@ -12,9 +12,16 @@
     {{else}}
       { "Fn::GetAtt":["iamr{{this.DeliverLogsPermissionArn}}","Arn"]}
     {{/startsWith}},{{/if}}
-    {{#if this.LogGroupName}}"LogGroupName":"{{this.LogGroupName}}",{{/if}}
+    {{#if this.LogGroupName}}"LogGroupName": "{{this.LogGroupName}}",{{/if}}
+    {{#if this.LogDestination}}"LogDestination": "{{this.LogDestination}}",{{/if}}
+    {{#if this.LogDestinationType}}"LogDestinationType": "{{this.LogDestinationType}}",{{/if}}
     "ResourceType":"{{this.ResourceType}}",
-    "ResourceId":"{{this.ResourceId}}",
-    "TrafficType":"{{this.TrafficType}}"
+    "TrafficType":"{{this.TrafficType}}",
+
+    {{#startsWith "arn:aws" this.ResourceId}}
+      "ResourceId": "{{this.ResourceId}}"
+    {{else}}
+      "ResourceId": {"Ref":"{{this.ResourceId}}"}
+    {{/startsWith}}
   }
 }
