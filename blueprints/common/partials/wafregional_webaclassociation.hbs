@@ -1,0 +1,20 @@
+{{!--
+  The AWS::WAFRegional::WebACLAssociation resource associates an AWS WAF Regional web access control
+  group (ACL) with a resource.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafregional-webaclassociation.html
+ --}}
+"wafrwacl{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFRegional::WebACLAssociation",
+  "Properties": {
+    "ResourceArn":
+    {{#startsWith 'aws:arn:' this.ResourceArn}}"{{this.ResourceArn}}"
+    {{else}}{"Ref":"elbv2{{sanitize this.ResourceArn ''}}"}
+    {{/startsWith}},
+    "WebACLId": {{#lengthEqual this.WebACLId 36}}
+      "{{this.WebACLId}}"
+    {{else}}
+      { "Ref":"wafrwacl{{sanitize this.WebACLId ''}}" }
+    {{/lengthEqual}}
+  }
+}

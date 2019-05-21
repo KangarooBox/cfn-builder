@@ -434,6 +434,34 @@
     {{> sqs_queue_policy}},
     {{/each}}
 
+    {{#each WAFWebACLs}}
+    {{> waf_webacl}},
+    {{/each}}
+
+    {{#each WAFRules}}
+    {{> waf_rule}},
+    {{/each}}
+
+    {{#each WAFRegionalByteMatchSets}}
+    {{> wafregional_bytematchset}},
+    {{/each}}
+
+    {{#each WAFRegionalSqlInjectionMatchSets}}
+    {{> wafregional_sqlinjectionmatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalWebACLs}}
+    {{> wafregional_webacl}},
+    {{/each}}
+
+    {{#each WAFRegionalWebACLAssociations}}
+    {{> wafregional_webaclassociation}},
+    {{/each}}
+
+    {{#each WAFRegionalRules}}
+    {{> wafregional_rule}},
+    {{/each}}
+
     {{#each WorkspacesWorkspaces}}
     {{> workspaces_workspace}},
     {{/each}}

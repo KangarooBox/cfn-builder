@@ -1,0 +1,16 @@
+{{!--
+  A combination of ByteMatchSet, IPSet, and/or SqlInjectionMatchSet objects that identify the
+  web requests that you want to allow, block, or count.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-waf-rule.html
+ --}}
+"wafr{{sanitize this.Name ''}}" : {
+  "Type": "AWS::WAF::Rule",
+  "Properties": {
+    {{#if this.Predicates}}"Predicates": [
+      {{#each this.Predicates}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "MetricName" : "{{this.MetricName}}",
+    "Name": "{{this.Name}}"
+  }
+}
