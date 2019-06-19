@@ -11,7 +11,8 @@
   {{/ifObject}}
 
   "Metadata" : {
-    {{#each Metadata}}{{{this}}},{{/each}}
+    {{#each Metadata}}{{{inject this}}},{{/each}}
+    {{> tags Name=ProjectName}},
     "Environment" : "{{EnvName}}",
     "Version"     : "{{EnvVersion}}",
     "ProjectName" : "{{ProjectName}}",
@@ -125,6 +126,10 @@
     {{> cognito_userpool}},
     {{/each}}
 
+    {{#each CognitoUserPoolClients}}
+    {{> cognito_userpoolclient}},
+    {{/each}}
+
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
     {{/each}}
@@ -175,6 +180,10 @@
 
     {{#each EC2TransitGatewayAttachments}}
     {{> ec2_transitgatewayattachment}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRoutes}}
+    {{> ec2_transitgatewayroute}},
     {{/each}}
 
     {{#each EC2TransitGatewayRouteTables}}
@@ -428,6 +437,34 @@
 
     {{#each SQSQueuePolicies}}
     {{> sqs_queue_policy}},
+    {{/each}}
+
+    {{#each WAFWebACLs}}
+    {{> waf_webacl}},
+    {{/each}}
+
+    {{#each WAFRules}}
+    {{> waf_rule}},
+    {{/each}}
+
+    {{#each WAFRegionalByteMatchSets}}
+    {{> wafregional_bytematchset}},
+    {{/each}}
+
+    {{#each WAFRegionalSqlInjectionMatchSets}}
+    {{> wafregional_sqlinjectionmatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalWebACLs}}
+    {{> wafregional_webacl}},
+    {{/each}}
+
+    {{#each WAFRegionalWebACLAssociations}}
+    {{> wafregional_webaclassociation}},
+    {{/each}}
+
+    {{#each WAFRegionalRules}}
+    {{> wafregional_rule}},
     {{/each}}
 
     {{#each WorkspacesWorkspaces}}

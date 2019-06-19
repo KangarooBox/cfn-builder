@@ -7,6 +7,7 @@
 "iamip{{this.Name}}": {
   "Type": "AWS::IAM::InstanceProfile",
   "Properties": {
+    {{#if this.InstanceProfileName}}"InstanceProfileName":"{{this.InstanceProfileName}}",{{/if}}
     "Path": {{#if this.Path}}"{{this.Path}}"{{else}}"/"{{/if}},
     "Roles": [
       {{#each Roles}}

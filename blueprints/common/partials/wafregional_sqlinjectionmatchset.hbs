@@ -1,0 +1,16 @@
+{{!--
+  A complex type that contains SqlInjectionMatchTuple objects, which specify the parts of
+  web requests that you want AWS WAF to inspect for snippets of malicious SQL code and, if
+  you want AWS WAF to inspect a header, the name of the header.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafregional-sqlinjectionmatchset.html
+ --}}
+"wafrsqlms{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFRegional::SqlInjectionMatchSet",
+  "Properties": {
+    {{#if this.SqlInjectionMatchTuples}}"SqlInjectionMatchTuples": [
+      {{#each this.SqlInjectionMatchTuples}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "Name": "{{this.Name}}"
+  }
+}

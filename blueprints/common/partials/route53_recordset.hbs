@@ -12,7 +12,7 @@
     {{else}}"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
     {{/if}}
 
-    {{#with (lookupById @root.DNS this.DomainName)}}
+    {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
       {{#ifEq this.Type ../DomainType}}
         "HostedZoneId":"{{this.HostedZoneId}}",
         "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",

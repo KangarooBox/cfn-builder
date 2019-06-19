@@ -18,6 +18,10 @@
       {{#startsWith "rtb-" this.NatGatewayId}}"{{this.NatGatewayId}}"
       {{else}}{"Ref":"ec2nat{{sanitize this.NatGatewayId ''}}"}{{/startsWith}},
     {{/if}}
+    {{#if this.TransitGatewayId}}"TransitGatewayId":
+      {{#startsWith "tgw-" this.TransitGatewayId}}"{{this.TransitGatewayId}}"
+      {{else}}{"Ref":"trgwy{{sanitize this.TransitGatewayId ''}}"}{{/startsWith}},
+    {{/if}}
     {{#if this.VpcPeeringConnectionId}}"VpcPeeringConnectionId":
       {{#startsWith "pcx-" this.VpcPeeringConnectionId}}"{{this.VpcPeeringConnectionId}}"
       {{else}}{"Ref":"ec2vpcpc{{sanitize this.VpcPeeringConnectionId ''}}"}{{/startsWith}},

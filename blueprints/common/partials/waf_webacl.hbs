@@ -1,0 +1,16 @@
+{{!--
+  Contains the Rules that identify the requests that you want to allow, block, or count.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-waf-webacl.html
+ --}}
+"wafwacl{{sanitize this.Name ''}}" : {
+  "Type": "AWS::WAF::WebACL",
+  "Properties": {
+    {{#if this.Rules}}"Rules": [
+      {{#each this.Rules}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "DefaultAction": { {{{inject this.DefaultAction}}} },
+    "MetricName": "{{this.MetricName}}",
+    "Name": "{{this.Name}}"
+  }
+}

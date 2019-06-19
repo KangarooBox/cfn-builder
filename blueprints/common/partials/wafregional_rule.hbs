@@ -1,0 +1,45 @@
+{{!--
+  A combination of ByteMatchSet, IPSet, and/or SqlInjectionMatchSet objects that identify the
+  web requests that you want to allow, block, or count.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafregional-rule.html
+ --}}
+"wafrr{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFRegional::Rule",
+  "Properties": {
+    {{#if this.Predicates}}"Predicates": [
+      {{#each this.Predicates}}
+        {
+          "Negated": {{this.Negated}},
+          "Type": "{{this.Type}}",
+          "DataId":
+            {{#switch this.Type}}
+              {{#case "ByteMatch" break=true}}
+                {"Ref":"wafrbms{{sanitize this.DataId ''}}"}
+              {{/case}}
+              {{#case "GeoMatch" break=true}}
+                {"Ref":"wafrgeoms{{sanitize this.DataId ''}}"}
+              {{/case}}
+              {{#case "IPMatch" break=true}}
+                {"Ref":"wafripmms{{sanitize this.DataId ''}}"}
+              {{/case}}
+              {{#case "RegexMatch" break=true}}
+                {"Ref":"wafrregmms{{sanitize this.DataId ''}}"}
+              {{/case}}
+              {{#case "SizeConstraint" break=true}}
+                {"Ref":"wafrsizems{{sanitize this.DataId ''}}"}
+              {{/case}}
+              {{#case "SqlInjectionMatch" break=true}}
+                {"Ref":"wafrsqlms{{sanitize this.DataId ''}}"}
+              {{/case}}
+              {{#case "XssMatch" break=true}}
+                {"Ref":"wafrxxsms{{sanitize this.DataId ''}}"}
+              {{/case}}
+            {{/switch}}
+        }
+      {{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "MetricName": "{{this.MetricName}}",
+    "Name": "{{this.Name}}"
+  }
+}

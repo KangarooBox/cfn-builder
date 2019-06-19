@@ -35,6 +35,24 @@
     ],
 
 
+    {{#if this.LifecycleHookSpecificationList}}
+      "LifecycleHookSpecificationList": [{{#each this.LifecycleHookSpecificationList}}
+        { {{{inject this.LifecycleHookSpecificationList}}} }{{#unless @last}},{{/unless}}
+      {{/each}}],
+    {{/if}}
+
+    {{#if this.MetricsCollection}}
+      "MetricsCollection": [ {{#each this.MetricsCollection}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
+    {{/if}}
+
+    {{#if this.NotificationConfigurations}}{{#with this.NotificationConfigurations}}
+      "NotificationConfigurations": [{{#each this}}
+        { "NotificationTypes": [{{#each this.NotificationTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+          "TopicARN": "{{this.TopicARN}}"
+        }{{#unless @last}},{{/unless}}
+      {{/each}}],
+    {{/with}}{{/if}}
+
     {{#if this.LoadBalancerNames}}
     "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
@@ -52,3 +70,14 @@
     {{> ec2_tags }}
   }
 }
+
+
+
+{{!-- TODO
+      "InstanceId" : String,
+      "LaunchTemplate" : LaunchTemplateSpecification,
+      "MixedInstancesPolicy" : MixedInstancesPolicy,
+      "PlacementGroup" : String,
+      "ServiceLinkedRoleARN" : String,
+      "TerminationPolicies" : [ String, ... ],
+ --}}

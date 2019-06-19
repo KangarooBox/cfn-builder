@@ -1,0 +1,23 @@
+{{!--
+  Creates an Amazon Cognito user pool client.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html
+ --}}
+"cogupc{{sanitize this.Name ''}}": {
+  "Type": "AWS::Cognito::UserPoolClient",
+  "Properties": {
+    {{#if this.ExplicitAuthFlows}}"ExplicitAuthFlows":[
+      {{#each this.ExplicitAuthFlows}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.GenerateSecret}}"GenerateSecret": {{default (toString this.GenerateSecret) true}},{{/if}}
+    {{#if this.ReadAttributes}}"ReadAttributes":[
+      {{#each this.ReadAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.RefreshTokenValidity}}"RefreshTokenValidity": {{this.RefreshTokenValidity}},{{/if}}
+    {{#if this.WriteAttributes}}"WriteAttributes":[
+      {{#each this.WriteAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "ClientName": "{{this.Name}}",
+    "UserPoolId": {"Ref":"cogup{{sanitize this.UserPoolId ''}}"}
+  }
+}

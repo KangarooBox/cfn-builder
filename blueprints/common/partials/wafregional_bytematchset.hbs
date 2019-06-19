@@ -1,0 +1,14 @@
+{{!--
+  Contains the Rules that identify the requests that you want to allow, block, or count.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafregional-bytematchset.html
+ --}}
+"wafrbms{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFRegional::ByteMatchSet",
+  "Properties": {
+    {{#if this.ByteMatchTuples}}"ByteMatchTuples": [
+      {{#each this.ByteMatchTuples}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "Name": "{{this.Name}}"
+  }
+}

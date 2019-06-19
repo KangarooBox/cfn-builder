@@ -7,6 +7,7 @@
  --}}
 "elbv2{{sanitize this.Name ''}}": {
   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+  {{#if this.DependsOn}}"DependsOn": "{{this.DependsOn}}",{{/if}}
   "Properties": {
     "Name": "{{this.Name}}-{{@root.EnvName}}",
     "Scheme": "{{this.Scheme}}",
