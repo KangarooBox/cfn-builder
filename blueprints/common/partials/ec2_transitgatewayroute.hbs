@@ -1,0 +1,35 @@
+{{!--
+  Specifies a static route for a transit gateway route table.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html
+ --}}
+"ec2tgwyrt{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::TransitGatewayRoute",
+  "Properties": {
+      "Blackhole": {{default (toString this.Blackhole) false}},
+      {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
+      {{#if this.TransitGatewayAttachmentId}}"TransitGatewayAttachmentId":
+        {{#startsWith this.TransitGatewayAttachmentId 'tgw-attach-'}}
+          "{{this.TransitGatewayAttachmentId}}"
+        {{else}}
+          {"Ref":"trgwyat{{sanitize this.TransitGatewayAttachmentId ''}}"}
+        {{/startsWith}}
+      ,{{/if}}
+      "TransitGatewayRouteTableId": "{{this.TransitGatewayRouteTableId}}"
+    }
+}
+
+
+{{!--
+  "Type": "AWS::EC2::TransitGatewayRouteTable",
+  "Properties" : {
+    "TransitGatewayId":
+      {{#startsWith 'tgw-' this.TransitGatewayId}}
+        "{{this.TransitGatewayId}}",
+      {{else}}
+        {"Ref": "trgwy{{sanitize this.Name ''}}"},
+      {{/startsWith}}
+    {{> tags}}
+  }
+}
+ --}}

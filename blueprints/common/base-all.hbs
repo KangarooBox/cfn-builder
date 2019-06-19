@@ -11,7 +11,8 @@
   {{/ifObject}}
 
   "Metadata" : {
-    {{#each Metadata}}{{{this}}},{{/each}}
+    {{#each Metadata}}{{{inject this}}},{{/each}}
+    {{> tags Name=ProjectName}},
     "Environment" : "{{EnvName}}",
     "Version"     : "{{EnvVersion}}",
     "ProjectName" : "{{ProjectName}}",
@@ -179,6 +180,10 @@
 
     {{#each EC2TransitGatewayAttachments}}
     {{> ec2_transitgatewayattachment}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRoutes}}
+    {{> ec2_transitgatewayroute}},
     {{/each}}
 
     {{#each EC2TransitGatewayRouteTables}}
