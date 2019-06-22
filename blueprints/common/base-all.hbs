@@ -451,6 +451,14 @@
     {{> wafregional_bytematchset}},
     {{/each}}
 
+    {{#each WAFRegionalGeoMatchSets}}
+    {{> wafregional_geomatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalIpMatchSets}}
+    {{> wafregional_ipmatchset}},
+    {{/each}}
+
     {{#each WAFRegionalSqlInjectionMatchSets}}
     {{> wafregional_sqlinjectionmatchset}},
     {{/each}}
