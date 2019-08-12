@@ -6,7 +6,15 @@
 "snstp{{sanitize this.Name ''}}" : {
   "Type" : "AWS::SNS::TopicPolicy",
   "Properties" : {
-    "PolicyDocument" : { {{{inject this.PolicyDocument}}} },
+    "PolicyDocument" : {
+      "Id": "{{this.Name}}",
+      "Version": "2012-10-17",
+      "Statement": [
+        {{#each this.PolicyDocumentStatements}}
+          { {{{inject this}}} }{{#unless @last}},{{/unless}}
+        {{/each}}
+      ]
+    },
     "Topics" : [
     {{#each this.Topics }}
       { "Ref":"snst{{sanitize this ''}}" }{{#unless @last}},{{/unless}}
