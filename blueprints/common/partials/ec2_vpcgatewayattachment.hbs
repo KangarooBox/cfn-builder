@@ -1,0 +1,14 @@
+{{!--
+  Attaches an internet gateway to a VPC, enabling connectivity between the internet and the VPC.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc-gateway-attachment.html
+ --}}
+"ec2vpcgwa{{this.Name}}":{
+  "Type": "AWS::EC2::VPCGatewayAttachment",
+  "Properties": {
+    {{#if this.InternetGatewayId}}"InternetGatewayId": "{{this.InternetGatewayId}}",{{/if}}
+    {{#if this.VpnGatewayId}}"VpnGatewayId": {"Ref": "ec2vpngw{{this.VpnGatewayId}}"} ,{{/if}}
+
+    {{> vpcid}}
+  }
+}

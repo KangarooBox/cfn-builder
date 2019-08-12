@@ -7,7 +7,15 @@
 "e2snrta{{sanitize Name ''}}":{
   "Type": "AWS::EC2::SubnetRouteTableAssociation",
   "Properties": {
-    "RouteTableId": "{{this.RouteTableId}}",
-    "SubnetId": "{{this.SubnetId}}"
+    "RouteTableId": {{#startsWith 'rtb-' this.RouteTableId}}
+      "{{this.RouteTableId}}"
+    {{else}}
+      {"Ref":"ec2routab{{sanitize this.RouteTableId ''}}"}
+    {{/startsWith}},
+    "SubnetId": {{#startsWith 'subnet-' this.SubnetId}}
+      "{{this.SubnetId}}"
+    {{else}}
+      {"Ref":"ec2sn{{sanitize this.SubnetId ''}}"}
+    {{/startsWith}}
   }
 }
