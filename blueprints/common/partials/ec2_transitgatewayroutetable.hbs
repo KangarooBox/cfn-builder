@@ -10,7 +10,7 @@
       {{#startsWith 'tgw-' this.TransitGatewayId}}
         "{{this.TransitGatewayId}}",
       {{else}}
-        {"Ref": "trgwy{{sanitize this.Name ''}}"},
+        {"Ref": "trgwy{{sanitize this.TransitGatewayId ''}}"},
       {{/startsWith}}
     {{> tags}}
   }

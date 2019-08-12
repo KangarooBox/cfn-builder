@@ -9,27 +9,16 @@
       "Blackhole": {{default (toString this.Blackhole) false}},
       {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
       {{#if this.TransitGatewayAttachmentId}}"TransitGatewayAttachmentId":
-        {{#startsWith this.TransitGatewayAttachmentId 'tgw-attach-'}}
+        {{#startsWith 'tgw-attach-' this.TransitGatewayAttachmentId}}
           "{{this.TransitGatewayAttachmentId}}"
         {{else}}
           {"Ref":"trgwyat{{sanitize this.TransitGatewayAttachmentId ''}}"}
         {{/startsWith}}
       ,{{/if}}
-      "TransitGatewayRouteTableId": "{{this.TransitGatewayRouteTableId}}"
+      "TransitGatewayRouteTableId": {{#startsWith 'tgw-rtb-' this.TransitGatewayRouteTableId}}
+        "{{this.TransitGatewayRouteTableId}}"
+      {{else}}
+        {"Ref":"ec2tgroutab{{sanitize this.TransitGatewayRouteTableId ''}}"}
+      {{/startsWith}}
     }
 }
-
-
-{{!--
-  "Type": "AWS::EC2::TransitGatewayRouteTable",
-  "Properties" : {
-    "TransitGatewayId":
-      {{#startsWith 'tgw-' this.TransitGatewayId}}
-        "{{this.TransitGatewayId}}",
-      {{else}}
-        {"Ref": "trgwy{{sanitize this.Name ''}}"},
-      {{/startsWith}}
-    {{> tags}}
-  }
-}
- --}}

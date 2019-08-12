@@ -1,0 +1,14 @@
+{{!--
+  Specifies a virtual private gateway. A virtual private gateway is the endpoint on the VPC side of
+  your VPN connection.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gateway.html
+ --}}
+"ec2vpngw{{sanitize this.Name ''}}":{
+  "Type": "AWS::EC2::VPNGateway",
+  "Properties": {
+    "Type": "{{this.Type}}",
+    {{#if this.AmazonSideAsn}}"AmazonSideAsn": {{this.AmazonSideAsn}},{{/if}}
+    {{> tags}}
+  }
+}

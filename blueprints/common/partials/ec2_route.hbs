@@ -10,7 +10,12 @@
     {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
     {{#if this.DestinationIpv6CidrBlock}}"DestinationIpv6CidrBlock": "{{this.DestinationIpv6CidrBlock}}",{{/if}}
     {{#if this.EgressOnlyInternetGatewayId}}"EgressOnlyInternetGatewayId": "{{this.EgressOnlyInternetGateway}}",{{/if}}
-    {{#if this.GatewayId}}"GatewayId": "{{this.GatewayId}}",{{/if}}
+    {{#if this.GatewayId}}"GatewayId": {{#startsWith 'vgw-' this.GatewayId}}
+      "{{this.GatewayId}}"
+      {{else}}
+      {"Ref":"ec2vpngw{{this.GatewayId}}"}
+      {{/startsWith}},
+    {{/if}}
     {{#if this.InstanceId}}"InstanceId":{{#startsWith "i-" this.InstanceId}}"{{this.InstanceId}}"
       {{else}}{"Ref":"ec2{{this.InstanceId}}"}{{/startsWith}},
     {{/if}}
