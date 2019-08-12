@@ -1,0 +1,14 @@
+{{!--
+  Contains the Rules that identify the requests that you want to allow, block, or count.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafregional-geomatchset.html
+ --}}
+"wafrgeoms{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFRegional::GeoMatchSet",
+  "Properties": {
+    {{#if this.GeoMatchConstraints}}"GeoMatchConstraints": [
+      {{#each this.GeoMatchConstraints}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "Name": "{{this.Name}}"
+  }
+}
