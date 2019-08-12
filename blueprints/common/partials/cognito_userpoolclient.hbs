@@ -6,18 +6,38 @@
 "cogupc{{sanitize this.Name ''}}": {
   "Type": "AWS::Cognito::UserPoolClient",
   "Properties": {
+    "ClientName": "{{this.Name}}",
+    {{#if this.AllowedOAuthFlows}}"AllowedOAuthFlows":[
+      {{#each this.AllowedOAuthFlows}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "AllowedOAuthFlowsUserPoolClient": {{default (toString this.AllowedOAuthFlowsUserPoolClient) false}},
+    {{#if this.AllowedOAuthScopes}}"AllowedOAuthScopes":[
+      {{#each this.AllowedOAuthScopes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.AnalyticsConfiguration}}"AnalyticsConfiguration": AnalyticsConfiguration,{{/if}}
+    {{#if this.CallbackURLs}}"CallbackURLs":[
+      {{#each this.CallbackURLs}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.DefaultRedirectURI}}"DefaultRedirectURI": "{{this.DefaultRedirectURI}}",{{/if}}
+
     {{#if this.ExplicitAuthFlows}}"ExplicitAuthFlows":[
       {{#each this.ExplicitAuthFlows}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}
     {{#if this.GenerateSecret}}"GenerateSecret": {{default (toString this.GenerateSecret) true}},{{/if}}
+    {{#if this.LogoutURLs}}"LogoutURLs":[
+      {{#each this.LogoutURLs}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
     {{#if this.ReadAttributes}}"ReadAttributes":[
       {{#each this.ReadAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}
     {{#if this.RefreshTokenValidity}}"RefreshTokenValidity": {{this.RefreshTokenValidity}},{{/if}}
+
+    {{#if this.SupportedIdentityProviders}}"SupportedIdentityProviders":[
+      {{#each this.SupportedIdentityProviders}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
     {{#if this.WriteAttributes}}"WriteAttributes":[
       {{#each this.WriteAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}
-    "ClientName": "{{this.Name}}",
     "UserPoolId": {"Ref":"cogup{{sanitize this.UserPoolId ''}}"}
   }
 }
