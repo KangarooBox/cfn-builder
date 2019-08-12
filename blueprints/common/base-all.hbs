@@ -190,6 +190,10 @@
     {{> ec2_transitgatewayroutetable}},
     {{/each}}
 
+    {{#each EC2TransitGatewayRouteTableAssociations}}
+    {{> ec2_transitgatewayroutetableassociation}},
+    {{/each}}
+
     {{#each EC2TransitGatewayRoutes}}
     {{> ec2_transitgatewayroute}},
     {{/each}}
@@ -210,6 +214,10 @@
     {{> ec2_vpcendpointservicepermission}},
     {{/each}}
 
+    {{#each EC2VPCGatewayAttachments}}
+    {{> ec2_vpcgatewayattachment}},
+    {{/each}}
+
     {{#each EC2VPCPeeringConnections}}
     {{> ec2_vpcpeeringconnection}},
     {{/each}}
@@ -220,6 +228,10 @@
 
     {{#each EC2VPNConnectionRoutes}}
     {{> ec2_vpnconnectionroute}},
+    {{/each}}
+
+    {{#each EC2VPNGateways}}
+    {{> ec2_vpngateway}},
     {{/each}}
 
     {{#each EC2NATGateways}}
@@ -461,6 +473,10 @@
 
     {{#each WAFRegionalSqlInjectionMatchSets}}
     {{> wafregional_sqlinjectionmatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalXssMatchSets}}
+    {{> wafregional_xssmatchset}},
     {{/each}}
 
     {{#each WAFRegionalWebACLs}}
