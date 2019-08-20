@@ -10,7 +10,9 @@
     {{#if this.DomainValidationOptions}}"DomainValidationOptions": [
       { "DomainName": "{{this.DomainName}}", "ValidationDomain": "{{this.ValidationDomain}}"}
     ],{{/if}}
-    {{#if this.SubjectAlternativeNames}}"SubjectAlternativeNames": [ String, ... ],{{/if}}
+    {{#if this.SubjectAlternativeNames}}"SubjectAlternativeNames": [
+      {{#each this.SubjectAlternativeNames}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
     {{#if this.ValidationMethod}}"ValidationMethod": "{{this.ValidationMethod}}",{{/if}}
     {{> tags}}
   }
