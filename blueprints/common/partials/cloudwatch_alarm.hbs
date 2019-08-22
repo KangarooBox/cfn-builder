@@ -37,7 +37,7 @@
           {{/case}}
 
           {{#case "LoadBalancer" break=true}}
-            { "Name": "{{this.Name}}", "Value": {"Ref":"elbv2{{this.Value}}"} }
+            { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2{{this.Value}}","LoadBalancerFullName"]} }
           {{/case}}
 
           {{#sdefault}}
