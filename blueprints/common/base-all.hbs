@@ -86,6 +86,10 @@
     {{> cloudwatch_alarm}},
     {{/each}}
 
+    {{#each CodeBuildProjects}}
+    {{> codebuild_project}},
+    {{/each}}
+
     {{#each CodeCommitRepositories}}
     {{> codecommit_repository}},
     {{/each}}
