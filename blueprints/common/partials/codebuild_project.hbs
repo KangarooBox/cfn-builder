@@ -1,0 +1,36 @@
+{{!--
+  Configures how AWS CodeBuild builds your source code. For example, it tells
+  CodeBuild where to get the source code and which build environment to use.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html
+ --}}
+"cbp{{this.Name}}": {
+  "Type": "AWS::CodeBuild::Project",
+  "Properties": {
+      "Artifacts": { {{{inject this.Artifacts}}} },
+      "Environment": { {{{inject this.Environment}}}  },
+      "Source": { {{{inject this.Source}}} },
+      "ServiceRole":{{#startsWith "arn:aws:" this.ServiceRole}}
+        "{{this.ServiceRole}}"
+      {{else}}
+        { "Ref":"iamr{{this.ServiceRole}}" }
+      {{/startsWith}},
+
+      {{#if this.BadgeEnabled}}"BadgeEnabled": Boolean,{{/if}}
+      {{#if this.Cache}}"Cache": { {{{inject this.Cache}}} },{{/if}}
+      {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+      {{#if this.EncryptionKey}}"EncryptionKey": "{{this.EncryptionKey}}",{{/if}}
+      {{#if this.LogsConfig}}"LogsConfig": LogsConfig,{{/if}}
+      {{#if this.QueuedTimeoutInMinutes}}"QueuedTimeoutInMinutes": {{this.QueuedTimeoutInMinutes}},{{/if}}
+      {{#if this.SecondaryArtifacts}}"SecondaryArtifacts": [ Artifacts, ... ],{{/if}}
+      {{#if this.SecondarySources}}"SecondarySources": [ Source, ... ],{{/if}}
+      {{#if this.SecondarySourceVersions}}"SecondarySourceVersions": [ ProjectSourceVersion, ... ],{{/if}}
+      {{#if this.SourceVersion}}"SourceVersion": "{{this.SourceVersion}}",{{/if}}
+      {{#if this.TimeoutInMinutes}}"TimeoutInMinutes": {{this.TimeoutInMinutes}},{{/if}}
+      {{#if this.Triggers}}"Triggers": ProjectTriggers,{{/if}}
+      {{#if this.VpcConfig}}"VpcConfig": { {{{inject this.VpcConfig}}} },{{/if}}
+
+      "Name": "{{this.Name}}",
+      {{> tags}}
+    }
+}

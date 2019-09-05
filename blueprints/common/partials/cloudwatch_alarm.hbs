@@ -40,6 +40,10 @@
             { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2{{this.Value}}","LoadBalancerFullName"]} }
           {{/case}}
 
+          {{#case "TargetGroup" break=true}}
+            { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2tg{{this.Value}}","TargetGroupFullName"]} }
+          {{/case}}
+
           {{#sdefault}}
             { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
           {{/sdefault}}

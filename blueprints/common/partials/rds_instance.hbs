@@ -30,6 +30,9 @@
     {{#if this.AllocatedStorage}}"AllocatedStorage":"{{this.AllocatedStorage}}",{{/if}}
     {{#if this.StorageType}}"StorageType":"{{this.StorageType}}",{{/if}}
     {{#if this.Iops}}"Iops":{{this.Iops}},{{/if}}
+    {{#if this.MultiAZ}}"MultiAZ": {{default (toString this.MultiAZ) false}},{{/if}}
+    {{#if this.StorageEncrypted}}"StorageEncrypted": {{default (toString this.StorageEncrypted) false}},{{/if}}
+
     "DBInstanceClass":"{{this.DBInstanceClass}}",
     "VPCSecurityGroups":[{{#each SecurityGroups}}
       {{#startsWith "sg-" this}}
@@ -39,8 +42,8 @@
       {{/startsWith}}{{#unless @last}}, {{/unless}}
     {{/each}}],
     "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.Name ''}}" },
-    "PubliclyAccessible":{{default this.PubliclyAccessible "false"}},
-    "CopyTagsToSnapshot":{{default this.CopyTagsToSnapshot "false"}},
+    "PubliclyAccessible":{{default (toString this.PubliclyAccessible) false}},
+    "CopyTagsToSnapshot":{{default (toString this.CopyTagsToSnapshot) false}},
     {{~#if this.DBInstanceIdentifier}}
     "DBInstanceIdentifier": "{{this.DBInstanceIdentifier}}",
     {{else}}
