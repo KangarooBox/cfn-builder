@@ -20,14 +20,14 @@
       {{#if this.Cache}}"Cache": { {{{inject this.Cache}}} },{{/if}}
       {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
       {{#if this.EncryptionKey}}"EncryptionKey": "{{this.EncryptionKey}}",{{/if}}
-      {{#if this.LogsConfig}}"LogsConfig": LogsConfig,{{/if}}
+      {{#if this.LogsConfig}}"LogsConfig": { {{{inject this.LogsConfig}}} },{{/if}}
       {{#if this.QueuedTimeoutInMinutes}}"QueuedTimeoutInMinutes": {{this.QueuedTimeoutInMinutes}},{{/if}}
       {{#if this.SecondaryArtifacts}}"SecondaryArtifacts": [ Artifacts, ... ],{{/if}}
       {{#if this.SecondarySources}}"SecondarySources": [ Source, ... ],{{/if}}
       {{#if this.SecondarySourceVersions}}"SecondarySourceVersions": [ ProjectSourceVersion, ... ],{{/if}}
       {{#if this.SourceVersion}}"SourceVersion": "{{this.SourceVersion}}",{{/if}}
       {{#if this.TimeoutInMinutes}}"TimeoutInMinutes": {{this.TimeoutInMinutes}},{{/if}}
-      {{#if this.Triggers}}"Triggers": ProjectTriggers,{{/if}}
+      {{#if this.Triggers}}"Triggers": { {{{inject this.Triggers}}} },{{/if}}
       {{#if this.VpcConfig}}"VpcConfig": { {{{inject this.VpcConfig}}} },{{/if}}
 
       "Name": "{{this.Name}}",
