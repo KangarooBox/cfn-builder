@@ -25,6 +25,13 @@
         {{else}}
         { "Fn::GetAtt":[ "{{this.Arn}}", "Arn"] }
         {{/startsWith}},
+        {{#if this.RoleArn}}"RoleArn":
+          {{#startsWith "arn:aws:" this.RoleArn}}
+            "{{this.RoleArn}}"
+          {{else}}
+            { "Fn::GetAtt":[ "iamr{{this.RoleArn}}", "Arn"] }
+          {{/startsWith}},
+        {{/if}}
         "Id":"{{this.Id}}"
       }{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
     {{#if this.Description}}"Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}

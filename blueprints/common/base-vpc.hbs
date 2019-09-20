@@ -43,6 +43,9 @@
     {{> ec2_vpcpeeringconnection}},
     {{/each}}
 
+    {{#each SSMParameters}}
+    {{> ssm_parameter}},
+    {{/each}}
 
     {{!-- Gateways setup --}}
     "VPNGateway" : {
