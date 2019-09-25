@@ -9,7 +9,6 @@
     "AutoScalingGroupName": "{{this.Name}}",
     {{#if this.Cooldown}}"Cooldown": "{{this.Cooldown}}",{{/if}}
     "LaunchConfigurationName":{ "Ref":"aslc{{this.LaunchConfigurationName}}" },
-
     {{#if this.AvailabilityZones}}
       "AvailabilityZones": [{{#each this.AvailabilityZones}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
@@ -33,18 +32,14 @@
         {{/each}}
       {{/if}}
     ],
-
-
     {{#if this.LifecycleHookSpecificationList}}
       "LifecycleHookSpecificationList": [{{#each this.LifecycleHookSpecificationList}}
         { {{{inject this.LifecycleHookSpecificationList}}} }{{#unless @last}},{{/unless}}
       {{/each}}],
     {{/if}}
-
     {{#if this.MetricsCollection}}
       "MetricsCollection": [ {{#each this.MetricsCollection}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
-
     {{#if this.NotificationConfigurations}}{{#with this.NotificationConfigurations}}
       "NotificationConfigurations": [{{#each this}}
         { "NotificationTypes": [{{#each this.NotificationTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
@@ -52,18 +47,17 @@
         }{{#unless @last}},{{/unless}}
       {{/each}}],
     {{/with}}{{/if}}
-
     {{#if this.LoadBalancerNames}}
-    "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
+      "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
-
     {{#if this.TargetGroupARNs}}
-    "TargetGroupARNs":[{{#each this.TargetGroupARNs}}{"Ref":"elbv2tg{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
+      "TargetGroupARNs":[{{#each this.TargetGroupARNs}}{"Ref":"elbv2tg{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
-
-    "HealthCheckGracePeriod":{{default this.HealthCheckGracePeriod 300}},
+      "HealthCheckGracePeriod":{{default this.HealthCheckGracePeriod 300}},
     {{#if this.HealthCheckType}}"HealthCheckType":"{{this.HealthCheckType}}",{{/if}}
-
+    {{#if this.TerminationPolicies}}"TerminationPolicies":[
+      {{#each this.TerminationPolicies}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
     "MinSize":{{default this.MinSize 0}},
     "MaxSize":{{default this.MaxSize 0}},
     "DesiredCapacity":{{default this.DesiredCapacity 0}},
@@ -79,5 +73,4 @@
       "MixedInstancesPolicy" : MixedInstancesPolicy,
       "PlacementGroup" : String,
       "ServiceLinkedRoleARN" : String,
-      "TerminationPolicies" : [ String, ... ],
  --}}
