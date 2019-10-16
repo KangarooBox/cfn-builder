@@ -1,0 +1,19 @@
+{{!--
+  The AWS::KMS::Key resource specifies a customer master key (CMK) in AWS Key Management Service (AWS KMS).
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kms-key.html
+ --}}
+"kmskey{{sanitize this.Name ''}}": {
+  "Type": "AWS::KMS::Key",
+  "Properties": {
+    "KeyPolicy": { {{{inject this.KeyPolicy}}} },
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.Enabled}}"Enabled": {{default (toString this.Enabled) true}},{{/if}}
+    {{#if this.EnableKeyRotation}}"EnableKeyRotation": {{default (toString this.EnableKeyRotation) false}},{{/if}}
+    {{#if this.KeyUsage}}"KeyUsage": "{{default this.KeyUsage 'ENCRYPT_DECRYPT'}}",{{/if}}
+    {{#if this.PendingWindowInDays}}"PendingWindowInDays": {{this.PendingWindowInDays}},{{/if}}
+    {{> tags}}
+  }
+},
+
+{{> kms_alias this }}

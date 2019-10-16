@@ -134,6 +134,10 @@
     {{> cognito_userpoolclient}},
     {{/each}}
 
+    {{#each CognitoUserPoolDomains}}
+    {{> cognito_userpooldomain}},
+    {{/each}}
+
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
     {{/each}}
@@ -349,8 +353,17 @@
     {{#each KinesisStreams}}
     {{> kinesis_stream}},
     {{/each}}
+
     {{#each KinesisFirehoses}}
     {{> kinesis_firehose}},
+    {{/each}}
+
+    {{#each KMSAliases}}
+    {{> kms_alias}},
+    {{/each}}
+
+    {{#each KMSKeys}}
+    {{> kms_key}},
     {{/each}}
 
     {{#each LambdaEventSourceMappings}}
