@@ -138,6 +138,10 @@
     {{> cognito_userpooldomain}},
     {{/each}}
 
+    {{#each CognitoUserPoolRiskConfigurationAttachments}}
+    {{> cognito_userpoolriskconfigurationattachment}},
+    {{/each}}
+
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
     {{/each}}
