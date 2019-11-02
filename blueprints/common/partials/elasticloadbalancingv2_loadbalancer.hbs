@@ -12,14 +12,38 @@
     "Name": "{{this.Name}}-{{@root.EnvName}}",
     "Scheme": "{{this.Scheme}}",
     "Subnets":[
-      {{#each @root.Region.Subnets as |subnet name|}}
-        {{#each subnet.addresses}}
-          {{#ifEq ../../SubnetId name}}
-            "{{this.Id}}"{{#unless @last}},{{/unless}}
-          {{/ifEq}}
+      {{#if this.SubnetIndex}}
+        {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
+        {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+          {{#each this}}
+            {{#ifEq this.AZ ../../SubnetIndex}}"{{this.Id}}"{{/ifEq}}
+          {{/each}}
         {{/each}}
-      {{/each}}
+      {{else}}
+        {{!-- Use a whole subnet group --}}
+        {{#each @root.Region.Subnets as |subnet name|}}
+          {{#each subnet.addresses}}
+            {{#ifEq ../../SubnetId name}}
+              "{{this.Id}}"{{#unless @last}},{{/unless}}
+            {{/ifEq}}
+          {{/each}}
+        {{/each}}
+      {{/if}}
     ],
+
+    {{#if this.SubnetMappings}}
+      "SubnetMappings": [
+        { "AllocationId": {"Ref":"ec2eip{{sanitize this.SubnetMappings.AllocationId ''}}"},
+          {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
+          {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+            {{#each this}}
+              {{#ifEq this.AZ ../../SubnetIndex}}"SubnetId":"{{this.Id}}"{{/ifEq}}
+            {{/each}}
+          {{/each}}
+        }
+      ],
+    {{/if}}
+
     {{#if this.LoadBalancerAttributes}}
     "LoadBalancerAttributes": [
       {{#each this.LoadBalancerAttributes}}
@@ -28,7 +52,7 @@
     ],
     {{/if}}
     {{#if this.SecurityGroups}}
-    "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+      "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
     {{#if this.Type}}"Type": "{{this.Type}}",{{/if}}
     {{> tags}}

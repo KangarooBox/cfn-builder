@@ -13,16 +13,15 @@
       "AvailabilityZones": [{{#each this.AvailabilityZones}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
     "VPCZoneIdentifier":[
-      {{!-- Restrict the instance to a specific subnet group (a,b,c,d,e,etc.) --}}
+      {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
       {{#if this.SubnetIndex}}
         {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
           {{#each this}}
             {{#ifEq this.AZ ../../SubnetIndex}}"{{this.Id}}"{{/ifEq}}
           {{/each}}
         {{/each}}
-
       {{else}}
-        {{!-- Launch an instance into any subnet group --}}
+        {{!-- Use a whole subnet group --}}
         {{#each @root.Region.Subnets as |subnet name|}}
           {{#each subnet.addresses}}
             {{#ifEq ../../SubnetId name}}
