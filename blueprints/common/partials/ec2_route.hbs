@@ -6,6 +6,9 @@
  --}}
 "ec2route{{sanitize this.Name ''}}": {
   "Type": "AWS::EC2::Route",
+  {{#if this.TransitGatewayAttachment}}
+    "DependsOn": "trgwyat{{this.TransitGatewayAttachment}}",
+  {{/if}}
   "Properties": {
     {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
     {{#if this.DestinationIpv6CidrBlock}}"DestinationIpv6CidrBlock": "{{this.DestinationIpv6CidrBlock}}",{{/if}}
