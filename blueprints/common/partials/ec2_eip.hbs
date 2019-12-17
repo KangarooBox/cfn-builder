@@ -4,14 +4,14 @@
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip.html
  --}}
 "ec2eip{{sanitize this.Name ''}}": {
-   "Type" : "AWS::EC2::EIP",
-   "Properties" : {
-      {{#if this.InstanceId}}
-        {{#startsWith this.InstanceId "i-"}}"InstanceId" : "{{this.InstanceId}}",
-        {{else}}"InstanceId" : { "Ref":"ec2{{this.InstanceId}}" },
-        {{/startsWith}}
-      {{/if}}
-
-      "Domain" : "{{default "vpc" this.Domain}}"
-   }
+  "Type": "AWS::EC2::EIP",
+  "Properties": {
+    {{#if this.InstanceId}}
+      {{#startsWith this.InstanceId "i-"}}"InstanceId": "{{this.InstanceId}}",
+      {{else}}"InstanceId": { "Ref":"ec2{{this.InstanceId}}" },
+      {{/startsWith}}
+    {{/if}}
+    {{#if this.PublicIpv4Pool}}"PublicIpv4Pool": "{{this.PublicIpv4Pool}}",{{/if}}
+    "Domain": "{{default this.Domain 'vpc'}}"
+  }
 }
