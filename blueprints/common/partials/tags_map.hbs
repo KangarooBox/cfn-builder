@@ -1,0 +1,14 @@
+{{!--
+  Build a set of default tags.  These tags can be overridden by coping this file to the projects
+  ".../blueprints/common/partial/" directory.
+--}}
+
+"{{default this.PropertyID 'Tags'}}": {
+  {{#if @root.EnvName}}"Environment": "{{lowercase @root.EnvName}}",{{/if}}
+  {{#if @root.EnvVersion}}"Version": "{{@root.EnvVersion}}",{{/if}}
+  {{#if @root.ProjectName}}"Project": "{{@root.ProjectName}}",{{/if}}
+  {{#if @root.Role}}"Role": "{{@root.Role}}",{{/if}}
+  {{#if this.Role}}"Role": "{{this.Role}}",{{/if}}
+  {{#if @root.Owner}}"Owner": "{{@root.Owner}}",{{/if}}
+  "Name": "{{this.Name}}"
+}

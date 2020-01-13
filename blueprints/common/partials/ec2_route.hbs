@@ -6,17 +6,29 @@
  --}}
 "ec2route{{sanitize this.Name ''}}": {
   "Type": "AWS::EC2::Route",
+  {{#if this.TransitGatewayAttachment}}
+    "DependsOn": "trgwyat{{this.TransitGatewayAttachment}}",
+  {{/if}}
   "Properties": {
     {{#if this.DestinationCidrBlock}}"DestinationCidrBlock": "{{this.DestinationCidrBlock}}",{{/if}}
     {{#if this.DestinationIpv6CidrBlock}}"DestinationIpv6CidrBlock": "{{this.DestinationIpv6CidrBlock}}",{{/if}}
     {{#if this.EgressOnlyInternetGatewayId}}"EgressOnlyInternetGatewayId": "{{this.EgressOnlyInternetGateway}}",{{/if}}
-    {{#if this.GatewayId}}"GatewayId": "{{this.GatewayId}}",{{/if}}
+    {{#if this.GatewayId}}"GatewayId": {{#startsWith 'vgw-' this.GatewayId}}
+      "{{this.GatewayId}}"
+      {{else}}
+      {"Ref":"ec2vpngw{{this.GatewayId}}"}
+      {{/startsWith}},
+    {{/if}}
     {{#if this.InstanceId}}"InstanceId":{{#startsWith "i-" this.InstanceId}}"{{this.InstanceId}}"
       {{else}}{"Ref":"ec2{{this.InstanceId}}"}{{/startsWith}},
     {{/if}}
     {{#if this.NatGatewayId}}"NatGatewayId":
       {{#startsWith "rtb-" this.NatGatewayId}}"{{this.NatGatewayId}}"
       {{else}}{"Ref":"ec2nat{{sanitize this.NatGatewayId ''}}"}{{/startsWith}},
+    {{/if}}
+    {{#if this.TransitGatewayId}}"TransitGatewayId":
+      {{#startsWith "tgw-" this.TransitGatewayId}}"{{this.TransitGatewayId}}"
+      {{else}}{"Ref":"trgwy{{sanitize this.TransitGatewayId ''}}"}{{/startsWith}},
     {{/if}}
     {{#if this.VpcPeeringConnectionId}}"VpcPeeringConnectionId":
       {{#startsWith "pcx-" this.VpcPeeringConnectionId}}"{{this.VpcPeeringConnectionId}}"

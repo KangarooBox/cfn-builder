@@ -7,14 +7,46 @@
  --}}
 "elbv2{{sanitize this.Name ''}}": {
   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+  {{#if this.DependsOn}}"DependsOn": "{{this.DependsOn}}",{{/if}}
   "Properties": {
     "Name": "{{this.Name}}-{{@root.EnvName}}",
     "Scheme": "{{this.Scheme}}",
-    "Subnets":[
-      {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
-      "{{this}}"{{#unless @last}},{{/unless}}
-      {{/each}}
-    ],
+    {{#if this.SubnetMappings}}
+      "SubnetMappings": [
+        {{#ifEq this.Type 'network'}}
+          {{!-- { "AllocationId": "{{this.SubnetMappings.AllocationId}}", --}}
+        {{else}}
+          { "AllocationId": { "Fn::GetAtt": ["ec2eip{{sanitize this.SubnetMappings.AllocationId ''}}","AllocationId"]},
+        {{/ifEq}}
+        {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
+        {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+          {{#each this}}
+            {{#ifEq this.AZ ../../SubnetIndex}}"SubnetId":"{{this.Id}}"{{/ifEq}}
+          {{/each}}
+        {{/each}}
+      }
+      ],
+    {{else}}
+      "Subnets":[
+        {{#if this.SubnetIndex}}
+          {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
+          {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+            {{#each this}}
+              {{#ifEq this.AZ ../../SubnetIndex}}"{{this.Id}}"{{/ifEq}}
+            {{/each}}
+          {{/each}}
+        {{else}}
+          {{!-- Use a whole subnet group --}}
+          {{#each @root.Region.Subnets as |subnet name|}}
+            {{#each subnet.addresses}}
+              {{#ifEq ../../SubnetId name}}
+                "{{this.Id}}"{{#unless @last}},{{/unless}}
+              {{/ifEq}}
+            {{/each}}
+          {{/each}}
+        {{/if}}
+      ],
+    {{/if}}
     {{#if this.LoadBalancerAttributes}}
     "LoadBalancerAttributes": [
       {{#each this.LoadBalancerAttributes}}
@@ -23,7 +55,7 @@
     ],
     {{/if}}
     {{#if this.SecurityGroups}}
-    "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
+      "SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
     {{#if this.Type}}"Type": "{{this.Type}}",{{/if}}
     {{> tags}}
@@ -34,7 +66,15 @@
 "elbv2lis{{sanitize ../Name ''}}{{this.Port}}": {
   "Type": "AWS::ElasticLoadBalancingV2::Listener",
   "Properties": {
-    {{#if this.Certificates}}"Certificates": [{{#each this.Certificates}}{"CertificateArn":"{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.Certificates}}"Certificates": [
+      {{#each this.Certificates}}
+        {{#startsWith "arn:aws:acm:" this}}
+          { "CertificateArn":"{{this}}" }
+        {{else}}
+          { "CertificateArn": { "Ref":"acmc{{sanitize this ''}}" }}
+        {{/startsWith}}
+      {{#unless @last}},{{/unless}}{{/each}}],
+    {{/if}}
     {{#if this.SslPolicy}}"SslPolicy": "{{this.SslPolicy}}",{{/if}}
     "DefaultActions": [
       {{#each this.DefaultActions}}

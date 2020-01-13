@@ -4,10 +4,20 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html
  --}}
-"iamip{{this.Name}}" : {
-  "Type" : "AWS::IAM::InstanceProfile",
-  "Properties" : {
-    "Path" : {{#if this.Path}}"{{this.Path}}"{{else}}"/"{{/if}},
-    "Roles" : [ {{#each Roles}}{ "Ref" : "iamr{{this}}" }{{#unless @last}},{{/unless}}{{/each}} ]
+"iamip{{this.Name}}": {
+  "Type": "AWS::IAM::InstanceProfile",
+  "Properties": {
+    {{#if this.InstanceProfileName}}"InstanceProfileName":"{{this.InstanceProfileName}}",{{/if}}
+    "Path": {{#if this.Path}}"{{this.Path}}"{{else}}"/"{{/if}},
+    "Roles": [
+      {{#each Roles}}
+        {{#startsWith 'arn:aws:iam' this}}
+          "{{this}}"
+        {{else}}
+          { "Ref": "iamr{{this}}" }
+        {{/startsWith}}
+        {{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
   }
 }

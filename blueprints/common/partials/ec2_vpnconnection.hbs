@@ -7,19 +7,29 @@
   "Type": "AWS::EC2::VPNConnection",
   "Properties": {
     "Type": "{{this.Type}}",
-    "CustomerGatewayId":
-    {{#startsWith "cgw-" this.CustomerGatewayId}}
+    "CustomerGatewayId": {{#startsWith "cgw-" this.CustomerGatewayId}}
       "{{this.CustomerGatewayId}}",
     {{else}}
       { "Ref": "ec2cgw{{this.CustomerGatewayId}}" },
     {{/startsWith}}
     "StaticRoutesOnly": {{default (toString this.StaticRoutesOnly) false}},
-    "VpnGatewayId":
-    {{#startsWith "vgw-" this.VpnGatewayId}}
-      "{{this.VpnGatewayId}}",
-    {{else}}
-      { "Ref": "ec2cgw{{this.VpnGatewayId}}" },
-    {{/startsWith}}
+
+    {{#if this.VpnGatewayId}}
+      "VpnGatewayId": {{#startsWith "vgw-" this.VpnGatewayId}}
+        "{{this.VpnGatewayId}}",
+      {{else}}
+        { "Ref": "ec2vpngw{{this.VpnGatewayId}}" },
+      {{/startsWith}}
+    {{/if}}
+
+    {{#if this.TransitGatewayId}}
+      "TransitGatewayId": {{#startsWith "tgw-" this.TransitGatewayId}}
+        "{{this.TransitGatewayId}}",
+      {{else}}
+        { "Ref": "trgwy{{this.TransitGatewayId}}" },
+      {{/startsWith}}
+    {{/if}}
+
     {{!-- "VpnTunnelOptionsSpecifications": [ VpnTunnelOptionsSpecification, ... ], --}}
     {{> tags}}
   }

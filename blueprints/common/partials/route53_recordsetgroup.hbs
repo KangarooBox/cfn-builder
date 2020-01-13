@@ -1,0 +1,37 @@
+{{!--
+  Create a Route53 DNS RecordSet Group
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordsetgroup.html
+ --}}
+"53rsg{{sanitize this.Name ''}}":{
+  "Type": "AWS::Route53::RecordSetGroup",
+  {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
+  "Properties": {
+    {{#if this.Comment}}"Comment": "{{this.Comment}}",{{/if}}
+
+    {{#if this.DomainName}}
+      {{#with (lookupById @root.DNS this.DomainName)}}
+        {{#ifEq this.Type ../DomainType}}
+          "HostedZoneId":"{{this.HostedZoneId}}",
+        {{/ifEq}}
+      {{/with}}
+    {{else}}
+      {{#if this.HostedZoneId}}"HostedZoneId": "{{this.HostedZoneId}}",{{/if}}
+      {{#if this.HostedZoneName}}"HostedZoneName": "{{this.HostedZoneName}}",{{/if}}
+    {{/if}}
+
+    {{#ifObject this.RecordSets}}
+      "RecordSets": { {{{inject this.RecordSets}}} }
+    {{else}}
+      "RecordSets": [
+      {{#each this.RecordSets}}
+        {{#ifEq ../Type "TXT"}}
+          "\"{{{this}}}\""
+        {{else}}
+          "{{this}}"
+        {{/ifEq}}
+      {{#unless @last}},{{/unless}}{{/each}}
+      ]
+    {{/ifObject}}
+  }
+}

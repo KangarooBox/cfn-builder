@@ -8,6 +8,9 @@
   "DeletionPolicy":"{{default this.DeletionPolicy 'Retain'}}",
   "Properties":{
     "BucketName":"{{this.Name}}",
+    {{#if this.BucketEncryption}}
+      "BucketEncryption": { {{{inject this.BucketEncryption}}} },
+    {{/if}}
     {{#if this.AccessControl}}"AccessControl":"{{this.AccessControl}}",{{/if}}
 
     {{#if this.LifecycleConfiguration}}
@@ -23,7 +26,7 @@
 
     {{#if this.PublicAccessBlockConfiguration}}
     {{#with this.PublicAccessBlockConfiguration}}
-    "PublicAccessBlockConfiguration": { 
+    "PublicAccessBlockConfiguration": {
       "BlockPublicAcls": {{default (toString this.BlockPublicAcls) true}},
       "BlockPublicPolicy": {{default (toString this.BlockPublicPolicy) true}},
       "IgnorePublicAcls": {{default (toString this.IgnorePublicAcls) true}},
@@ -51,26 +54,38 @@
     {{#if this.VersioningConfiguration}}
     "VersioningConfiguration":{"Status":"{{this.VersioningConfiguration}}"},
     {{/if}}
+
     {{#if this.NotificationConfiguration}}
-    "NotificationConfiguration":[
-      {{#if this.LambdaConfigurations}}
-      "LambdaConfigurations":[
-        {{#each this.LambdaConfigurations}}
-        {
-          "Event":"{{this.Event}}",
-          "Filter":{
-            "S3Key":{ "Rules":[
-            {{#each this.Filter.S3Key.Rules}}
-            { "Name":"{{this.Name}}", "Value":"{{this.Value}}"}
-            {{/each}}
-            ]}
-          },
-          "Function":"{{this.Function}}"
-        }{{#unless @last}},{{/unless}}
-        {{/each}}
-      ]
-      {{/if}}
-    ],
+    {{#with this.NotificationConfiguration}}
+      "NotificationConfiguration":{
+        {{#if this.LambdaConfigurations}}
+        {{#with this.LambdaConfigurations}}
+          "LambdaConfigurations": [
+          {{#each this}}
+            { "Event": "{{this.Event}}",
+              {{#if this.Filter}}"Filter": { {{{inject this.Filter}}} },{{/if}}
+              "Function":
+                {{#startsWith "arn:aws:lambda:" this.Function}}
+                  "{{this.Function}}"
+                {{else}}
+                  {"Fn::GetAtt":["fun{{sanitize this.Function ''}}","Arn"]}
+                {{/startsWith}}
+            }{{#unless @last}},{{/unless}}
+          {{/each}}
+        {{/with}}
+        ]{{/if}}
+
+        {{#if this.QueueConfigurations}}
+          "QueueConfigurations": [
+            {"test":"one"}
+        ]{{/if}}
+
+        {{#if this.TopicConfigurations}}
+          "TopicConfigurations": [
+            {"test":"one"}
+        ]{{/if}}
+      },
+    {{/with}}
     {{/if}}
 
     {{> tags}}

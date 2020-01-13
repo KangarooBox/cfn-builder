@@ -19,11 +19,13 @@
       ],{{/if}}
       {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
 
-      {{#if this.Dimensions}}"Dimensions": [{{#each this.Dimensions}}
+      {{#if this.Dimensions}}"Dimensions": [
+      {{#each this.Dimensions}}
         {{#switch this.Name}}
           {{#case "AutoScalingGroupName" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
+            { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
           {{/case}}
+
           {{#case "InstanceId" break=true}}
           { "Name": "{{this.Name}}", "Value":
             {{#startsWith "i-" this.Value}}
@@ -33,8 +35,17 @@
             {{/startsWith}}
           }
           {{/case}}
+
+          {{#case "LoadBalancer" break=true}}
+            { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2{{this.Value}}","LoadBalancerFullName"]} }
+          {{/case}}
+
+          {{#case "TargetGroup" break=true}}
+            { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2tg{{this.Value}}","TargetGroupFullName"]} }
+          {{/case}}
+
           {{#sdefault}}
-          { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
+            { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
           {{/sdefault}}
         {{/switch}}
       {{#unless @last}},{{/unless}}{{/each}}],{{/if}}

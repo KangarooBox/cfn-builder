@@ -1,0 +1,13 @@
+{{!--
+  Creates an Amazon Cognito user pool.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpool.html
+ --}}
+"cogupd{{sanitize this.Domain ''}}": {
+  "Type": "AWS::Cognito::UserPoolDomain",
+  "Properties": {
+    {{#if this.CustomDomainConfig}}"CustomDomainConfig": { {{{inject this.CustomDomainConfig}}} },{{/if}}
+    "Domain": "{{this.Domain}}",
+    "UserPoolId": { "Ref": "cogup{{this.UserPoolId}}" }
+  }
+}

@@ -11,7 +11,8 @@
   {{/ifObject}}
 
   "Metadata" : {
-    {{#each Metadata}}{{{this}}},{{/each}}
+    {{#each Metadata}}{{{inject this}}},{{/each}}
+    {{> tags Name=ProjectName}},
     "Environment" : "{{EnvName}}",
     "Version"     : "{{EnvVersion}}",
     "ProjectName" : "{{ProjectName}}",
@@ -29,6 +30,10 @@
   },
 
   "Resources" : {
+    {{#each CustomResources}}
+      {{{inject this}}},
+    {{/each}}
+
     {{#each AccessKeys}}
     {{> iam_accesskey}},
     {{/each}}
@@ -57,7 +62,7 @@
     {{> apigateway_domain_name}},
     {{/each}}
 
-    {{#each AutoscalingGroups}}
+    {{#each AutoScalingGroups}}
     {{> autoscaling_group}},
     {{/each}}
 
@@ -65,7 +70,11 @@
     {{> autoscaling_scalingpolicy}},
     {{/each}}
 
-    {{#each AutoscalingLaunchConfigurations}}
+    {{#each AutoScalingScheduledActions}}
+    {{> autoscaling_scheduledaction}},
+    {{/each}}
+
+    {{#each AutoScalingLaunchConfigurations}}
     {{> autoscaling_launchconfiguration}},
     {{/each}}
 
@@ -75,6 +84,10 @@
 
     {{#each CloudWatchAlarms}}
     {{> cloudwatch_alarm}},
+    {{/each}}
+
+    {{#each CodeBuildProjects}}
+    {{> codebuild_project}},
     {{/each}}
 
     {{#each CodeCommitRepositories}}
@@ -113,6 +126,22 @@
     {{> config_rule}},
     {{/each}}
 
+    {{#each CognitoUserPools}}
+    {{> cognito_userpool}},
+    {{/each}}
+
+    {{#each CognitoUserPoolClients}}
+    {{> cognito_userpoolclient}},
+    {{/each}}
+
+    {{#each CognitoUserPoolDomains}}
+    {{> cognito_userpooldomain}},
+    {{/each}}
+
+    {{#each CognitoUserPoolRiskConfigurationAttachments}}
+    {{> cognito_userpoolriskconfigurationattachment}},
+    {{/each}}
+
     {{#each DataPipelines}}
     {{> datapipeline_pipeline}},
     {{/each}}
@@ -123,6 +152,10 @@
 
     {{#each DirectoryServiceSimpleADs}}
     {{> directoryservice_simplead}},
+    {{/each}}
+
+    {{#each DLMLifecyclePolicies}}
+    {{> dlm_lifecyclepolicy}},
     {{/each}}
 
     {{#each EC2CustomerGateways}}
@@ -149,6 +182,34 @@
     {{> ec2_networkinterfaceattachment}},
     {{/each}}
 
+    {{#each EC2SpotFleets}}
+    {{> ec2_spotfleet}},
+    {{/each}}
+
+    {{#each EC2TransitGateways}}
+    {{> ec2_transitgateway}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayAttachments}}
+    {{> ec2_transitgatewayattachment}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRoutes}}
+    {{> ec2_transitgatewayroute}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRouteTables}}
+    {{> ec2_transitgatewayroutetable}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRouteTableAssociations}}
+    {{> ec2_transitgatewayroutetableassociation}},
+    {{/each}}
+
+    {{#each EC2TransitGatewayRoutes}}
+    {{> ec2_transitgatewayroute}},
+    {{/each}}
+
     {{#each EC2VPCs}}
     {{> ec2_vpc}},
     {{/each}}
@@ -165,6 +226,10 @@
     {{> ec2_vpcendpointservicepermission}},
     {{/each}}
 
+    {{#each EC2VPCGatewayAttachments}}
+    {{> ec2_vpcgatewayattachment}},
+    {{/each}}
+
     {{#each EC2VPCPeeringConnections}}
     {{> ec2_vpcpeeringconnection}},
     {{/each}}
@@ -175,6 +240,10 @@
 
     {{#each EC2VPNConnectionRoutes}}
     {{> ec2_vpnconnectionroute}},
+    {{/each}}
+
+    {{#each EC2VPNGateways}}
+    {{> ec2_vpngateway}},
     {{/each}}
 
     {{#each EC2NATGateways}}
@@ -288,8 +357,21 @@
     {{#each KinesisStreams}}
     {{> kinesis_stream}},
     {{/each}}
+
     {{#each KinesisFirehoses}}
     {{> kinesis_firehose}},
+    {{/each}}
+
+    {{#each KMSAliases}}
+    {{> kms_alias}},
+    {{/each}}
+
+    {{#each KMSKeys}}
+    {{> kms_key}},
+    {{/each}}
+
+    {{#each LambdaEventSourceMappings}}
+    {{> lambda_event_source_mapping}},
     {{/each}}
 
     {{#each LambdaFunctions}}
@@ -320,6 +402,10 @@
     {{> opsworks_stack}},
     {{/each}}
 
+    {{#each RAMResourceShares}}
+    {{> ram_resourceshare}},
+    {{/each}}
+
     {{#each RDSInstances}}
     {{> rds_instance}},
     {{/each}}
@@ -336,6 +422,10 @@
     {{> route53_hostedzone}},
     {{/each}}
 
+    {{#each Route53RecordSetGroups}}
+    {{> route53_recordsetgroup}},
+    {{/each}}
+
     {{#each Route53RecordSets}}
     {{> route53_recordset}},
     {{/each}}
@@ -350,8 +440,8 @@
     {{> s3_bucketpolicy}},
     {{/each}}
 
-    {{#each ScheduledActions}}
-    {{> autoscaling_scheduledaction}},
+    {{#each SecretsManagerSecrets}}
+    {{> secretsmanager_secret}},
     {{/each}}
 
     {{#each SecretsManagerSecrets}}
@@ -374,12 +464,56 @@
     {{> ssm_document}},
     {{/each}}
 
+    {{#each SSMParameters}}
+    {{> ssm_parameter}},
+    {{/each}}
+
     {{#each SQSQueues}}
     {{> sqs_queue}},
     {{/each}}
 
     {{#each SQSQueuePolicies}}
     {{> sqs_queue_policy}},
+    {{/each}}
+
+    {{#each WAFWebACLs}}
+    {{> waf_webacl}},
+    {{/each}}
+
+    {{#each WAFRules}}
+    {{> waf_rule}},
+    {{/each}}
+
+    {{#each WAFRegionalByteMatchSets}}
+    {{> wafregional_bytematchset}},
+    {{/each}}
+
+    {{#each WAFRegionalGeoMatchSets}}
+    {{> wafregional_geomatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalIpMatchSets}}
+    {{> wafregional_ipmatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalSqlInjectionMatchSets}}
+    {{> wafregional_sqlinjectionmatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalXssMatchSets}}
+    {{> wafregional_xssmatchset}},
+    {{/each}}
+
+    {{#each WAFRegionalWebACLs}}
+    {{> wafregional_webacl}},
+    {{/each}}
+
+    {{#each WAFRegionalWebACLAssociations}}
+    {{> wafregional_webaclassociation}},
+    {{/each}}
+
+    {{#each WAFRegionalRules}}
+    {{> wafregional_rule}},
     {{/each}}
 
     {{#each WorkspacesWorkspaces}}

@@ -1,0 +1,17 @@
+{{!--
+  Creates a new route table for a transit gateway
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroutetable.html
+ --}}
+"ec2tgroutab{{sanitize this.Name ''}}": {
+  "Type" : "AWS::EC2::TransitGatewayRouteTable",
+  "Properties" : {
+    "TransitGatewayId":
+      {{#startsWith 'tgw-' this.TransitGatewayId}}
+        "{{this.TransitGatewayId}}",
+      {{else}}
+        {"Ref": "trgwy{{sanitize this.TransitGatewayId ''}}"},
+      {{/startsWith}}
+    {{> tags}}
+  }
+}

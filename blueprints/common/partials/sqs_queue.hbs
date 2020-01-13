@@ -6,14 +6,24 @@
 "sqsq{{sanitize this.Name ''}}" : {
   "Type": "AWS::SQS::Queue",
   "Properties": {
-    {{~#if this.DelaySeconds}}"DelaySeconds": {{this.DelaySeconds}},{{/if}}
-    {{~#if this.MaximumMessageSize}}"MaximumMessageSize": {{this.MaximumMessageSize}},{{/if}}
-    {{~#if this.MessageRetentionPeriod}}"MessageRetentionPeriod": {{this.MessageRetentionPeriod}},{{/if}}
-    {{~#if this.ReceiveMessageWaitTimeSeconds}}"ReceiveMessageWaitTimeSeconds": {{this.ReceiveMessageWaitTimeSeconds}},{{/if}}
-    {{~#if this.RedrivePolicy}}"RedrivePolicy": {
-      {{{inject this.RedrivePolicy}}}
+    {{#if this.ContentBasedDeduplication}}"ContentBasedDeduplication": {{default (toString this.ContentBasedDeduplication) true}},{{/if}}
+    {{#if this.FifoQueue}}"FifoQueue": {{default (toString this.FifoQueue) false}},{{/if}}
+    {{#if this.DelaySeconds}}"DelaySeconds": {{this.DelaySeconds}},{{/if}}
+    {{#if this.MaximumMessageSize}}"MaximumMessageSize": {{this.MaximumMessageSize}},{{/if}}
+    {{#if this.MessageRetentionPeriod}}"MessageRetentionPeriod": {{this.MessageRetentionPeriod}},{{/if}}
+    {{#if this.ReceiveMessageWaitTimeSeconds}}"ReceiveMessageWaitTimeSeconds": {{this.ReceiveMessageWaitTimeSeconds}},{{/if}}
+    {{#if this.KmsDataKeyReusePeriodSeconds}}"KmsDataKeyReusePeriodSeconds": {{this.KmsDataKeyReusePeriodSeconds}},{{/if}}
+    {{#if this.KmsMasterKeyId}}"KmsMasterKeyId": "{{this.KmsMasterKeyId}}",{{/if}}
+    {{#if this.RedrivePolicy}}"RedrivePolicy": {
+      "maxReceiveCount": "{{this.RedrivePolicy.maxReceiveCount}}",
+      "deadLetterTargetArn":
+        {{#startsWith "arn:aws:sqs:" this.RedrivePolicy.deadLetterTargetArn}}
+          "{{this.RedrivePolicy.deadLetterTargetArn}}"
+        {{else}}
+          {"Fn::GetAtt":["sqsq{{sanitize this.RedrivePolicy.deadLetterTargetArn ''}}","Arn"]}
+        {{/startsWith}}
     },{{/if}}
-    {{~#if this.VisibilityTimeout}}"VisibilityTimeout": {{this.VisibilityTimeout}},{{/if}}
+    {{#if this.VisibilityTimeout}}"VisibilityTimeout": {{this.VisibilityTimeout}},{{/if}}
     "QueueName": "{{this.Name}}"
   }
 }

@@ -1,0 +1,20 @@
+{{!--
+  Associates the specified attachment with the specified transit gateway route table.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroutetableassociation.html
+ --}}
+"ec2tgroutabass{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::TransitGatewayRouteTableAssociation",
+  "Properties": {
+    "TransitGatewayAttachmentId": {{#startsWith 'tgw-attach-' this.TransitGatewayAttachmentId}}
+      "{{this.TransitGatewayAttachmentId}}"
+    {{else}}
+      {"Ref":"ec2tgwatt{{sanitize this.TransitGatewayAttachmentId ''}}"}
+    {{/startsWith}},
+    "TransitGatewayRouteTableId": {{#startsWith 'tgw-rtb-' this.TransitGatewayRouteTableId}}
+      "{{this.TransitGatewayRouteTableId}}"
+    {{else}}
+      {"Ref":"ec2tgroutab{{sanitize this.TransitGatewayRouteTableId ''}}"}
+    {{/startsWith}}
+  }
+}

@@ -1,0 +1,18 @@
+{{!--
+  Sets the risk configuration that is used for Amazon Cognito advanced security features.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolriskconfigurationattachment.html
+ --}}
+
+"coguprca{{sanitize this.Name ''}}": {
+  "Type": "AWS::Cognito::UserPoolRiskConfigurationAttachment",
+  "Properties": {
+      {{#if this.AccountTakeoverRiskConfiguration}}"AccountTakeoverRiskConfiguration": { {{{inject this.AccountTakeoverRiskConfiguration}}} },{{/if}}
+      {{#if this.CompromisedCredentialsRiskConfiguration}}"CompromisedCredentialsRiskConfiguration": { {{{inject this.CompromisedCredentialsRiskConfiguration}}} },{{/if}}
+      {{#if this.RiskExceptionConfiguration}}"RiskExceptionConfiguration": { {{{inject this.RiskExceptionConfiguration}}} },{{/if}}
+      "ClientId": {{#ifEq this.ClientId 'ALL'}} "ALL", {{else}}
+        {"Ref":"cogupc{{sanitize this.ClientId ''}}"},
+      {{/ifEq}}
+      "UserPoolId": {"Ref":"cogup{{sanitize this.UserPoolId ''}}"}
+    }
+}

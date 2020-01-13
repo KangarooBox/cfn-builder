@@ -35,6 +35,17 @@
     {{> logs_loggroup}},
     {{/each}}
 
+    {{#each EC2FlowLogs}}
+    {{> ec2_flowlog ResourceId="VPC" ResourceType="VPC" TrafficType="ALL"}},
+    {{/each}}
+
+    {{#each EC2VPCPeeringConnections}}
+    {{> ec2_vpcpeeringconnection}},
+    {{/each}}
+
+    {{#each SSMParameters}}
+    {{> ssm_parameter}},
+    {{/each}}
 
     {{!-- Gateways setup --}}
     "VPNGateway" : {

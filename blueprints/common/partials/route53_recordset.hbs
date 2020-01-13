@@ -12,28 +12,37 @@
     {{else}}"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
     {{/if}}
 
-    {{#with (lookupById @root.DNS this.DomainName)}}
-      {{#ifEq this.Type ../DomainType}}
+    {{#if this.AliasTarget}}
+      "AliasTarget":{ {{{inject this.AliasTarget}}}, "HostedZoneId": "Z2FDTNDATAQYW2" },
+      {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
         "HostedZoneId":"{{this.HostedZoneId}}",
         "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",
-      {{/ifEq}}
-    {{/with}}
+      {{/with}}
+      "Type": "A"
+    {{else}}
+      {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
+        {{#ifEq this.Type ../DomainType}}
+          "HostedZoneId":"{{this.HostedZoneId}}",
+          "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",
+        {{/ifEq}}
+      {{/with}}
 
-    "Type":"{{default this.Type "CNAME"}}",
-    "TTL":{{default this.TTL 300}},
-    "ResourceRecords":[
-      {{!-- {{#if this.ResourceRecord}}{"Fn::GetAtt":["elb{{this.ResourceRecord}}","DNSName"]}{{/if}} --}}
-      {{#each this.ResourceRecords}}
-        {{#ifObject this}}
-          { {{{inject this}}} }
-        {{else}}
-          {{#ifEq ../Type "TXT"}}
-            "\"{{{this}}}\""
+      "Type":"{{default this.Type "CNAME"}}",
+      "TTL":{{default this.TTL 300}},
+      "ResourceRecords":[
+        {{!-- {{#if this.ResourceRecord}}{"Fn::GetAtt":["elb{{this.ResourceRecord}}","DNSName"]}{{/if}} --}}
+        {{#each this.ResourceRecords}}
+          {{#ifObject this}}
+            { {{{inject this}}} }
           {{else}}
-            "{{this}}"
-          {{/ifEq}}
-        {{/ifObject}}
-      {{#unless @last}},{{/unless}}{{/each}}
-    ]
+            {{#ifEq ../Type "TXT"}}
+              "\"{{{this}}}\""
+            {{else}}
+              "{{this}}"
+            {{/ifEq}}
+          {{/ifObject}}
+        {{#unless @last}},{{/unless}}{{/each}}
+      ]
+    {{/if}}
   }
 }

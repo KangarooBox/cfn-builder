@@ -1,0 +1,16 @@
+{{!--
+  A complex type that contains XssMatchTuple objects, which specify the parts of
+  web requests that you want AWS WAF to inspect for cross-site scripting attacks
+  and, if you want AWS WAF to inspect a header, the name of the header.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafregional-xssmatchset.html
+ --}}
+"wafrxssms{{sanitize this.Name ''}}": {
+  "Type" : "AWS::WAFRegional::XssMatchSet",
+  "Properties": {
+    {{#if this.XssMatchTuples}}"XssMatchTuples": [
+      {{#each this.XssMatchTuples}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "Name": "{{this.Name}}"
+  }
+}
