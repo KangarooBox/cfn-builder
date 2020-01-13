@@ -13,14 +13,18 @@
     "Scheme": "{{this.Scheme}}",
     {{#if this.SubnetMappings}}
       "SubnetMappings": [
-        { "AllocationId": { "Fn::GetAtt": ["ec2eip{{sanitize this.SubnetMappings.AllocationId ''}}","AllocationId"]},
-          {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
-          {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
-            {{#each this}}
-              {{#ifEq this.AZ ../../SubnetIndex}}"SubnetId":"{{this.Id}}"{{/ifEq}}
-            {{/each}}
+        {{#ifEq this.Type 'network'}}
+          {{!-- { "AllocationId": "{{this.SubnetMappings.AllocationId}}", --}}
+        {{else}}
+          { "AllocationId": { "Fn::GetAtt": ["ec2eip{{sanitize this.SubnetMappings.AllocationId ''}}","AllocationId"]},
+        {{/ifEq}}
+        {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
+        {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+          {{#each this}}
+            {{#ifEq this.AZ ../../SubnetIndex}}"SubnetId":"{{this.Id}}"{{/ifEq}}
           {{/each}}
-        }
+        {{/each}}
+      }
       ],
     {{else}}
       "Subnets":[
