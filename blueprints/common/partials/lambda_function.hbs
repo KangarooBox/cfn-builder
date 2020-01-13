@@ -27,6 +27,24 @@
     {{/if}}
     {{#if this.MemorySize}}"MemorySize":{{this.MemorySize}},{{/if}}
     {{#if this.Timeout}}"Timeout":{{this.Timeout}},{{/if}}
+    {{#if this.VpcConfig}}"VpcConfig":{
+      "SecurityGroupIds":[{{#each this.VpcConfig.SecurityGroupIds}}
+        {{#startsWith "sg-" this}}"{{this}}"{{else}}{"Ref":"ec2sg{{this}}"}{{/startsWith}}
+        {{#unless @last}},{{/unless}}
+      {{/each}}],
+      "SubnetIds":[{{#each this.VpcConfig.SubnetIds}}
+        {{#startsWith "subnet-" this}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{else}}
+          {{#with (lookupByNode @root.Region.Subnets this) }}
+            {{#each this.addresses}}
+              "{{this.Id}}"{{#unless @last}},{{/unless}}
+            {{/each}}
+          {{/with}}
+        {{/startsWith}}
+      {{/each}}]
+      },
+    {{/if}}
     "Role":{ "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] },
     "Runtime":"{{this.Runtime}}",
     "FunctionName":"{{this.Name}}",
