@@ -181,12 +181,10 @@
               "Type":"AWS::Route53::RecordSet",
               "Properties":{
                 "Comment":"VPC NAT ({{@root.EnvVersion}}{{@root.EnvName}})",
-                {{#if @root.DNS}}
-                  {{#with (lookupById @root.DNS @root.Route53::RecordSet.External.Domain)}}
+                {{#with (lookupByKey @root.DNS "Type" name)}}
                   "HostedZoneId":"{{this.HostedZoneId}}",
-                  {{/with}}
-                {{/if}}
-                "Name":"{{lowercase @root.ProjectName}}nat.{{lowercase @root.Region.Name}}.{{lowercase name}}.{{lowercase @root.EnvVersion}}.{{lowercase @root.EnvName}}.{{@root.Route53::RecordSet.External.Domain}}.",
+                  "Name":"{{lowercase @root.ProjectName}}nat.{{lowercase @root.Region.Name}}.{{lowercase name}}.{{lowercase @root.EnvVersion}}.{{lowercase @root.EnvName}}.{{this.HostedZoneDomain}}.",
+                {{/with}}
                 "Type":"A",
                 "TTL":300,
                 "ResourceRecords":[{"Ref":"ec2eipNAT{{name}}"}]
