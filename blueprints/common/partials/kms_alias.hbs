@@ -6,7 +6,7 @@
 "kmsalias{{sanitize this.Name ''}}": {
   "Type": "AWS::KMS::Alias",
   "Properties": {
-    "AliasName": "alias/{{this.Name}}",
+    "AliasName": {{#if this.Alias}}"alias/{{this.Alias}}"{{else}}"alias/{{this.Name}}"{{/if}},
     {{#if this.TargetKeyId}}
       "TargetKeyId": {{#startsWith "arn:aws:kms" this.TargetKeyId}}
         "{{this.TargetKeyId}}"
