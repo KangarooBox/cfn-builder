@@ -65,7 +65,7 @@
             { "Event": "{{this.Event}}",
               {{#if this.Filter}}"Filter": { {{{inject this.Filter}}} },{{/if}}
               "Function":
-                {{#startsWith "arn:aws:function:" this.Function}}
+                {{#startsWith "arn:aws:lambda:" this.Function}}
                   "{{this.Function}}"
                 {{else}}
                   {"Fn::GetAtt":["fun{{sanitize this.Function ''}}","Arn"]}

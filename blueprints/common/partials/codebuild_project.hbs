@@ -4,7 +4,7 @@
 
   https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html
  --}}
-"cbp{{this.Name}}": {
+"cbp{{sanitize this.Name ''}}": {
   "Type": "AWS::CodeBuild::Project",
   "Properties": {
       "Artifacts": { {{{inject this.Artifacts}}} },

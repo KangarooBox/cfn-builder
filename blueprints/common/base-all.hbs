@@ -456,6 +456,10 @@
     {{> secretsmanager_secret}},
     {{/each}}
 
+    {{#each SecretsManagerSecrets}}
+    {{> secretsmanager_secret}},
+    {{/each}}
+
     {{#each SNSTopics}}
     {{> sns_topic}},
     {{/each}}
