@@ -1,0 +1,64 @@
+{{!--
+  Creates an Amazon ElastiCache Redis replication group. A replication group is a collection of cache
+  clusters, where one of the clusters is a primary read-write cluster and the others are read-only replicas.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-replicationgroup.html
+ --}}
+
+"ecsng{{sanitize this.Name ''}}":{
+  "Type":"AWS::ElastiCache::SubnetGroup",
+  "Properties":{
+    "Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",
+    "SubnetIds":[
+      {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+        {{#each this}}
+          "{{this.Id}}"{{#unless @last}},{{/unless}}
+        {{/each}}
+      {{/each}}
+    ]
+  }
+},
+
+"ecrg{{sanitize this.Name ''}}":{
+  "Type": "AWS::ElastiCache::ReplicationGroup",
+  "Properties": {
+    "ReplicationGroupId":
+      {{#if this.ReplicationGroupId}}"{{this.ReplicationGroupId}}"{{else}}
+      "{{sanitize this.Name '-'}}"
+      {{/if}},
+    "ReplicationGroupDescription":
+      {{#if this.ReplicationGroupDescription}}"{{this.ReplicationGroupDescription}}"{{else}}
+      "{{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})"
+      {{/if}},
+    "AtRestEncryptionEnabled":{{default (toString this.AtRestEncryptionEnabled) false}},
+    {{#if this.AuthToken}}"AuthToken": "{{this.AuthToken}}",{{/if}}
+    "AutomaticFailoverEnabled": {{default (toString this.AutomaticFailoverEnabled) false}},
+    "AutoMinorVersionUpgrade": {{default (toString this.AutoMinorVersionUpgrade) false}},
+    {{#if this.CacheNodeType}}"CacheNodeType": "{{this.CacheNodeType}}",{{/if}}
+    {{#if this.CacheParameterGroupName}}"CacheParameterGroupName": "{{this.CacheParameterGroupName}}",{{/if}}
+    {{#if this.CacheSecurityGroupNames}}"CacheSecurityGroupNames": [ String, ... ],{{/if}}
+    "CacheSubnetGroupName":{"Ref":"ecsng{{sanitize this.Name ''}}"},
+    {{#if this.Engine}}"Engine": "{{this.Engine}}",{{/if}}
+    {{#if this.EngineVersion}}"EngineVersion": "{{this.EngineVersion}}",{{/if}}
+    {{#if this.KmsKeyId}}"KmsKeyId": "{{this.KmsKeyId}}",{{/if}}
+    {{#if this.NodeGroupConfiguration}}"NodeGroupConfiguration": [ NodeGroupConfiguration, ... ],{{/if}}
+    {{#if this.NotificationTopicArn}}"NotificationTopicArn": "{{this.NotificationTopicArn}}",{{/if}}
+    {{#if this.NumCacheClusters}}"NumCacheClusters": {{this.NumCacheClusters}},{{/if}}
+    {{#if this.NumNodeGroups}}"NumNodeGroups": {{this.NumNodeGroups}},{{/if}}
+    {{#if this.Port}}"Port": {{this.Port}},{{/if}}
+    {{#if this.PreferredCacheClusterAZs}}"PreferredCacheClusterAZs": [ String, ... ],{{/if}}
+    {{#if this.PreferredMaintenanceWindow}}"PreferredMaintenanceWindow": "{{this.PreferredMaintenanceWindow}}",{{/if}}
+    {{#if this.PrimaryClusterId}}"PrimaryClusterId": "{{this.PrimaryClusterId}}",{{/if}}
+    {{#if this.ReplicasPerNodeGroup}}"ReplicasPerNodeGroup": {{this.ReplicasPerNodeGroup}},{{/if}}
+    {{#if this.SecurityGroupIds}}"SecurityGroupIds": [
+      {{#each this.SecurityGroupIds}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.SnapshotArns}}"SnapshotArns": [ String, ... ],{{/if}}
+    {{#if this.SnapshotName}}"SnapshotName": "{{this.SnapshotName}}",{{/if}}
+    {{#if this.SnapshotRetentionLimit}}"SnapshotRetentionLimit": {{this.SnapshotRetentionLimit}},{{/if}}
+    {{#if this.SnapshottingClusterId}}"SnapshottingClusterId": "{{this.SnapshottingClusterId}}",{{/if}}
+    {{#if this.SnapshotWindow}}"SnapshotWindow": "{{this.SnapshotWindow}}",{{/if}}
+    "TransitEncryptionEnabled": {{default (toString this.TransitEncryptionEnabled) false}},
+    {{> tags}}
+  }
+}
