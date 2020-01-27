@@ -322,6 +322,10 @@
     {{> elasticache_parametergroup}},
     {{/each}}
 
+    {{#each ElastiCacheReplicationGroups}}
+    {{> elasticache_replicationgroup}},
+    {{/each}}
+
     {{#each ElasticLoadBalancers}}
     {{> elasticloadbalancing_loadbalancer}},
     {{/each}}
