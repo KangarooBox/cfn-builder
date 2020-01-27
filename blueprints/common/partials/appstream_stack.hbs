@@ -1,22 +1,7 @@
 {{!--
   Creates an AppStream Stack
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-stack.html
-Gotchas:
-  -
-
-        "AccessEndpoints" : [
-          {{#if this.AccessEndpoints}}{{#with this.AccessEndpoints}}
-            {{#each this}}
-              {
-                "EndpointType" : {{this.EndpointType}},
-                "VpceId" : {{this.VpceId}}
-              }
-            {{/each}}
-          {{/if}}
-        ],
-
- --}}
-
+--}}
 
 "appstream{{sanitize this.Name ''}}":
 {

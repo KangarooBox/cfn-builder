@@ -1,30 +1,8 @@
 {{!--
   Creates an AppStream Fleet
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-fleet.html
-Gotchas:
-  - ComputeCapacity takes a custom resource type: "ComputeCapacity"
-  - VpcConfig takes a custom resource type: "VpcConfig"
-      - Which looks like:
-                        {
-                        "SecurityGroupIds" : [ String, ... ],
-                        "SubnetIds" : [ String, ... ]
-                        }
+--}}
 
-                        {{#startsWith "subnet-" this.SubnetId}}
-                        "SubnetId": "{{this.SubnetId}}",
-                        {{else}}
-                        {{#if this.SubnetIndex}}
-                        "SubnetId":
-                          {{debug @root.Region.SubnetIds}}
-                          {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}
-                          "{{lookup this ../SubnetIndex}}"
-                          {{/with}},
-                        {{/if}},
-                        {{/startsWith}},
-                        {{else}}
-                          "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
-
- --}}
 "appstream{{sanitize this.Name ''}}":
 {
   "Type":"AWS::AppStream::Fleet",
