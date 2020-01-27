@@ -1,0 +1,8 @@
+"appstream{{sanitize this.Name ''}}":{
+  "Type" : "AWS::AppStream::StackFleetAssociation",
+  "Properties" : {
+      {{debug this}}
+      "FleetName" : {"Ref": "appstream{{sanitize this.FleetName ''}}"},
+      "StackName" : {"Ref": "appstream{{sanitize this.StackName ''}}"}
+    }
+}

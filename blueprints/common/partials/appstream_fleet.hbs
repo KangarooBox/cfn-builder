@@ -1,0 +1,104 @@
+{{!--
+  Creates an AppStream Fleet
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-fleet.html
+Gotchas:
+  - ComputeCapacity takes a custom resource type: "ComputeCapacity"
+  - VpcConfig takes a custom resource type: "VpcConfig"
+      - Which looks like:
+                        {
+                        "SecurityGroupIds" : [ String, ... ],
+                        "SubnetIds" : [ String, ... ]
+                        }
+
+                        {{#startsWith "subnet-" this.SubnetId}}
+                        "SubnetId": "{{this.SubnetId}}",
+                        {{else}}
+                        {{#if this.SubnetIndex}}
+                        "SubnetId":
+                          {{debug @root.Region.SubnetIds}}
+                          {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}
+                          "{{lookup this ../SubnetIndex}}"
+                          {{/with}},
+                        {{/if}},
+                        {{/startsWith}},
+                        {{else}}
+                          "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
+
+ --}}
+"appstream{{sanitize this.Name ''}}":
+{
+  "Type":"AWS::AppStream::Fleet",
+
+  "Properties":{
+
+    "ComputeCapacity" : { "DesiredInstances": {{default this.DesiredInstances 1}} },
+
+    {{#if this.Description}}
+      "Description" : "{{this.Description}}",
+    {{/if}}
+
+    {{#if this.DisconnectTimeoutInSeconds}}
+      "DisconnectTimeoutInSeconds" : {{ this.DisconnectTimeoutInSeconds}},
+    {{/if}}
+
+    "DisplayName":
+    {{#if this.DisplayName}}
+      "{{this.DisplayName}}"
+    {{else}}
+      "{{this.Name}}"
+    {{/if}},
+
+    {{#if this.DomainJoinInfo}}
+      "DomainJoinInfo" : {{this.DomainJoinInfo}},
+    {{/if}}
+
+    "EnableDefaultInternetAccess" : {{default (toString this.EnableFleetInternetAccess) true}},
+
+    "FleetType" : "{{default this.FleetType 'ON_DEMAND'}}",
+
+    {{#if this.IdleDisconnectTimeoutInSeconds}}
+      "IdleDisconnectTimeoutInSeconds" : {{ this.IdleDisconnectTimeoutInSeconds}},
+    {{/if}}
+
+    {{#if this.ImageArn}}
+      "ImageArn" : "{{this.ImageArn}}",
+    {{/if}}
+
+    {{#if this.ImageName}}
+      "ImageName" : "{{this.ImageName}}",
+    {{/if}}
+
+    "InstanceType" : "{{default (toString this.InstanceType) "stream.standard.medium"}}",
+
+    {{#if this.MaxUserDurationInSeconds}}
+      "MaxUserDurationInSeconds" : "{{ this.MaxUserDurationInSeconds}}",
+    {{/if}}
+
+    "Name" : "{{this.Name}}",
+
+    {{#if this.VpcConfig}}
+      "VpcConfig" : {
+          {{#if this.SecurityGroupIds}}
+            "SecurityGroupIds":[
+            {{#each this.SecurityGroupIds}}
+              {{#startsWith "sg" this}}
+                "{{this}}"
+              {{else}}
+                {"Ref":"ec2sg{{this}}"}
+              {{/startsWith}}
+              {{#unless @last}},{{/unless}}
+            {{/each}}],
+          {{/if}}
+
+          {{#if this.VpcConfig.SubnetIds}}
+            "SubnetIds": [
+            {{#each this.VpcConfig.SubnetIds}}
+              "{{this}}"{{#unless @last}},{{/unless}}
+            {{/each}}]
+          {{/if}}
+        },
+      {{/if}}
+
+      {{> tags}}
+  }
+}
