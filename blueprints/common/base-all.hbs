@@ -74,6 +74,14 @@
     {{> appstream_stackfleetassociation}},
     {{/each}}
 
+    {{#each AppStreamStackUserAssociations}}
+    {{> appstream_stackuserassociation}},
+    {{/each}}
+
+    {{#each AppStreamUsers}}
+    {{> appstream_user}},
+    {{/each}}
+
     {{#each AutoScalingGroups}}
     {{> autoscaling_group}},
     {{/each}}

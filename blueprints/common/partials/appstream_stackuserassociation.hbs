@@ -1,0 +1,14 @@
+{{!--
+  Creates an AppStream Stack Fleet Association
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-stackuserassociation.html
+--}}
+
+"appstream{{sanitize this.Name ''}}":{
+  "Type" : "AWS::AppStream::StackUserAssociation",
+  "Properties" : {
+      "AuthenticationType" : "{{default this.AuthenticationType 'USERPOOL'}}",
+      "SendEmailNotification" : {{default (toString this.SendEmailNotification) false}},
+      "StackName" : {"Ref": "appstream{{sanitize this.StackName ''}}"},
+      "UserName" : "{{this.UserName}}"
+    }
+}
