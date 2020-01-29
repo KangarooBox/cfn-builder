@@ -1,0 +1,82 @@
+{{!--
+  Creates an AppStream Fleet
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-fleet.html
+--}}
+
+"appstream{{sanitize this.Name ''}}":
+{
+  "Type":"AWS::AppStream::Fleet",
+
+  "Properties":{
+
+    "ComputeCapacity" : { "DesiredInstances": {{default this.DesiredInstances 1}} },
+
+    {{#if this.Description}}
+      "Description" : "{{this.Description}}",
+    {{/if}}
+
+    {{#if this.DisconnectTimeoutInSeconds}}
+      "DisconnectTimeoutInSeconds" : {{ this.DisconnectTimeoutInSeconds}},
+    {{/if}}
+
+    "DisplayName":
+    {{#if this.DisplayName}}
+      "{{this.DisplayName}}"
+    {{else}}
+      "{{this.Name}}"
+    {{/if}},
+
+    {{#if this.DomainJoinInfo}}
+      "DomainJoinInfo" : {{this.DomainJoinInfo}},
+    {{/if}}
+
+    "EnableDefaultInternetAccess" : {{default (toString this.EnableFleetInternetAccess) true}},
+
+    "FleetType" : "{{default this.FleetType 'ON_DEMAND'}}",
+
+    {{#if this.IdleDisconnectTimeoutInSeconds}}
+      "IdleDisconnectTimeoutInSeconds" : {{ this.IdleDisconnectTimeoutInSeconds}},
+    {{/if}}
+
+    {{#if this.ImageArn}}
+      "ImageArn" : "{{this.ImageArn}}",
+    {{/if}}
+
+    {{#if this.ImageName}}
+      "ImageName" : "{{this.ImageName}}",
+    {{/if}}
+
+    "InstanceType" : "{{default (toString this.InstanceType) "stream.standard.medium"}}",
+
+    {{#if this.MaxUserDurationInSeconds}}
+      "MaxUserDurationInSeconds" : "{{ this.MaxUserDurationInSeconds}}",
+    {{/if}}
+
+    "Name" : "{{this.Name}}",
+
+    {{#if this.VpcConfig}}
+      "VpcConfig" : {
+          {{#if this.SecurityGroupIds}}
+            "SecurityGroupIds":[
+            {{#each this.SecurityGroupIds}}
+              {{#startsWith "sg" this}}
+                "{{this}}"
+              {{else}}
+                {"Ref":"ec2sg{{this}}"}
+              {{/startsWith}}
+              {{#unless @last}},{{/unless}}
+            {{/each}}],
+          {{/if}}
+
+          {{#if this.VpcConfig.SubnetIds}}
+            "SubnetIds": [
+            {{#each this.VpcConfig.SubnetIds}}
+              "{{this}}"{{#unless @last}},{{/unless}}
+            {{/each}}]
+          {{/if}}
+        },
+      {{/if}}
+
+      {{> tags}}
+  }
+}

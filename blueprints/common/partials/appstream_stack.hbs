@@ -1,0 +1,98 @@
+{{!--
+  Creates an AppStream Stack
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-stack.html
+--}}
+
+"appstream{{sanitize this.Name ''}}":
+{
+  "Type" : "AWS::AppStream::Stack",
+
+  "Properties" : {
+      {{#if this.AccessEndpoints}}
+        "AccessEndpoints" : [
+          {{#if this.AccessEndpoints}}{{#with this.AccessEndpoints}}
+            {{#each this}}
+              {
+                "EndpointType" : {{this.EndpointType}},
+                "VpceId" : {{this.VpceId}}
+              }
+            {{/each}}
+            {{/with}}
+          {{/if}}
+        ],
+      {{/if}}
+
+      {{#if this.ApplicationSettings}}
+        "ApplicationSettings" : {
+            {{#if this.SettingsGroup}}
+              "SettingsGroup" : "{{this.SettingsGroup}}",
+            {{/if}}
+            "Enabled" : {{default (toString this.ApplicationSettings.Enabled) false}}
+        },
+      {{/if}}
+
+      {{#if this.AttributesToDelete}}
+        "AttributesToDelete" : [
+        {{#each this.AttributesToDelete}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}}
+         ],
+      {{/if}}
+
+      {{#if this.Description}}
+        "Description" : "{{this.Description}}",
+      {{/if}}
+
+      "DisplayName":
+      {{#if this.DisplayName}}
+        "{{this.DisplayName}}"
+      {{else}}
+        "{{this.Name}}"
+      {{/if}},
+
+      {{#if this.EmbedHostDomains}}
+        "EmbedHostDomains" : [
+          {{#each this.EmbedHostDomains}}
+            "{{this}}"{{#unless @last}},{{/unless}}
+          {{/each}}
+        ],
+      {{/if}}
+
+      {{#if this.FeedbackURL}}
+        "FeedbackURL" : "{{this.FeedbackURL}}",
+      {{/if}}
+
+      "Name" : "{{this.Name}}",
+
+      {{#if this.RedirectURL}}
+        "RedirectURL" : "{{this.RedirectURL}}",
+      {{/if}}
+
+      {{#if this.StorageConnectors}}
+        "StorageConnectors" : [
+        {{#each this.StorageConnectors}}
+        {
+          "ConnectorType" : {{this.ConnectorType}},
+          "Domains" : [
+            {{#each this.Domains}}
+              "{{this}}"{{#unless @last}},{{/unless}}
+            {{/each}}
+           ],
+          "ResourceIdentifier" : "{{this.ResourceIdentifier}}"
+        }
+        {{/each}}
+        ],
+      {{/if}}
+
+      "UserSettings" : [
+        {{#each this.UserSettings}}
+          {
+            "Action" : "{{this.Action}}",
+            "Permission" : "{{this.Permission}}"
+          }
+        {{/each}}
+      ],
+
+      {{> tags}}
+    }
+}

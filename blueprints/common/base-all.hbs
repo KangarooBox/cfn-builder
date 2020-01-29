@@ -62,6 +62,26 @@
     {{> apigateway_domain_name}},
     {{/each}}
 
+    {{#each AppStreamFleets}}
+    {{> appstream_fleet}},
+    {{/each}}
+
+    {{#each AppStreamStacks}}
+    {{> appstream_stack}},
+    {{/each}}
+
+    {{#each AppStreamStackFleetAssociations}}
+    {{> appstream_stackfleetassociation}},
+    {{/each}}
+
+    {{#each AppStreamStackUserAssociations}}
+    {{> appstream_stackuserassociation}},
+    {{/each}}
+
+    {{#each AppStreamUsers}}
+    {{> appstream_user}},
+    {{/each}}
+
     {{#each AutoScalingGroups}}
     {{> autoscaling_group}},
     {{/each}}

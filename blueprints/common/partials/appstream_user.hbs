@@ -1,0 +1,25 @@
+{{!--
+  Creates an AppStream User
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appstream-user.html
+--}}
+
+"appstream{{sanitize this.Name ''}}":{
+  "Type" : "AWS::AppStream::User",
+  "Properties" : {
+      "AuthenticationType" : "{{default this.AuthenticationType 'USERPOOL'}}",
+
+      {{#if this.FirstName}}
+        "FirstName" : "{{this.FirstName}}",
+      {{/if}}
+
+      {{#if this.LastName}}
+        "LastName" : "{{this.LastName}}",
+      {{/if}}
+
+      {{#if this.MessageAction}}
+      "MessageAction" : "{{this.MessageAction}}",
+      {{/if}}
+
+      "UserName" : "{{this.UserName}}"
+    }
+}
