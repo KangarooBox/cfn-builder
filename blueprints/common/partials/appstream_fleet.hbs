@@ -54,29 +54,25 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apps
 
     "Name" : "{{this.Name}}",
 
-    {{#if this.VpcConfig}}
-      "VpcConfig" : {
-          {{#if this.SecurityGroupIds}}
-            "SecurityGroupIds":[
-            {{#each this.SecurityGroupIds}}
-              {{#startsWith "sg" this}}
-                "{{this}}"
-              {{else}}
-                {"Ref":"ec2sg{{this}}"}
-              {{/startsWith}}
-              {{#unless @last}},{{/unless}}
-            {{/each}}],
-          {{/if}}
+    {{#if this.VpcConfig}}"VpcConfig":{
+      "SecurityGroupIds":[{{#each this.VpcConfig.SecurityGroupIds}}
+        {{#startsWith "sg-" this}}"{{this}}"{{else}}{"Ref":"ec2sg{{this}}"}{{/startsWith}}
+        {{#unless @last}},{{/unless}}
+      {{/each}}],
+      "SubnetIds":[{{#each this.VpcConfig.SubnetIds}}
+        {{#startsWith "subnet-" this}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{else}}
+          {{#with (lookupByNode @root.Region.Subnets this) }}
+            {{#each this.addresses}}
+              "{{this.Id}}"{{#unless @last}},{{/unless}}
+            {{/each}}
+          {{/with}}
+        {{/startsWith}}
+      {{/each}}]
+      },
+    {{/if}}
 
-          {{#if this.VpcConfig.SubnetIds}}
-            "SubnetIds": [
-            {{#each this.VpcConfig.SubnetIds}}
-              "{{this}}"{{#unless @last}},{{/unless}}
-            {{/each}}]
-          {{/if}}
-        },
-      {{/if}}
-
-      {{> tags}}
+    {{> tags}}
   }
 }
