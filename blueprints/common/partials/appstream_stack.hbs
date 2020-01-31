@@ -24,8 +24,8 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apps
 
       {{#if this.ApplicationSettings}}
         "ApplicationSettings" : {
-            {{#if this.SettingsGroup}}
-              "SettingsGroup" : "{{this.SettingsGroup}}",
+            {{#if this.ApplicationSettings.SettingsGroup}}
+              "SettingsGroup" : "{{this.ApplicationSettings.SettingsGroup}}",
             {{/if}}
             "Enabled" : {{default (toString this.ApplicationSettings.Enabled) false}}
         },
@@ -89,7 +89,7 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apps
           {
             "Action" : "{{this.Action}}",
             "Permission" : "{{this.Permission}}"
-          }
+          }{{#unless @last}},{{/unless}}
         {{/each}}
       ],
 
