@@ -8,6 +8,7 @@
   "Type": "AWS::IAM::Role",
   "Properties": {
     {{#if this.RoleName}}"RoleName": "{{this.RoleName}}",{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
     {{#if this.ManagedPolicyArns}}"ManagedPolicyArns": [
     {{#each this.ManagedPolicyArns}}
     {{#startsWith "arn:aws:iam:" this}}"{{this}}"{{else}}{ "Ref": "iammp{{this}}" }{{/startsWith}}{{#unless @last}}, {{/unless}}
