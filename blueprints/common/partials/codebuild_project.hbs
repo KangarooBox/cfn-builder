@@ -13,7 +13,7 @@
       "ServiceRole":{{#startsWith "arn:aws:" this.ServiceRole}}
         "{{this.ServiceRole}}"
       {{else}}
-        { "Ref":"iamr{{this.ServiceRole}}" }
+        { "Fn::GetAtt": ["iamr{{this.ServiceRole}}", "Arn"] }
       {{/startsWith}},
 
       {{#if this.BadgeEnabled}}"BadgeEnabled": Boolean,{{/if}}
