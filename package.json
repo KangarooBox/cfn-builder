@@ -44,7 +44,13 @@
     "type": "git",
     "url": "git+https://github.com/rnhurt/cfn-builder.git"
   },
+<<<<<<< HEAD
   "version": "0.13.0",
+||||||| 63db32f
+  "version": "0.12.1",
+=======
+  "version": "0.13.1",
+>>>>>>> fcc10c6b24b5bb4a1ee71a7f46368659cbab8c8b
   "scripts": {
     "test": "yarn run lint",
     "lint": "eslint lib scripts/*.js"
