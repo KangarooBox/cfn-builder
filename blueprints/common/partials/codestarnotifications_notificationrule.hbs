@@ -1,0 +1,23 @@
+{{!--
+  Creates a notification rule for a resource. The rule specifies the events you want notifications
+  about and the targets (such as SNS topics) where you want to receive them.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestarnotifications-notificationrule.html
+ --}}
+"csnr{{sanitize this.Name ''}}": {
+  "Type": "AWS::CodeStarNotifications::NotificationRule",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    "DetailType": "{{default this.DetailType 'BASIC'}}",
+    "EventTypeIds": [ {{#each this.EventTypeIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+    "Resource": "{{this.Resource}}",
+    "Status": "{{default this.Status 'ENABLED'}}",
+    "Targets": [
+      {{#each this.Targets}}{
+        "TargetAddress": "{{this.TargetAddress}}",
+        "TargetType": "{{default this.TargetType 'SNS'}}"
+      }{{#unless @last}},{{/unless}}{{/each}}
+    ],
+    {{> tags}}
+  }
+}

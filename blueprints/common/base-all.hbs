@@ -122,6 +122,10 @@
     {{> codedeploy_deploymentgroup}},
     {{/each}}
 
+    {{#each CodeStarNotificationsNotificationRules}}
+    {{> codestarnotifications_notificationrule}},
+    {{/each}}
+
     {{#each CodePipelinePipelines}}
     {{> codepipeline_pipeline}},
     {{/each}}
