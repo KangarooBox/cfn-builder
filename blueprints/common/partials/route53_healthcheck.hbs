@@ -6,24 +6,27 @@
  "53hc{{this.Name}}":{
   "Type": "AWS::Route53::HealthCheck",
   "Properties": {
-    "HealthCheckConfig": {
-      {{#if this.AlarmIdentifier}}"AlarmIdentifier": {
-        "Name":"{{this.AlarmIdentifier.Name}}", "Region":"{{this.AlarmIdentifier.Region}}"
-      },{{/if}}
-      {{#if this.ChildHealthChecks}}"ChildHealthChecks": [ {{#each this.ChildHealthChecks}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
-      {{#if this.EnableSNI}}"EnableSNI": {{this.EnableSNI}},{{/if}}
-      {{#if this.FailureThreshold}}"FailureThreshold": {{this.FailureThreshold}},{{/if}}
-      {{#if this.FullyQualifiedDomainName}}"FullyQualifiedDomainName": "{{this.FullyQualifiedDomainName}}",{{/if}}
-      {{#if this.HealthThreshold}}"HealthThreshold": {{this.HealthThreshold}},{{/if}}
-      {{#if this.InsufficientDataHealthStatus}}"InsufficientDataHealthStatus": "{{this.InsufficientDataHealthStatus}}",{{/if}}
-      {{#if this.Inverted}}"Inverted": {{this.Inverted}},{{/if}}
-      {{#if this.IPAddress}}"IPAddress": "{{this.IPAddress}}",{{/if}}
-      {{#if this.MeasureLatency}}"MeasureLatency": {{this.MeasureLatency}},{{/if}}
-      {{#if this.Port}}"Port": {{this.Port}},{{/if}}
-      {{#if this.RequestInterval}}"RequestInterval": {{this.RequestInterval}},{{/if}}
-      {{#if this.ResourcePath}}"ResourcePath": "{{this.ResourcePath}}",{{/if}}
-      {{#if this.SearchString}}"SearchString": "{{this.SearchString}}",{{/if}}
-      "Type": "{{this.Type}}"
+    {{#with this.HealthCheckConfig}}
+      "HealthCheckConfig": {
+        {{#if this.AlarmIdentifier}}"AlarmIdentifier": {
+          "Name":"{{this.AlarmIdentifier.Name}}", "Region":"{{this.AlarmIdentifier.Region}}"
+        },{{/if}}
+        {{#if this.ChildHealthChecks}}"ChildHealthChecks": [ {{#each this.ChildHealthChecks}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+        {{#if this.EnableSNI}}"EnableSNI": {{this.EnableSNI}},{{/if}}
+        {{#if this.FailureThreshold}}"FailureThreshold": {{this.FailureThreshold}},{{/if}}
+        {{#if this.FullyQualifiedDomainName}}"FullyQualifiedDomainName": "{{this.FullyQualifiedDomainName}}",{{/if}}
+        {{#if this.HealthThreshold}}"HealthThreshold": {{this.HealthThreshold}},{{/if}}
+        {{#if this.InsufficientDataHealthStatus}}"InsufficientDataHealthStatus": "{{this.InsufficientDataHealthStatus}}",{{/if}}
+        {{#if this.Inverted}}"Inverted": {{this.Inverted}},{{/if}}
+        {{#if this.IPAddress}}"IPAddress": "{{this.IPAddress}}",{{/if}}
+        {{#if this.MeasureLatency}}"MeasureLatency": {{this.MeasureLatency}},{{/if}}
+        {{#if this.Port}}"Port": {{this.Port}},{{/if}}
+        {{#if this.RequestInterval}}"RequestInterval": {{this.RequestInterval}},{{/if}}
+        {{#if this.Regions}}"Regions": [{{#each this.Regions}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+        {{#if this.ResourcePath}}"ResourcePath": "{{this.ResourcePath}}",{{/if}}
+        {{#if this.SearchString}}"SearchString": "{{this.SearchString}}",{{/if}}
+        "Type": "{{this.Type}}"
+      {{/with}}
     },
     {{> tags PropertyID="HealthCheckTags"}}
   }
