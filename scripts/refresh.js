@@ -2,10 +2,11 @@
 
 "use strict";
 
-var utilities = require("../lib/utilities");
-var refresh = require("../lib/refresh");
+const utilities = require("../lib/utilities");
+const refresh = require("../lib/refresh");
+const util  = require('util');
+
 var cwd = process.cwd();
-var util  = require('util');
 
 refresh(cwd)
 .then(function(data){

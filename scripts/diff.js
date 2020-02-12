@@ -3,15 +3,12 @@
 'use strict';
 
 // Local
-var utilities = require("../lib/utilities");
-var diff      = require('../lib/diff');
+const utilities = require('../lib/utilities');
+const diff      = require('../lib/diff');
+const fs        = require('fs');
+const path      = require('path');
 
-var args  = utilities.parseArguments();
+var args  = utilities.parseArguments(true);
 var cwd   = process.cwd();
 
-diff(cwd, args.envName, args.projectName, function(err){
-  if (err) {
-    console.error(err);
-    return;
-  }
-});
+diff(cwd, args.envName, args.projectName)
