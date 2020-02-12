@@ -44,6 +44,10 @@
             { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2tg{{this.Value}}","TargetGroupFullName"]} }
           {{/case}}
 
+          {{#case "HealthCheckId" break=true}}
+            { "Name": "{{this.Name}}", "Value": {"Ref":"53hc{{@root.ProjectName}}"} }
+          {{/case}}
+
           {{#sdefault}}
             { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
           {{/sdefault}}
