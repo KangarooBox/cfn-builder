@@ -4,74 +4,75 @@
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html
  --}}
 "cldwalrm{{sanitize this.Name ''}}": {
-   "Type":"AWS::CloudWatch::Alarm",
-   "Properties": {
-      {{#if this.AlarmName}}"AlarmName": "{{this.AlarmName}}",{{/if}}
-      {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
-      {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
-        {{#ifObject this}} { {{{inject this}}} }
-        {{else}}
-          {{#startsWith "arn:aws:" this}}"{{this}}"
-          {{else}} {"Ref":"snst{{this}}"}
+  "Type":"AWS::CloudWatch::Alarm",
+  {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
+  "Properties": {
+    {{#if this.AlarmName}}"AlarmName": "{{this.AlarmName}}",{{/if}}
+    {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
+    {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
+      {{#ifObject this}} { {{{inject this}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"
+        {{else}} {"Ref":"snst{{this}}"}
+        {{/startsWith}}
+      {{/ifObject}}
+    {{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
+
+    {{#if this.Dimensions}}"Dimensions": [
+    {{#each this.Dimensions}}
+      {{#switch this.Name}}
+        {{#case "AutoScalingGroupName" break=true}}
+          { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
+        {{/case}}
+
+        {{#case "InstanceId" break=true}}
+        { "Name": "{{this.Name}}", "Value":
+          {{#startsWith "i-" this.Value}}
+          "{{this.Value}}"
+          {{else}}
+          {"Ref":"ec2{{this.Value}}"}
           {{/startsWith}}
-        {{/ifObject}}
-      {{#unless @last}},{{/unless}}{{/each}}
-      ],{{/if}}
-      {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
+        }
+        {{/case}}
 
-      {{#if this.Dimensions}}"Dimensions": [
-      {{#each this.Dimensions}}
-        {{#switch this.Name}}
-          {{#case "AutoScalingGroupName" break=true}}
-            { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
-          {{/case}}
+        {{#case "LoadBalancer" break=true}}
+          { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2{{this.Value}}","LoadBalancerFullName"]} }
+        {{/case}}
 
-          {{#case "InstanceId" break=true}}
-          { "Name": "{{this.Name}}", "Value":
-            {{#startsWith "i-" this.Value}}
-            "{{this.Value}}"
-            {{else}}
-            {"Ref":"ec2{{this.Value}}"}
-            {{/startsWith}}
-          }
-          {{/case}}
+        {{#case "TargetGroup" break=true}}
+          { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2tg{{this.Value}}","TargetGroupFullName"]} }
+        {{/case}}
 
-          {{#case "LoadBalancer" break=true}}
-            { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2{{this.Value}}","LoadBalancerFullName"]} }
-          {{/case}}
+        {{#case "HealthCheckId" break=true}}
+          { "Name": "{{this.Name}}", "Value": {"Ref":"53hc{{@root.ProjectName}}"} }
+        {{/case}}
 
-          {{#case "TargetGroup" break=true}}
-            { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2tg{{this.Value}}","TargetGroupFullName"]} }
-          {{/case}}
+        {{#sdefault}}
+          { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
+        {{/sdefault}}
+      {{/switch}}
+    {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
 
-          {{#case "HealthCheckId" break=true}}
-            { "Name": "{{this.Name}}", "Value": {"Ref":"53hc{{@root.ProjectName}}"} }
-          {{/case}}
-
-          {{#sdefault}}
-            { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
-          {{/sdefault}}
-        {{/switch}}
-      {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
-
-      {{#if this.InsufficientDataActions}}"InsufficientDataActions": [ "{{this.}}", ... ],{{/if}}
-      {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}
-        {{#ifObject this}} { {{{inject this}}} }
-        {{else}}
-          {{#startsWith "arn:aws:" this}}"{{this}}"
-          {{else}} {"Ref":"snst{{this}}"}
-          {{/startsWith}}
-        {{/ifObject}}
-      {{#unless @last}},{{/unless}}{{/each}}
-      ],{{/if}}
-      {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
-      {{#if this.TreatMissingData}}"TreatMissingData": "{{this.TreatMissingData}}",{{/if}}
-      "ComparisonOperator": "{{this.ComparisonOperator}}",
-      "EvaluationPeriods": "{{this.EvaluationPeriods}}",
-      "MetricName": "{{this.MetricName}}",
-      "Namespace": "{{this.Namespace}}",
-      "Period":  {{this.Period}},
-      "Statistic": "{{this.Statistic}}",
-      "Threshold": {{this.Threshold}}
-   }
+    {{#if this.InsufficientDataActions}}"InsufficientDataActions": [ "{{this.}}", ... ],{{/if}}
+    {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}
+      {{#ifObject this}} { {{{inject this}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"
+        {{else}} {"Ref":"snst{{this}}"}
+        {{/startsWith}}
+      {{/ifObject}}
+    {{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
+    {{#if this.TreatMissingData}}"TreatMissingData": "{{this.TreatMissingData}}",{{/if}}
+    "ComparisonOperator": "{{this.ComparisonOperator}}",
+    "EvaluationPeriods": "{{this.EvaluationPeriods}}",
+    "MetricName": "{{this.MetricName}}",
+    "Namespace": "{{this.Namespace}}",
+    "Period":  {{this.Period}},
+    "Statistic": "{{this.Statistic}}",
+    "Threshold": {{this.Threshold}}
+  }
 }

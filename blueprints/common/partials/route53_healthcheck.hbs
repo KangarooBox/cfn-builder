@@ -5,6 +5,7 @@
  --}}
  "53hc{{this.Name}}":{
   "Type": "AWS::Route53::HealthCheck",
+  {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
   "Properties": {
     {{#with this.HealthCheckConfig}}
       "HealthCheckConfig": {
