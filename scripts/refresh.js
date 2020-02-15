@@ -2,7 +2,6 @@
 
 "use strict";
 
-const utilities = require("../lib/utilities");
 const refresh = require("../lib/refresh");
 const util  = require('util');
 
