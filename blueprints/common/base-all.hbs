@@ -302,6 +302,10 @@
     {{> ec2_subnet}},
     {{/each}}
 
+    {{#each EC2SubnetNetworkAclAssociations}}
+    {{> ec2_subnetnetworkaclassociation}},
+    {{/each}}
+
     {{#each EC2SubnetRouteTableAssociations}}
     {{> ec2_subnetroutetableassociation}},
     {{/each}}

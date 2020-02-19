@@ -9,7 +9,11 @@
   "Type" : "AWS::EC2::NatGateway",
   "Properties" : {
     "AllocationId" : {"Fn::GetAtt" : ["ec2eip{{sanitize this.Name ''}}", "AllocationId"]},
-    "SubnetId" : "{{this.SubnetId}}",
+    "SubnetId": {{#startsWith 'subnet-' this.SubnetId}}
+      "{{this.SubnetId}}"
+    {{else}}
+      {"Ref":"ec2sn{{sanitize this.SubnetId ''}}"}
+    {{/startsWith}},
     {{> tags}}
   }
 }
