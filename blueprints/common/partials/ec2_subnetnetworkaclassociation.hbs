@@ -1,0 +1,22 @@
+{{!--
+  Associates a subnet with a route table.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html
+ --}}
+
+"e2snnacla{{sanitize Name ''}}":{
+  "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+  "Properties" : {
+    "NetworkAclId": {{#startsWith 'acl-' this.NetworkAclId}}
+      "{{this.NetworkAclId}}"
+    {{else}}
+      {"Ref":"ec2nacl{{sanitize this.NetworkAclId ''}}"}
+    {{/startsWith}},
+
+    "SubnetId": {{#startsWith 'subnet-' this.SubnetId}}
+      "{{this.SubnetId}}"
+    {{else}}
+      {"Ref":"ec2sn{{sanitize this.SubnetId ''}}"}
+    {{/startsWith}}
+  }
+}
