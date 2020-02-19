@@ -9,8 +9,37 @@
   "Type":"AWS::EC2::VPCEndpoint",
   "Properties":{
     {{#if this.PolicyDocument}}"PolicyDocument":{ {{{inject this.PolicyDocument}}} },{{/if}}
+    {{#if this.PrivateDnsEnabled}}"PrivateDnsEnabled": "{{default (toString this.PrivateDnsEnabled) false}}",{{/if}}
     {{#if this.RouteTableIds}}"RouteTableIds":[{{#each this.RouteTableIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+
+    {{#if this.SecurityGroupIds}}"SecurityGroupIds":[
+      {{#each this.SecurityGroupIds}}
+        {{#startsWith "sg" this}}
+          "{{this}}"
+        {{else}}
+          {"Ref":"ec2sg{{this}}"}
+        {{/startsWith}}
+        {{#unless @last}},{{/unless}}
+      {{/each}}],
+    {{/if}}
+
     "ServiceName":"{{this.ServiceName}}",
+
+    {{#if this.SubnetIds}}
+      "SubnetIds":[{{#each this.SubnetIds}}
+        {{#startsWith "subnet-" this}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{else}}
+          {{#with (lookupByNode @root.Region.Subnets this) }}
+            {{#each this.addresses}}
+              "{{this.Id}}"{{#unless @last}},{{/unless}}
+            {{/each}}
+          {{/with}}
+        {{/startsWith}}
+      {{/each}}],
+    {{/if}}
+
+    {{#if this.VpcEndpointType}}"VpcEndpointType": "{{this.VpcEndpointType}}",{{/if}}
 
     {{> vpcid}}
   }

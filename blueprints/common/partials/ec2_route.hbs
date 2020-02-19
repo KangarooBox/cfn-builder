@@ -35,6 +35,12 @@
       {{else}}{"Ref":"ec2vpcpc{{sanitize this.VpcPeeringConnectionId ''}}"}{{/startsWith}},
     {{/if}}
     {{#if this.NetworkInterfaceId}}"NetworkInterfaceId": "{{this.NetworkInterfaceId}}",{{/if}}
-    "RouteTableId": "{{this.RouteTableId}}"
+
+
+    "RouteTableId": {{#startsWith "rtb-" this.RouteTableId}}
+      "{{this.RouteTableId}}"
+    {{else}}
+      {"Ref": "ec2routab{{sanitize this.RouteTableId ''}}"}
+    {{/startsWith}}
   }
 }
