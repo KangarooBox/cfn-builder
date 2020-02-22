@@ -9,5 +9,11 @@ var ChangeSet = require('../lib/changeSet');
 var args  = utilities.parseArguments();
 var cwd   = process.cwd();
 
-var changeSet = new ChangeSet(cwd, args);
-changeSet.create();
+utilities.isCorrectAccount().then(function(correctAccount){
+  if (correctAccount) {
+    var changeSet = new ChangeSet(cwd, args);
+    changeSet.create();
+  }
+}).catch(function(err){
+  console.log(err);
+})
