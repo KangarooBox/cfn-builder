@@ -9,4 +9,8 @@ const diff      = require('../lib/diff');
 var args  = utilities.parseArguments(true);
 var cwd   = process.cwd();
 
-diff(cwd, args.envName, args.projectName)
+utilities.isCorrectAccount().then(function(correctAccount){
+  if (correctAccount) { diff(cwd, args.envName, args.projectName); }
+}).catch(function(err){
+  console.log(err);
+})
