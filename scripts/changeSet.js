@@ -15,5 +15,5 @@ utilities.isCorrectAccount().then(function(correctAccount){
     changeSet.create();
   }
 }).catch(function(err){
-  console.log(err);
+  console.log(err.message);
 })

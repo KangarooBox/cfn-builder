@@ -12,5 +12,5 @@ var cwd   = process.cwd();
 utilities.isCorrectAccount().then(function(correctAccount){
   if (correctAccount) { diff(cwd, args.envName, args.projectName); }
 }).catch(function(err){
-  console.log(err);
+  console.log(err.message);
 })
