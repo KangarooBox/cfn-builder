@@ -12,7 +12,7 @@
     {{#if this.Policies}}"Policies": "{{this.Policies}}",{{/if}}
     {{#if this.Tier}}"Tier": "{{this.Tier}}",{{/if}}
     "Type": "{{this.Type}}",
-    "Value": "{{this.Value}}",
+    "Value": {{#ifObject this.Value}}{ {{{inject this.Value}}} }{{else}}"{{this.Value}}"{{/ifObject}},
     {{> tags_map}}
   }
 }
