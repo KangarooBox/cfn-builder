@@ -1,0 +1,21 @@
+{{!--
+  Create Amazon Inspector assessment targets, which specify the Amazon EC2 instances that will be
+  analyzed during an assessment run.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-inspector-assessmenttarget.html
+ --}}
+"insasstarg{{sanitize this.Name ''}}": {
+  "Type": "AWS::Inspector::AssessmentTarget",
+  "Properties": {
+      {{#if this.ResourceGroupArn}}"ResourceGroupArn":
+        {{#startsWith this.ResourceGroupArn 'arn:aws:'}}
+          { "Ref": "insresgrp{{sanitize this.Name ''}}" }
+        {{else}}
+          "{{this.ResourceGroupArn}}"
+        {{/startsWith}},
+      {{/if}}
+      "AssessmentTargetName":
+        {{#if this.AssessmentTargetName}}"{{this.AssessmentTargetName}}"
+        {{else}}"{{this.Name}}"{{/if}}
+    }
+}

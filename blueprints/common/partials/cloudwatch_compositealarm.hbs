@@ -1,0 +1,42 @@
+{{!--
+  Creates or updates a composite alarm. When you create a composite alarm, you specify
+  a rule expression for the alarm that takes into account the alarm states of
+  other alarms that you have created. The composite alarm goes into ALARM state
+  only if all conditions of the rule are met.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-compositealarm.html
+ --}}
+"cldwcompalrm{{sanitize this.Name ''}}": {
+  "Type": "AWS::CloudWatch::CompositeAlarm",
+  "Properties": {
+    {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
+    {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
+      {{#ifObject this}} { {{{inject this}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"
+        {{else}} {"Ref":"snst{{this}}"}
+        {{/startsWith}}
+      {{/ifObject}}
+    {{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
+    {{#if this.InsufficientDataActions}}"InsufficientDataActions": [{{#each this.InsufficientDataActions}}
+      {{#ifObject this}} { {{{inject this}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"
+        {{else}} {"Ref":"snst{{this}}"}
+        {{/startsWith}}
+      {{/ifObject}}
+    {{comma}}{{/each}}],{{/if}}
+    {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}
+      {{#ifObject this}} { {{{inject this}}} }
+      {{else}}
+        {{#startsWith "arn:aws:" this}}"{{this}}"
+        {{else}} {"Ref":"snst{{this}}"}
+        {{/startsWith}}
+      {{/ifObject}}
+    {{comma}}{{/each}}],{{/if}}
+    "AlarmName": "{{this.AlarmName}}",
+    "AlarmRule": "{{this.AlarmRule}}"
+  }
+}
