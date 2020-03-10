@@ -102,6 +102,10 @@
     {{> cloudtrail_trail}},
     {{/each}}
 
+    {{#each CloudWatchCompositeAlarms}}
+    {{> cloudwatch_compositealarm}},
+    {{/each}}
+
     {{#each CloudWatchAlarms}}
     {{> cloudwatch_alarm}},
     {{/each}}
