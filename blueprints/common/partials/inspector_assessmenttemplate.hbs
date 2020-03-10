@@ -1,0 +1,24 @@
+{{!--
+  Create an Amazon Inspector assessment template, which specifies the Inspector assessment targets
+  that will be evaluated by an assessment run and its related configurations.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-inspector-assessmenttemplate.html
+ --}}
+"insasstemp{{sanitize this.Name ''}}": {
+  "Type": "AWS::Inspector::AssessmentTemplate",
+  "Properties": {
+    {{#if this.UserAttributesForFindings}}"UserAttributesForFindings": [ Tag, ... ]{{/if}}
+    "AssessmentTargetArn": {{#startsWith this.AssessmentTargetArn 'arn:aws:'}}
+      "{{this.AssessmentTargetArn}}"
+    {{else}}
+      {"Ref":"insasstarg{{sanitize this.AssessmentTargetArn ''}}"}
+    {{/startsWith}},
+    "AssessmentTemplateName": {{#if this.AssessmentTemplateName}}
+      "{{this.AssessmentTemplateName}}"
+    {{else}}
+      "{{this.Name}}"
+    {{/if}},
+    "DurationInSeconds": {{this.DurationInSeconds}},
+    "RulesPackageArns": [{{#each this.RulesPackageArns}}"{{this}}"{{comma}}{{/each}}]
+  }
+}

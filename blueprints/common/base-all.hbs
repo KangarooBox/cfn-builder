@@ -386,6 +386,18 @@
     {{> iam_group}},
     {{/each}}
 
+    {{#each InspectorAssessmentTargets}}
+    {{> inspector_assessmenttarget}},
+    {{/each}}
+
+    {{#each InspectorAssessmentTemplates}}
+    {{> inspector_assessmenttemplate}},
+    {{/each}}
+
+    {{#each InspectorResourceGroups}}
+    {{> inspector_resourcegroup}},
+    {{/each}}
+
     {{#each KinesisStreams}}
     {{> kinesis_stream}},
     {{/each}}

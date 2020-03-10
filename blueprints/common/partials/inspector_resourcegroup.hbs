@@ -1,0 +1,12 @@
+{{!--
+  Create Amazon Inspector resource groups. A resource group defines a set of tags that, when queried,
+  identify the AWS resources that make up the assessment target.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-inspector-resourcegroup.html
+ --}}
+"insresgrp{{sanitize this.Name ''}}": {
+  "Type": "AWS::Inspector::ResourceGroup",
+  "Properties": {
+      "ResourceGroupTags": [ Tag, ... ]
+    }
+}
