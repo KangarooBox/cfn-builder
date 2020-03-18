@@ -76,22 +76,27 @@
     "SourceDestCheck":{{default (toString this.SourceDestCheck) true}},
     {{#if this.SubnetId}}
       {{#startsWith "subnet-" this.SubnetId}}
-      "SubnetId": "{{this.SubnetId}}",
+        "SubnetId": "{{this.SubnetId}}",
       {{else}}
-      {{#if this.SubnetIndex}}
-      "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}
-        "{{lookup this ../SubnetIndex}}"
-      {{/with}},
-      {{else}}
-      "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}"{{this.[0]}}"{{/with}},
-      {{/if}}
+        {{#if this.SubnetIndex}}
+          "SubnetId": {{#with (lookupByNode @root.Region.SubnetIds this.SubnetId) }}
+            "{{lookup this ../SubnetIndex}}"
+          {{/with}},
+        {{else}}
+          {{!-- Choose the first subnet --}}
+          "SubnetId": {{#with (lookupByNode @root.Region.Subnets this.SubnetId) }}
+            {{#each this.addresses}}
+              {{#if @first}}"{{this.Id}}"{{/if}}
+            {{/each}}
+          {{/with}},
+        {{/if}}
       {{/startsWith}}
     {{/if}}
 
     {{#if this.Tenancy}}"Tenancy":"{{this.Tenancy}}",{{/if}}
     {{#if this.UserData}}"UserData": { {{{inject this.UserData}}} },
     {{else}}
-      {{> (whichPartial "user_data_" this) }},
+      {{> (whichPartial "AMI" "user_data_" this) }},
     {{/if}}
     {{#if this.Volumes}}"Volumes":[
       {{#each this.Volumes}}{"Device":"{{this.Device}}", "VolumeId":
