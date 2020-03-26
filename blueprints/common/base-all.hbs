@@ -496,6 +496,10 @@
     {{> secretsmanager_secret}},
     {{/each}}
 
+    {{#each SecurityHubHubs}}
+    {{> securityhub_hub}},
+    {{/each}}
+
     {{#each SNSTopics}}
     {{> sns_topic}},
     {{/each}}

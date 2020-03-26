@@ -1,0 +1,12 @@
+{{!--
+  Represents the implementation of the AWS Security Hub service in your account.
+  One hub resource is created for each Region in which you enable Security Hub.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-hub.html
+ --}}
+"sechubhub{{sanitize this.Name ''}}": {
+  "Type": "AWS::SecurityHub::Hub",
+  "Properties": {
+    {{> tags_map}}
+  }
+}
