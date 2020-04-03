@@ -11,7 +11,7 @@
     {{#if this.CloudWatchLogsRoleArn}}"CloudWatchLogsRoleArn":{{#startsWith "arn:aws:" this.CloudWatchLogsRoleArn}}"{{this.CloudWatchLogsRoleArn}}"{{else}}{"Fn::GetAtt":["iamr{{this.CloudWatchLogsRoleArn}}","Arn"]}{{/startsWith}},{{/if}}
     {{#if this.EnableLogFileValidation}}"EnableLogFileValidation":{{this.EnableLogFileValidation}},{{/if}}
     {{#if this.IncludeGlobalServiceEvents}}"IncludeGlobalServiceEvents":{{this.IncludeGlobalServiceEvents}},{{/if}}
-    {{#if this.IsMultiRegionTail}}"IsMultiRegionTrail":{{this.IsMultiRegionTail}},{{/if}}
+    {{#if this.IsMultiRegionTrail}}"IsMultiRegionTrail":{{this.IsMultiRegionTrail}},{{/if}}
     {{#if this.KMSKeyId}}"KMSKeyId":"{{this.KMSKeyId}}",{{/if}}
     {{#if this.S3KeyPrefix}}"S3KeyPrefix":"{{this.S3KeyPrefix}}",{{/if}}
     {{#if this.SnsTopicName}}"SnsTopicName":"{{this.SnsTopicName}}",{{/if}}
