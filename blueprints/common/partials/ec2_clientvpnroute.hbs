@@ -1,0 +1,27 @@
+{{!--
+  Specifies a network route to add to a Client VPN endpoint. Each Client VPN endpoint
+  has a route table that describes the available destination network routes. Each route
+  in the route table specifies the path for traﬃc to speciﬁc resources or networks.
+
+  A target network association must be created before you can specify a route. If
+  you're setting up all the components of a Client VPN endpoint at the same time,
+  you must use the DependsOn Attribute to declare a dependency on the
+  AWS::EC2::ClientVpnTargetNetworkAssociation resource.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-clientvpnroute.html
+ --}}
+"ec2clntvpnauthrule{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::ClientVpnRoute",
+  "Properties": {
+    "ClientVpnEndpointId":
+      {{#startsWith 'cvpn-endpoint-' this.ClientVpnEndpointId}}
+        "{{this.ClientVpnEndpointId}}",
+      {{else}}
+        {"Ref": "ec2clntvpnendp{{sanitize this.ClientVpnEndpointId ''}}"},
+      {{/startsWith}}
+    "Description": {{#if this.Description}}"{{this.Description}}"{{else}}
+      "{{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})"{{/if}},
+    "DestinationCidrBlock": "{{this.DestinationCidrBlock}}",
+    "TargetVpcSubnetId": "{{this.TargetVpcSubnetId}}"
+  }
+}

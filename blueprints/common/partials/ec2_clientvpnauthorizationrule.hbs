@@ -1,0 +1,24 @@
+{{!--
+  Specifies an ingress authorization rule to add to a Client VPN endpoint. Ingress
+  authorization rules act as firewall rules that grant access to networks. You must
+  configure ingress authorization rules to enable clients to access resources in
+  AWS or on-premises networks.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-clientvpnauthorizationrule.html
+ --}}
+"ec2clntvpnauthrule{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::ClientVpnAuthorizationRule",
+  "Properties": {
+    {{#if this.AccessGroupId}}"AccessGroupId": "{{this.AccessGroupId}}",{{/if}}
+    "AuthorizeAllGroups": {{default (toString this.AuthorizeAllGroups) false}},
+    "ClientVpnEndpointId":
+      {{#startsWith 'cvpn-endpoint-' this.ClientVpnEndpointId}}
+        "{{this.ClientVpnEndpointId}}",
+      {{else}}
+        {"Ref": "ec2clntvpnendp{{sanitize this.ClientVpnEndpointId ''}}"},
+      {{/startsWith}}
+    "Description": {{#if this.Description}}"{{this.Description}}"{{else}}
+      "{{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})"{{/if}},
+    "TargetNetworkCidr": "{{this.TargetNetworkCidr}}"
+  }
+}

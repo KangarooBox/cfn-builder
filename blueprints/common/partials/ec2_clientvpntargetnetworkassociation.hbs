@@ -1,0 +1,17 @@
+{{!--
+  Specifies a target network to associate with a Client VPN endpoint.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-clientvpntargetnetworkassociation.html
+ --}}
+"ec2clntvpntarnetass{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::ClientVpnTargetNetworkAssociation",
+  "Properties": {
+    "ClientVpnEndpointId":
+      {{#startsWith 'cvpn-endpoint-' this.ClientVpnEndpointId}}
+        "{{this.ClientVpnEndpointId}}",
+      {{else}}
+        {"Ref": "ec2clntvpnendp{{sanitize this.ClientVpnEndpointId ''}}"},
+      {{/startsWith}}
+    "SubnetId": "{{this.SubnetId}}"
+  }
+}

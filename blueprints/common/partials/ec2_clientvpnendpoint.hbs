@@ -1,0 +1,44 @@
+{{!--
+  A Client VPN endpoint is the resource you create and configure to enable and manage
+  client VPN sessions. It is the destination endpoint at which all client VPN
+  sessions are terminated.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-clientvpnendpoint.html
+ --}}
+"ec2clntvpnendp{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::ClientVpnEndpoint",
+  "Properties": {
+    "AuthenticationOptions":[
+      {{#each this.AuthenticationOptions}}{ {{{inject this}}} }{{comma}}{{/each}}
+    ],
+    "ClientCidrBlock": "{{this.ClientCidrBlock}}",
+    "ConnectionLogOptions": {
+      {{#if this.CloudwatchLogGroup}}"CloudwatchLogGroup": "{{this.CloudwatchLogGroup}}",{{/if}}
+      {{#if this.CloudwatchLogStream}}"CloudwatchLogStream": "{{this.CloudwatchLogStream}}",{{/if}}
+      "Enabled": {{default (toString this.Enabled) false}}
+    },
+    "Description": {{#if this.Description}}
+      "{{this.Description}}",
+    {{else}}
+      "{{this.Name}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",
+    {{/if}}
+    {{#if this.DnsServers}}"DnsServers": [ {{#each this.DnsServers}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{#if this.SecurityGroupIds}}
+     "SecurityGroupIds": [
+      {{#each this.SecurityGroupIds}}
+        {{#startsWith "sg-" this}}"{{this}}"{{else}}{"Ref":"ec2sg{{this}}"}{{/startsWith}}{{comma}}
+      {{/each}} ],
+    {{/if}}
+    "ServerCertificateArn": "{{this.ServerCertificateArn}}",
+    "SplitTunnel": {{default (toString this.SplitTunnel) false}},
+    "TransportProtocol": "{{default this.TransportProtocol 'udp'}}",
+    "VpcId": "{{@root.Region.VPCId}}",
+    {{#if this.VpnPort}}"VpnPort": {{this.VpnPort}},{{/if}}
+
+    "TagSpecifications": [
+      { "ResourceType": "client-vpn-endpoint",
+        {{> tags}}
+      }
+    ]
+  }
+}

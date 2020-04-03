@@ -1,0 +1,20 @@
+{{!--
+  The AWS::CloudWatch::AnomalyDetector type specifies an anomaly detection band for
+  a certain metric and statistic. The band represents the expected "normal" range
+  for the metric values. Anomaly detection bands can be used for visualization of
+  a metric's expected values, and for alarms.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html
+ --}}
+"cldwanomdetcr{{sanitize this.Name ''}}": {
+  "Type": "AWS::CloudWatch::AnomalyDetector",
+  "Properties": {
+    {{#if this.Configuration}}"Configuration": { {{{inject this.Configuration}}} },{{/if}}
+    {{#if this.Dimensions}}"Dimensions":[
+      {{#each this.Dimensions}}{ {{{inject this}}} }{{comma}}{{/each}}
+    ],{{/if}}
+    "MetricName": "{{this.MetricName}}",
+    "Namespace": "{{this.Namespace}}",
+    "Stat": "{{this.Stat}}"
+  }
+}
