@@ -110,6 +110,10 @@
     {{> cloudwatch_alarm}},
     {{/each}}
 
+    {{#each CloudWatchAnomalyDetectors}}
+    {{> cloudwatch_anomalydetector}},
+    {{/each}}
+
     {{#each CodeBuildProjects}}
     {{> codebuild_project}},
     {{/each}}
@@ -184,6 +188,22 @@
 
     {{#each DLMLifecyclePolicies}}
     {{> dlm_lifecyclepolicy}},
+    {{/each}}
+
+    {{#each EC2ClientVpnAuthorizationRules}}
+    {{> ec2_clientvpnauthorizationrule}},
+    {{/each}}
+
+    {{#each EC2ClientVpnEndpoints}}
+    {{> ec2_clientvpnendpoint}},
+    {{/each}}
+
+    {{#each EC2ClientVpnRoutes}}
+    {{> ec2_clientvpnroute}},
+    {{/each}}
+
+    {{#each EC2ClientVpnTargetNetworkAssociations}}
+    {{> ec2_clientvpntargetnetworkassociation}},
     {{/each}}
 
     {{#each EC2CustomerGateways}}

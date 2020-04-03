@@ -71,12 +71,17 @@
     ],{{/if}}
     {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
     {{#if this.TreatMissingData}}"TreatMissingData": "{{this.TreatMissingData}}",{{/if}}
+    {{#if this.Metrics}}"Metrics": [
+      {{#each this.Metrics}}{ {{{inject this}}} }{{comma}}{{/each}}
+    ],{{/if}}
+    {{#if this.MetricName}}"MetricName": "{{this.MetricName}}",{{/if}}
+    {{#if this.Namespace}}"Namespace": "{{this.Namespace}}",{{/if}}
+    {{#if (toString this.Period)}}"Period":  {{this.Period}},{{/if}}
+    {{#if this.Statistic}}"Statistic": "{{this.Statistic}}",{{/if}}
+    {{#if (toString this.Threshold)}}"Threshold": {{this.Threshold}},{{/if}}
+    {{#if this.ThresholdMetricId}}"ThresholdMetricId": "{{this.ThresholdMetricId}}",{{/if}}
+
     "ComparisonOperator": "{{this.ComparisonOperator}}",
-    "EvaluationPeriods": "{{this.EvaluationPeriods}}",
-    "MetricName": "{{this.MetricName}}",
-    "Namespace": "{{this.Namespace}}",
-    "Period":  {{this.Period}},
-    "Statistic": "{{this.Statistic}}",
-    "Threshold": {{this.Threshold}}
+    "EvaluationPeriods": "{{this.EvaluationPeriods}}"
   }
 }
