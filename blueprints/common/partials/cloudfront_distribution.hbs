@@ -1,0 +1,13 @@
+{{!--
+  A distribution tells CloudFront where you want content to be delivered from, and
+  the details about how to track and manage content delivery.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudfront-distribution.html
+ --}}
+"cfntdist{{sanitize this.Name ''}}" : {
+  "Type": "AWS::CloudFront::Distribution",
+  "Properties": {
+    "DistributionConfig": { {{{inject this.DistributionConfig}}} },
+    {{> tags}}
+  }
+}

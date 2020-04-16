@@ -13,7 +13,7 @@
     {{/if}}
 
     {{#if this.AliasTarget}}
-      "AliasTarget":{ {{{inject this.AliasTarget}}}, "HostedZoneId": "Z2FDTNDATAQYW2" },
+      "AliasTarget":{ {{{inject this.AliasTarget}}} },
       {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
         "HostedZoneId":"{{this.HostedZoneId}}",
         "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",

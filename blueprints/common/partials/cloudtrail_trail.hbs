@@ -15,13 +15,8 @@
     {{#if this.KMSKeyId}}"KMSKeyId":"{{this.KMSKeyId}}",{{/if}}
     {{#if this.S3KeyPrefix}}"S3KeyPrefix":"{{this.S3KeyPrefix}}",{{/if}}
     {{#if this.SnsTopicName}}"SnsTopicName":"{{this.SnsTopicName}}",{{/if}}
-    "IsLogging":{{default this.IsLogging false}},
+    "IsLogging":{{default (toString this.IsLogging) false}},
     "S3BucketName":"{{this.S3BucketName}}",
     {{> tags}}
-  },
-  "DependsOn":[
-    {{#if this.CloudWatchLogsLogGroupArn}}"loggrp{{sanitize this.CloudWatchLogsLogGroupArn ''}}",{{/if}}
-    {{#if this.CloudWatchLogsRoleArn}}"iamr{{this.CloudWatchLogsRoleArn}}",{{/if}}
-    "s3bp{{sanitize this.S3BucketName ''}}"
-  ]
+  }
 }

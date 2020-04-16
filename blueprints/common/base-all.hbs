@@ -98,6 +98,14 @@
     {{> autoscaling_launchconfiguration}},
     {{/each}}
 
+    {{#each CloudFrontDistributions}}
+    {{> cloudfront_distribution}},
+    {{/each}}
+
+    {{#each CloudFrontOriginAccessIdentities}}
+    {{> cloudfront_originaccessidentity}},
+    {{/each}}
+
     {{#each CloudTrailTrails}}
     {{> cloudtrail_trail}},
     {{/each}}

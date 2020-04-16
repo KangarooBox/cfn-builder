@@ -20,6 +20,7 @@
     ],{{/if}}
     {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
 
+    {{#if this.DatapointsToAlarm}}"DatapointsToAlarm": "{{this.DatapointsToAlarm}}",{{/if}}
     {{#if this.Dimensions}}"Dimensions": [
     {{#each this.Dimensions}}
       {{#switch this.Name}}

@@ -51,3 +51,25 @@
     {{> tags Role=''}}
   }
 }
+
+{{#if this.AlarmActions}},
+  "cldwalrm{{sanitize this.Name ''}}": {
+    "Type" : "AWS::CloudWatch::Alarm",
+    "Properties" : {
+      "AlarmName": "{{@root.EnvName}} {{this.Name}} Lambda Error Count",
+      "AlarmDescription": "Number of errors for {{this.Name}} lambda function",
+      {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}"{{this}}"{{comma}}{{/each}}],{{/if}}
+      {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}"{{this}}"{{comma}}{{/each}}],{{/if}}
+      {{#if this.InsufficientDataActions}}"InsufficientDataActions": [{{#each this.InsufficientDataActions}}"{{this}}"{{comma}}{{/each}}],{{/if}}
+      "ComparisonOperator": "GreaterThanThreshold",
+      "EvaluationPeriods": 1,
+      "MetricName": "Errors",
+      "Namespace": "AWS/Lambda",
+      "Dimensions": [ {"Name": "FunctionName", "Value": "{{sanitize this.Name ''}}"} ],
+      "Period": 60,
+      "Statistic": "Sum",
+      "Threshold": 0,
+      "TreatMissingData": "notBreaching"
+    }
+  }
+{{/if}}
