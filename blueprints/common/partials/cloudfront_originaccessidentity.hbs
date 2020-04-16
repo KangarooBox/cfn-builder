@@ -1,0 +1,13 @@
+{{!--
+  The request to create a new origin access identity (OAI). An origin access identity
+  is a special CloudFront user that you can associate with Amazon S3 origins, so that
+  you can secure all or just some of your Amazon S3 content.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudfront-cloudfrontoriginaccessidentity.html
+ --}}
+"cfntoaid{{sanitize this.Name ''}}": {
+  "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+  "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": { {{{inject CloudFrontOriginAccessIdentityConfig}}} }
+  }
+}
