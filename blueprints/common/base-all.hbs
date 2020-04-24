@@ -507,9 +507,7 @@
     {{/each}}
 
     {{#each S3Buckets}}
-    {{#ifEq this.Region @root.Region.Id}}
     {{> s3_bucket}},
-    {{/ifEq}}
     {{/each}}
 
     {{#each S3BucketPolicies}}
