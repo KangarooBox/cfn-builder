@@ -9,8 +9,12 @@
   "Properties": {
     "Name": "{{this.Name}}",
     "DetailType": "{{default this.DetailType 'BASIC'}}",
-    "EventTypeIds": [ {{#each this.EventTypeIds}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
-    "Resource": "{{this.Resource}}",
+    "EventTypeIds": [ {{#each this.EventTypeIds}}"{{this}}"{{comma}}{{/each}}],
+    "Resource": {{#ifObject this.Resource}}
+      { {{{inject this.Resource}}} },
+    {{else}}
+      "{{this.Resource}}",
+    {{/ifObject}}
     "Status": "{{default this.Status 'ENABLED'}}",
     "Targets": [
       {{#each this.Targets}}{
@@ -18,6 +22,6 @@
         "TargetType": "{{default this.TargetType 'SNS'}}"
       }{{#unless @last}},{{/unless}}{{/each}}
     ],
-    {{> tags}}
+    {{> tags_map}}
   }
 }
