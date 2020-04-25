@@ -8,7 +8,7 @@
   {{#if this.DISABLED}}"Condition":"Disabled",{{/if}}
   "Properties": {
     {{#if this.AlarmName}}"AlarmName": "{{this.AlarmName}}",{{/if}}
-    {{#if this.ActionsEnabled}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
+    {{#if (toString this.ActionsEnabled)}}"ActionsEnabled": {{this.ActionsEnabled}},{{/if}}
     {{#if this.AlarmActions}}"AlarmActions": [{{#each this.AlarmActions}}
       {{#ifObject this}} { {{{inject this}}} }
       {{else}}
