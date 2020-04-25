@@ -1,0 +1,20 @@
+{{!--
+  Subscribes an endpoint to an Amazon Simple Notification Service (Amazon SNS) topic.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html
+ --}}
+"snssub{{sanitize this.Name ''}}": {
+  "Type": "AWS::SNS::Subscription",
+  "Properties": {
+    {{#if this.Endpoint}}"Endpoint": "{{this.Endpoint}}",{{/if}}
+    {{#if this.DeliveryPolicy}}"DeliveryPolicy": { {{{inject this.DeliveryPolicy}}} },{{/if}}
+    {{#if this.FilterPolicy}}"FilterPolicy": { {{{inject this.FilterPolicy}}} },{{/if}}
+    {{#if (toString this.RawMessageDelivery)}}"RawMessageDelivery": {{toString this.RawMessageDelievery}},{{/if}}
+    {{#if this.RedrivePolicy}}"RedrivePolicy": { {{{inject this.RedrivePolicy}}} },{{/if}}
+    {{#if this.Region}}"Region": "{{this.Region}}",{{/if}}
+    "Protocol": "{{this.Protocol}}",
+    "TopicArn": {{#startsWith "arn:aws:" this.TopicArn}}"{{this.TopicArn}}"{{else}}
+      { "Ref": "snst{{sanitize this.TopicArn ''}}" }
+    {{/startsWith}}
+  }
+}

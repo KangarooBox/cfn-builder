@@ -526,6 +526,10 @@
     {{> securityhub_hub}},
     {{/each}}
 
+    {{#each SNSSubscriptions}}
+    {{> sns_subscription}},
+    {{/each}}
+
     {{#each SNSTopics}}
     {{> sns_topic}},
     {{/each}}
