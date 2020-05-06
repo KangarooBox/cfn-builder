@@ -22,7 +22,13 @@
           "SourceSecurityGroupOwnerId": "{{this.SourceSecurityGroupOwnerId}}",
           "SourceSecurityGroupId": "{{this.SourceSecurityGroupId}}"
         {{else}}
-          {{#if this.SourceSecurityGroupId}}"SourceSecurityGroupId":{"Ref":"ec2sg{{this.SourceSecurityGroupId}}"}{{/if}}
+          {{#if this.SourceSecurityGroupId}}
+            "SourceSecurityGroupId":{{#startsWith "sg-" this.SourceSecurityGroupId}}
+              "{{this.SourceSecurityGroupId}}"
+            {{else}}
+              {"Ref":"ec2sg{{this.SourceSecurityGroupId}}"}
+            {{/startsWith}}
+          {{/if}}
         {{/if}}
       } {{#unless @last}},{{/unless}}
       {{/each}}
@@ -33,7 +39,13 @@
         {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
         {{#if this.FromPort}}"FromPort": {{this.FromPort}}, "ToPort": {{this.ToPort}}, {{/if}}
         {{#if this.CidrIp}}"CidrIp": "{{this.CidrIp}}" }{{/if}}
-        {{#if this.DestinationSecurityGroupId}} "DestinationSecurityGroupId": { "Ref": "ec2sg{{this.DestinationSecurityGroupId}}" }}{{/if}}
+        {{#if this.DestinationSecurityGroupId}}
+          "DestinationSecurityGroupId":{{#startsWith "sg-" this.DestinationSecurityGroupId}}
+            "{{this.DestinationSecurityGroupId}}"
+          {{else}}
+            {"Ref":"ec2sg{{this.DestinationSecurityGroupId}}"}
+          {{/startsWith}}
+        {{/if}}
         {{#unless @last}},{{/unless}}
       {{/each}}
     ],
