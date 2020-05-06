@@ -6,6 +6,7 @@
  --}}
 "logmtrflt{{sanitize this.Name ''}}" : {
   "Type": "AWS::Logs::MetricFilter",
+  {{#if this.LogGroupName}}"DependsOn": "loggrp{{sanitize this.LogGroupName ''}}",{{/if}}
   "Properties": {
     {{#if this.LogGroupName}}"LogGroupName":"{{this.LogGroupName}}",{{/if}}
     "FilterPattern":"{{{inject this.FilterPattern}}}",
