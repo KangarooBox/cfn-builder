@@ -7,30 +7,30 @@
 "cbp{{sanitize this.Name ''}}": {
   "Type": "AWS::CodeBuild::Project",
   "Properties": {
-      "Artifacts": { {{{inject this.Artifacts}}} },
-      "Environment": { {{{inject this.Environment}}}  },
-      "Source": { {{{inject this.Source}}} },
-      "ServiceRole":{{#startsWith "arn:aws:" this.ServiceRole}}
-        "{{this.ServiceRole}}"
-      {{else}}
-        { "Fn::GetAtt": ["iamr{{this.ServiceRole}}", "Arn"] }
-      {{/startsWith}},
+    "Artifacts": { {{{inject this.Artifacts}}} },
+    "Environment": { {{{inject this.Environment}}}  },
+    "Source": { {{{inject this.Source}}} },
+    "ServiceRole":{{#startsWith "arn:aws:" this.ServiceRole}}
+      "{{this.ServiceRole}}"
+    {{else}}
+      { "Fn::GetAtt": ["iamr{{this.ServiceRole}}", "Arn"] }
+    {{/startsWith}},
 
-      {{#if this.BadgeEnabled}}"BadgeEnabled": Boolean,{{/if}}
-      {{#if this.Cache}}"Cache": { {{{inject this.Cache}}} },{{/if}}
-      {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
-      {{#if this.EncryptionKey}}"EncryptionKey": "{{this.EncryptionKey}}",{{/if}}
-      {{#if this.LogsConfig}}"LogsConfig": { {{{inject this.LogsConfig}}} },{{/if}}
-      {{#if this.QueuedTimeoutInMinutes}}"QueuedTimeoutInMinutes": {{this.QueuedTimeoutInMinutes}},{{/if}}
-      {{#if this.SecondaryArtifacts}}"SecondaryArtifacts": [ Artifacts, ... ],{{/if}}
-      {{#if this.SecondarySources}}"SecondarySources": [ Source, ... ],{{/if}}
-      {{#if this.SecondarySourceVersions}}"SecondarySourceVersions": [ ProjectSourceVersion, ... ],{{/if}}
-      {{#if this.SourceVersion}}"SourceVersion": "{{this.SourceVersion}}",{{/if}}
-      {{#if this.TimeoutInMinutes}}"TimeoutInMinutes": {{this.TimeoutInMinutes}},{{/if}}
-      {{#if this.Triggers}}"Triggers": { {{{inject this.Triggers}}} },{{/if}}
-      {{#if this.VpcConfig}}"VpcConfig": { {{{inject this.VpcConfig}}} },{{/if}}
+    {{#if this.BadgeEnabled}}"BadgeEnabled": Boolean,{{/if}}
+    {{#if this.Cache}}"Cache": { {{{inject this.Cache}}} },{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.EncryptionKey}}"EncryptionKey": "{{this.EncryptionKey}}",{{/if}}
+    {{#if this.LogsConfig}}"LogsConfig": { {{{inject this.LogsConfig}}} },{{/if}}
+    {{#if this.QueuedTimeoutInMinutes}}"QueuedTimeoutInMinutes": {{this.QueuedTimeoutInMinutes}},{{/if}}
+    {{#if this.SecondaryArtifacts}}"SecondaryArtifacts": [ Artifacts, ... ],{{/if}}
+    {{#if this.SecondarySources}}"SecondarySources": [ Source, ... ],{{/if}}
+    {{#if this.SecondarySourceVersions}}"SecondarySourceVersions": [ ProjectSourceVersion, ... ],{{/if}}
+    {{#if this.SourceVersion}}"SourceVersion": "{{this.SourceVersion}}",{{/if}}
+    {{#if this.TimeoutInMinutes}}"TimeoutInMinutes": {{this.TimeoutInMinutes}},{{/if}}
+    {{#if this.Triggers}}"Triggers": { {{{inject this.Triggers}}} },{{/if}}
+    {{#if this.VpcConfig}}"VpcConfig": { {{{inject this.VpcConfig}}} },{{/if}}
 
-      "Name": "{{this.Name}}",
-      {{> tags}}
-    }
+    "Name": "{{this.Name}}",
+    {{> tags}}
+  }
 }
