@@ -38,7 +38,7 @@
       { "IpProtocol": "{{this.IpProtocol}}",
         {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
         {{#if this.FromPort}}"FromPort": {{this.FromPort}}, "ToPort": {{this.ToPort}}, {{/if}}
-        {{#if this.CidrIp}}"CidrIp": "{{this.CidrIp}}" }{{/if}}
+        {{#if this.CidrIp}}"CidrIp": "{{this.CidrIp}}"{{/if}}
         {{#if this.DestinationSecurityGroupId}}
           "DestinationSecurityGroupId":{{#startsWith "sg-" this.DestinationSecurityGroupId}}
             "{{this.DestinationSecurityGroupId}}"
@@ -46,7 +46,7 @@
             {"Ref":"ec2sg{{this.DestinationSecurityGroupId}}"}
           {{/startsWith}}
         {{/if}}
-        {{#unless @last}},{{/unless}}
+       } {{#unless @last}},{{/unless}}
       {{/each}}
     ],
     {{> tags Name=(concat @root.ProjectName ": " this.GroupDescription)}}
