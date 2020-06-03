@@ -10,11 +10,11 @@
     "Name": "{{this.Name}}",
     "DetailType": "{{default this.DetailType 'BASIC'}}",
     "EventTypeIds": [ {{#each this.EventTypeIds}}"{{this}}"{{comma}}{{/each}}],
-    "Resource": {{#ifObject this.Resource}}
-      { {{{inject this.Resource}}} },
-    {{else}}
+    "Resource": {{#startsWith "arn:aws:" this.Resource}}
       "{{this.Resource}}",
-    {{/ifObject}}
+    {{else}}
+      {"Fn::GetAtt":["cbp{{this.Resource}}","Arn"]},
+    {{/startsWith}}
     "Status": "{{default this.Status 'ENABLED'}}",
     "Targets": [
       {{#each this.Targets}}{
