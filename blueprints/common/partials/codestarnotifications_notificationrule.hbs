@@ -13,7 +13,7 @@
     "Resource": {{#startsWith "arn:aws:" this.Resource}}
       "{{this.Resource}}",
     {{else}}
-      {"Fn::GetAtt":["cbp{{this.Resource}}","Arn"]},
+      {"Fn::GetAtt":["cbp{{sanitize this.Resource ''}}","Arn"]},
     {{/startsWith}}
     "Status": "{{default this.Status 'ENABLED'}}",
     "Targets": [
