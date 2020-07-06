@@ -1,0 +1,14 @@
+{{!--
+  The AWS::Pinpoint::App resource is an Amazon Pinpoint application, also referred
+  to as a project or app. An application is a collection of related settings,
+  customer information, segments, campaigns, and other types of Amazon Pinpoint resources.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-pinpoint-app.html
+ --}}
+"pinpapp{{sanitize this.Name ''}}": {
+  "Type": "AWS::Pinpoint::App",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{> tags_map}}
+  }
+}
