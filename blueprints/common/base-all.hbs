@@ -478,6 +478,10 @@
     {{> opsworks_stack}},
     {{/each}}
 
+    {{#each PinpointApps}}
+    {{> pinpoint_app}},
+    {{/each}}
+
     {{#each RAMResourceShares}}
     {{> ram_resourceshare}},
     {{/each}}
