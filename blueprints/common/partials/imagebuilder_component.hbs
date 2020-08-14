@@ -1,0 +1,44 @@
+{{!--
+  Creates an Image Builder Component
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-component.html
+--}}
+
+"imagebuilder{{sanitize this.Name ''}}":{
+  "Type" : "AWS::ImageBuilder::Component",
+  "Properties" : {
+      {{#if this.ChangeDescription}}
+        "ChangeDescription" : "{{this.ChnageDescription}}",
+      {{/if}}
+
+      {{#if this.Data}}
+        "Data" : "{{this.Data}}",
+      {{/if}}
+
+      {{#if this.Description}}
+        "Description" : "{{this.Description}}",
+      {{/if}}
+
+      {{#if this.KmsKeyId}}
+        "KmsKeyId" : "{{this.KmsKeyId}}",
+      {{/if}}
+
+        "Name" : "{{this.Name}}",
+
+        "Platform" : "{{this.Platform}}",
+
+      {{#if this.SupportedOsVersions}}
+        "SupportedOsVersions" :
+        {{#each this.SupportedOsVersions}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}},
+      {{/if}}
+
+      {{#if this.Uri}}
+        "Uri" : "{{this.Uri}}",
+      {{/if}}
+
+        "Version" : "{{this.Version}}",
+
+      {{> tags}}
+    }
+}
