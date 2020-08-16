@@ -7,7 +7,13 @@
 "iamr{{this.Name}}": {
   "Type": "AWS::IAM::Role",
   "Properties": {
-    {{#if this.RoleName}}"RoleName": "{{this.RoleName}}",{{/if}}
+    {{#if this.RoleName}}"RoleName":
+      {{#ifObject this.RoleName}}
+        { {{{inject this.RoleName}}} }
+      {{else}}
+        "{{this.RoleName}}"
+      {{/ifObject}},
+    {{/if}}
     {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
     {{#if this.ManagedPolicyArns}}"ManagedPolicyArns": [
     {{#each this.ManagedPolicyArns}}
@@ -22,6 +28,8 @@
     "AssumeRolePolicyDocument": { {{{inject this.AssumeRolePolicyDocument}}} }
     {{else}}
     "AssumeRolePolicyDocument": {"Version": "2012-10-17", "Statement": [{ "Effect": "Allow", "Principal": { "Service": ["ec2.amazonaws.com"]}, "Action": [ "sts:AssumeRole" ] } ] }
-    {{/if}}
+    {{/if}},
+
+    {{> tags}}
   }
 }
