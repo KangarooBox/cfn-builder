@@ -1,0 +1,62 @@
+{{!--
+  Creates an Image Builder Infrastructure Configuration
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-infrastructureconfiguration.html
+--}}
+
+"imagebuilder{{sanitize this.Name ''}}":{
+  "Type" : "AWS::ImageBuilder::InfrastructureConfiguration",
+  "Properties" : {
+
+      {{#if this.Description}}
+        "Description" : "{{this.Description}}",
+      {{/if}}
+
+        "Name" : "{{this.Name}}",
+
+        "InstanceProfileName" : { {{{inject this.InstanceProfileName}}} },
+
+      {{#if this.KeyPair}}
+        "KeyPair" : "{{this.KeyPair}}",
+      {{/if}}
+
+      {{#if this.SnsTopicArn}}
+        "SnsTopicArn" : "{{this.SnsTopicArn}}",
+      {{/if}}
+
+      {{#if this.SubnetId}}
+        "SubnetId" : "{{this.SubnetId}}",
+      {{/if}}
+
+      {{#if this.TerminateInstanceOnFailure}}
+        "TerminateInstanceOnFailure" : {{default (toString this.TerminateInstanceOnFailure) true}},
+      {{/if}}
+
+      {{#if this.Logging}}
+        "Logging": { {{{inject this.Logging}}} },
+      {{/if}}
+
+      {{#if this.InstanceTypes}}
+        "InstanceTypes" :
+        {{#each this.InstanceTypes}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}},
+      {{/if}}
+
+      {{#if this.SecurityGroupIds}}
+        "SecurityGroupIds" :
+        {{#each this.SecurityGroupIds}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}},
+      {{/if}}
+
+      {{#if this.ResourceTags}}
+        "ResourceTags": [
+          {{#each this.ResourceTags}}
+          { "Key": "{{this.Key}}", "Value": "{{this.Value}}"}
+          {{#unless @last}},{{/unless}}{{/each}}
+        ],
+      {{/if}}
+
+      {{> tags_map}}
+    }
+}

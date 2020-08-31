@@ -3,11 +3,13 @@
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-component.html
 --}}
 
-"imagebuilder{{sanitize this.Name ''}}":{
+"imagebuilder{{sanitize this.Name ''}}":
+{
   "Type" : "AWS::ImageBuilder::Component",
+
   "Properties" : {
       {{#if this.ChangeDescription}}
-        "ChangeDescription" : "{{this.ChnageDescription}}",
+        "ChangeDescription" : "{{this.ChangeDescription}}",
       {{/if}}
 
       {{#if this.Data}}
@@ -39,6 +41,6 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
 
         "Version" : "{{this.Version}}",
 
-      {{> tags}}
+      {{> tags_map}}
     }
 }
