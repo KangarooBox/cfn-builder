@@ -346,6 +346,10 @@
     {{> ec2_volume}},
     {{/each}}
 
+    {{#each ECRRepositories}}
+    {{> ecr_repository}},
+    {{/each}}
+
     {{#each ECSServices}}
     {{> ecs_service}},
     {{/each}}
