@@ -13,7 +13,7 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
 
         "Name" : "{{this.Name}}",
 
-        "InstanceProfileName" : { {{{inject this.InstanceProfileName}}} },
+        "InstanceProfileName" : {{#ifObject this.InstanceProfileName}}{ {{{inject this.InstanceProfileName}}} }{{else}}"{{this.InstanceProfileName}}"{{/ifObject}},
 
       {{#if this.KeyPair}}
         "KeyPair" : "{{this.KeyPair}}",
