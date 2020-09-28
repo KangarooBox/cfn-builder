@@ -24,7 +24,16 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
       {{/if}}
 
       {{#if this.SubnetId}}
-        "SubnetId" : "{{this.SubnetId}}",
+        "SubnetId":
+        {{#ifObject this.SubnetId}}
+          { {{{inject this.SubnetId}}} }
+        {{else}}
+          {{#with (lookupByNode @root.Region.Subnets this.SubnetId) }}
+            {{#each this.addresses}}
+              {{#if @first}}"{{this.Id}}"{{/if}}
+            {{/each}}
+          {{/with}}
+        {{/ifObject}},
       {{/if}}
 
       {{#if this.TerminateInstanceOnFailure}}
@@ -38,14 +47,14 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
       {{#if this.InstanceTypes}}
         "InstanceTypes" :
         {{#each this.InstanceTypes}}
-          "{{this}}"{{#unless @last}},{{/unless}}
+          "{{this}}"{{comma}}
         {{/each}},
       {{/if}}
 
       {{#if this.SecurityGroupIds}}
         "SecurityGroupIds" :
         {{#each this.SecurityGroupIds}}
-          "{{this}}"{{#unless @last}},{{/unless}}
+          "{{this}}"{{comma}}
         {{/each}},
       {{/if}}
 
@@ -53,7 +62,7 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
         "ResourceTags": [
           {{#each this.ResourceTags}}
           { "Key": "{{this.Key}}", "Value": "{{this.Value}}"}
-          {{#unless @last}},{{/unless}}{{/each}}
+          {{comma}}{{/each}}
         ],
       {{/if}}
 

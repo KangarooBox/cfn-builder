@@ -7,30 +7,30 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
   "Type" : "AWS::ImageBuilder::ImageRecipe",
   "Properties" : {
 
+      "Name" : "{{this.Name}}",
+
+      "ParentImage" : "{{this.ParentImage}}",
+
+      "Version" : "{{this.Version}}",
+
       {{#if this.Description}}
         "Description" : "{{this.Description}}",
       {{/if}}
 
       {{#if this.BlockDeviceMappings}}
-        "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}],
+        "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{comma}}{{/each}}],
       {{/if}}
 
         "Components" : [
           {{#with this.Components}}
-          {{#each this}}
-            {
-              {{{inject this}}}
-            }
-            {{#unless @last}},{{/unless}}
-          {{/each}}
+            {{#each this}}
+              {
+                {{{inject this}}}
+              }
+              {{comma}}
+            {{/each}}
           {{/with}}
-          ],
-
-        "Name" : "{{this.Name}}",
-
-        "ParentImage" : "{{this.ParentImage}}",
-
-        "Version" : "{{this.Version}}",
+        ],
 
       {{#if this.WorkingDirectory}}
         "WorkingDirectory" : "{{this.WorkingDirectory}}",

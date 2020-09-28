@@ -31,7 +31,7 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
       {{#if this.SupportedOsVersions}}
         "SupportedOsVersions" :
         {{#each this.SupportedOsVersions}}
-          "{{this}}"{{#unless @last}},{{/unless}}
+          "{{this}}"{{comma}}
         {{/each}},
       {{/if}}
 
