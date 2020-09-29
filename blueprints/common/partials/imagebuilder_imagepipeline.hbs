@@ -7,16 +7,16 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
   "Type" : "AWS::ImageBuilder::ImagePipeline",
   "Properties" : {
 
-      {{#if this.Description}}
-        "Description" : "{{this.Description}}",
-      {{/if}}
-
         "Name" : "{{this.Name}}",
 
         "ImageRecipeArn" : {{#ifObject this.ImageRecipeArn}}{ {{{inject this.ImageRecipeArn}}} }{{else}}"{{this.ImageRecipeArn}}"{{/ifObject}},
 
         "InfrastructureConfigurationArn" : {{#ifObject this.InfrastructureConfigurationArn}}{ {{{inject this.InfrastructureConfigurationArn}}} }{{else}}"{{this.InfrastructureConfigurationArn}}"{{/ifObject}},
 
+        {{#if this.Description}}
+          "Description" : "{{this.Description}}",
+        {{/if}}
+        
         {{#if this.DistributionConfigurationArn}}
           "DistributionConfigurationArn" : "{{this.DistributionConfigurationArn}}",
         {{/if}}

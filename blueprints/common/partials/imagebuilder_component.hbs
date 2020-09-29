@@ -8,6 +8,17 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
   "Type" : "AWS::ImageBuilder::Component",
 
   "Properties" : {
+
+      "Name" : "{{this.Name}}",
+
+      "Platform" : "{{this.Platform}}",
+
+      "Version" : "{{this.Version}}",
+
+      {{#if this.Description}}
+        "Description" : "{{this.Description}}",
+      {{/if}}
+
       {{#if this.ChangeDescription}}
         "ChangeDescription" : "{{this.ChangeDescription}}",
       {{/if}}
@@ -16,17 +27,9 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
         "Data" : "{{this.Data}}",
       {{/if}}
 
-      {{#if this.Description}}
-        "Description" : "{{this.Description}}",
-      {{/if}}
-
       {{#if this.KmsKeyId}}
         "KmsKeyId" : "{{this.KmsKeyId}}",
       {{/if}}
-
-        "Name" : "{{this.Name}}",
-
-        "Platform" : "{{this.Platform}}",
 
       {{#if this.SupportedOsVersions}}
         "SupportedOsVersions" :
@@ -38,8 +41,6 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
       {{#if this.Uri}}
         "Uri" : "{{this.Uri}}",
       {{/if}}
-
-        "Version" : "{{this.Version}}",
 
       {{> tags_map}}
     }

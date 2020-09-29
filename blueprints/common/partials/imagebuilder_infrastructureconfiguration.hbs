@@ -7,65 +7,65 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
   "Type" : "AWS::ImageBuilder::InfrastructureConfiguration",
   "Properties" : {
 
-      {{#if this.Description}}
-        "Description" : "{{this.Description}}",
-      {{/if}}
-
         "Name" : "{{this.Name}}",
 
         "InstanceProfileName" : {{#ifObject this.InstanceProfileName}}{ {{{inject this.InstanceProfileName}}} }{{else}}"{{this.InstanceProfileName}}"{{/ifObject}},
 
-      {{#if this.KeyPair}}
-        "KeyPair" : "{{this.KeyPair}}",
-      {{/if}}
+        {{#if this.Description}}
+          "Description" : "{{this.Description}}",
+        {{/if}}
 
-      {{#if this.SnsTopicArn}}
-        "SnsTopicArn" : "{{this.SnsTopicArn}}",
-      {{/if}}
+        {{#if this.KeyPair}}
+          "KeyPair" : "{{this.KeyPair}}",
+        {{/if}}
 
-      {{#if this.SubnetId}}
-        "SubnetId":
-        {{#ifObject this.SubnetId}}
-          { {{{inject this.SubnetId}}} }
-        {{else}}
-          {{#with (lookupByNode @root.Region.Subnets this.SubnetId) }}
-            {{#each this.addresses}}
-              {{#if @first}}"{{this.Id}}"{{/if}}
-            {{/each}}
-          {{/with}}
-        {{/ifObject}},
-      {{/if}}
+        {{#if this.SnsTopicArn}}
+          "SnsTopicArn" : "{{this.SnsTopicArn}}",
+        {{/if}}
 
-      {{#if this.TerminateInstanceOnFailure}}
-        "TerminateInstanceOnFailure" : {{default (toString this.TerminateInstanceOnFailure) true}},
-      {{/if}}
+        {{#if this.SubnetId}}
+          "SubnetId":
+          {{#ifObject this.SubnetId}}
+            { {{{inject this.SubnetId}}} }
+          {{else}}
+            {{#with (lookupByNode @root.Region.Subnets this.SubnetId) }}
+              {{#each this.addresses}}
+                {{#if @first}}"{{this.Id}}"{{/if}}
+              {{/each}}
+            {{/with}}
+          {{/ifObject}},
+        {{/if}}
 
-      {{#if this.Logging}}
-        "Logging": { {{{inject this.Logging}}} },
-      {{/if}}
+        {{#if this.TerminateInstanceOnFailure}}
+          "TerminateInstanceOnFailure" : {{default (toString this.TerminateInstanceOnFailure) true}},
+        {{/if}}
 
-      {{#if this.InstanceTypes}}
-        "InstanceTypes" :
-        {{#each this.InstanceTypes}}
-          "{{this}}"{{comma}}
-        {{/each}},
-      {{/if}}
+        {{#if this.Logging}}
+          "Logging": { {{{inject this.Logging}}} },
+        {{/if}}
 
-      {{#if this.SecurityGroupIds}}
-        "SecurityGroupIds" :
-        {{#each this.SecurityGroupIds}}
-          "{{this}}"{{comma}}
-        {{/each}},
-      {{/if}}
+        {{#if this.InstanceTypes}}
+          "InstanceTypes" :
+          {{#each this.InstanceTypes}}
+            "{{this}}"{{comma}}
+          {{/each}},
+        {{/if}}
 
-      {{#if this.ResourceTags}}
-        "ResourceTags": [
-          {{#each this.ResourceTags}}
-          { "Key": "{{this.Key}}", "Value": "{{this.Value}}"}
-          {{comma}}{{/each}}
-        ],
-      {{/if}}
+        {{#if this.SecurityGroupIds}}
+          "SecurityGroupIds" :
+          {{#each this.SecurityGroupIds}}
+            "{{this}}"{{comma}}
+          {{/each}},
+        {{/if}}
 
-      {{> tags_map}}
+        {{#if this.ResourceTags}}
+          "ResourceTags": [
+            {{#each this.ResourceTags}}
+            { "Key": "{{this.Key}}", "Value": "{{this.Value}}"}
+            {{comma}}{{/each}}
+          ],
+        {{/if}}
+
+        {{> tags_map}}
     }
 }
