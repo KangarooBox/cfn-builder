@@ -1,0 +1,41 @@
+{{!--
+  Creates an Image Builder Image Recipe
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagerecipe.html
+--}}
+
+"imagebuilder{{sanitize this.Name ''}}":{
+  "Type" : "AWS::ImageBuilder::ImageRecipe",
+  "Properties" : {
+
+      "Name" : "{{this.Name}}",
+
+      "ParentImage" : "{{this.ParentImage}}",
+
+      "Version" : "{{this.Version}}",
+
+      {{#if this.Description}}
+        "Description" : "{{this.Description}}",
+      {{/if}}
+
+      {{#if this.BlockDeviceMappings}}
+        "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{comma}}{{/each}}],
+      {{/if}}
+
+        "Components" : [
+          {{#with this.Components}}
+            {{#each this}}
+              {
+                {{{inject this}}}
+              }
+              {{comma}}
+            {{/each}}
+          {{/with}}
+        ],
+
+      {{#if this.WorkingDirectory}}
+        "WorkingDirectory" : "{{this.WorkingDirectory}}",
+      {{/if}}
+
+      {{> tags_map}}
+    }
+}

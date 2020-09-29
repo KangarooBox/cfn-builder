@@ -422,6 +422,26 @@
     {{> iam_group}},
     {{/each}}
 
+    {{#each ImageBuilderComponents}}
+    {{> imagebuilder_component}},
+    {{/each}}
+
+    {{#each ImageBuilderImageRecipes}}
+    {{> imagebuilder_imagerecipe}},
+    {{/each}}
+
+    {{#each ImageBuilderImages}}
+    {{> imagebuilder_image}},
+    {{/each}}
+
+    {{#each ImageBuilderImagePipelines}}
+    {{> imagebuilder_imagepipeline}},
+    {{/each}}
+
+    {{#each ImageBuilderInfrastructureConfigurations}}
+    {{> imagebuilder_infrastructureconfiguration}},
+    {{/each}}
+
     {{#each InspectorAssessmentTargets}}
     {{> inspector_assessmenttarget}},
     {{/each}}

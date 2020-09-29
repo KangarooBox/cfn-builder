@@ -1,0 +1,42 @@
+{{!--
+  Creates an Image Builder Image Pipeline
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html
+--}}
+
+"imagebuilder{{sanitize this.Name ''}}":{
+  "Type" : "AWS::ImageBuilder::ImagePipeline",
+  "Properties" : {
+
+        "Name" : "{{this.Name}}",
+
+        "ImageRecipeArn" : {{#ifObject this.ImageRecipeArn}}{ {{{inject this.ImageRecipeArn}}} }{{else}}"{{this.ImageRecipeArn}}"{{/ifObject}},
+
+        "InfrastructureConfigurationArn" : {{#ifObject this.InfrastructureConfigurationArn}}{ {{{inject this.InfrastructureConfigurationArn}}} }{{else}}"{{this.InfrastructureConfigurationArn}}"{{/ifObject}},
+
+        {{#if this.Description}}
+          "Description" : "{{this.Description}}",
+        {{/if}}
+        
+        {{#if this.DistributionConfigurationArn}}
+          "DistributionConfigurationArn" : "{{this.DistributionConfigurationArn}}",
+        {{/if}}
+
+        {{#if this.Status}}
+          "Status" : "{{this.Status}}",
+        {{/if}}
+
+        {{#if this.EnhancedImageMetadataEnabled}}
+          "EnhancedImageMetadataEnabled" : {{default (toString this.EnhancedImageMetadataEnabled) false}},
+        {{/if}}
+
+        {{#if this.ImageTestsConfiguration}}
+          "ImageTestsConfiguration": { {{{inject this.ImageTestsConfiguration}}} },
+        {{/if}}
+
+        {{#if this.Schedule}}
+          "Schedule": { {{{inject this.Schedule}}} },
+        {{/if}}
+
+      {{> tags_map}}
+    }
+}
