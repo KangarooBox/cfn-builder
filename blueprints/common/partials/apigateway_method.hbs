@@ -3,42 +3,50 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html
  --}}
-"apmeth{{this.Name}}" : {
-  "Type" : "AWS::ApiGateway::Method",
-  "Properties" : {
-    {{#if this.AuthorizationType}}"AuthorizationType" : "{{this.AuthorizationType}}",{{/if}}
-    {{#if this.Authorized}}"AuthorizerId" : "{{this.AuthorizerId}}",{{/if}}
-    "HttpMethod" : "{{this.HttpMethod}}",
-    {{#if this.Integration}}"Integration" : {{#with this.Integration}}
-      { "Type" : "{{this.Type}}",
-        "Uri"  : "{{this.Uri}}",
-        "IntegrationHttpMethod" : "{{default ../this.HttpMethod this.IntegrationHttpMethod}}",
-        "IntegrationResponses" : [
-          {{#each this.IntegrationResponses}}
-          { {{#if this.ResponseParameters}}"ResponseParameters" : {},{{/if}}
-            {{#if this.ResponseTemplates}}"ResponseTemplates" : {},{{/if}}
-            {{#if this.SelectionPattern}}"SelectionPattern" : "{{this.SelectionPattern}}",{{/if}}
-            "StatusCode" : "{{this.StatusCode}}"
-          }{{#unless @last}},{{/unless}}{{/each}}
-        ]
-      },{{/with}}{{/if}}
-
-    {{#if this.MethodResponses}}"MethodResponses" : [
-    {{#each this.MethodResponses}}
-      { "ResponseModels" : { "application/json" : "Empty" },
-        "ResponseParameters" : { "method.response.header.TEST" : false },
-        "StatusCode" : "{{this.StatusCode}}"
-      }{{#unless @last}},{{/unless}}
-    ],
-    {{/each}}
+"apgwmeth{{this.Name}}": {
+  "Type": "AWS::ApiGateway::Method",
+  "Properties": {
+    {{#if this.AuthorizationType}}"AuthorizationType": "{{this.AuthorizationType}}",{{/if}}
+    {{#if this.Authorized}}"AuthorizerId": "{{this.AuthorizerId}}",{{/if}}
+    "HttpMethod": "{{this.HttpMethod}}",
+    {{#if this.Integration}}"Integration": {{#with this.Integration}}
+      {
+        {{#if this.CacheKeyParameters}}"CacheKeyParameters" : [ String, ... ],{{/if}}
+        {{#if this.CacheNamespace}}"CacheNamespace": "{{this.CacheNamespace}}",{{/if}}
+        {{#if this.ConnectionId}}"ConnectionId": "{{this.ConnectionId}}",{{/if}}
+        {{#if this.ConnectionType}}"ConnectionType": "{{this.ConnectionType}}",{{/if}}
+        {{#if this.ContentHandling}}"ContentHandling": "{{this.ContentHandling}}",{{/if}}
+        {{#if this.Credentials}}"Credentials": "{{this.Credentials}}",{{/if}}
+        {{#if this.RequestParameters }}"RequestParameters": { {{{inject this.RequestParameters}}} },{{/if}}
+        {{#if this.TimeoutInMillis}}"TimeoutInMillis": {{this.TimeoutInMillis}},{{/if}}
+        "IntegrationHttpMethod": "{{default ../this.HttpMethod this.IntegrationHttpMethod}}",
+        "IntegrationResponses": [
+          {{#each this.IntegrationResponses}}{ {{{inject this}}} }{{comma}}{{/each}}
+        ],
+        {{#if this.PassthroughBehavior}}"PassthroughBehavior": "{{this.PassthroughBehavior}}",{{/if}}
+        {{#if this.RequestTemplates}}"RequestTemplates": { {{{inject this.RequestTemplates}}} },{{/if}}
+        "Type": "{{this.Type}}",
+        "Uri" : "{{this.Uri}}"
+      },{{/with}}
     {{/if}}
 
-    {{#if this.RequestModels }}"RequestModels" : { String:String, ... },  { {{this.RequestModels}} },{{/if}}
-    {{#if this.RequestParameters }}"RequestParameters" : { String:Boolean, ... },  { {{this.RequestParameters}} },{{/if}}
-    {{#if this.ResourceId }}"ResourceId" : { "Ref" : "apres{{this.ResourceId}}" },{{/if}}
-    {{#if this.RestApiId }}"RestApiId" : { "Ref" : "api{{this.RestApiId}}" },{{/if}}
-    "ApiKeyRequired" : {{default this.ApiKeyRequired false}}
+    {{#if this.MethodResponses}}"MethodResponses": [
+      {{#each this.MethodResponses}}
+        { {{#if this.ResponseModels}}"ResponseModels": { {{{inject this.ResponseModels}}} },{{/if}}
+          {{#if this.ResponseParameters}}"ResponseParameters": { {{{inject this.ResponseParameters}}} },{{/if}}
+          "StatusCode": "{{this.StatusCode}}"
+        }{{comma}}
+      {{/each}}
+    ],
+    {{/if}}
+
+    {{#if this.RequestModels }}"RequestModels": { {{{inject this.RequestModels}}} },{{/if}}
+    {{#if this.RequestParameters }}"RequestParameters": { {{{inject this.RequestParameters}}} },{{/if}}
+    {{#if this.ResourceId }}"ResourceId": { "Ref": "apigwresc{{this.ResourceId}}" },{{/if}}
+    {{#if this.RestApiId }}"RestApiId": { "Ref": "apigwrest{{this.RestApiId}}" },{{/if}}
+    "ApiKeyRequired": {{default this.ApiKeyRequired false}}
   }
 }
+
 
 
