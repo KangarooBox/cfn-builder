@@ -13,4 +13,7 @@
     {{#if this.StageDescription}}"StageDescription": "{{this.StageDescription}}",{{/if}}
     "RestApiId": { "Ref": "apigwrest{{this.RestApiId}}" }
   }
+  {{#if this.MethodNames}}
+    ,"DependsOn": [{{#each this.MethodNames}}"apigwmeth{{this}}"{{comma}}{{/each}} ]
+  {{/if}}
 }
