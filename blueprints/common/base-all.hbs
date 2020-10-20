@@ -42,24 +42,28 @@
     {{> certificatemanager_certificate}},
     {{/each}}
 
-    {{#each APIs}}
+    {{#each APIGatewayRestAPIs}}
     {{> apigateway_restapi}},
     {{/each}}
 
-    {{#each APIResources}}
+    {{#each APIGatewayResources}}
     {{> apigateway_resource}},
     {{/each}}
 
-    {{#each APIMethods}}
-    {{> apigateway_method}}
+    {{#each APIGatewayMethods}}
+    {{> apigateway_method}},
     {{/each}}
 
-    {{#each APIModels}}
+    {{#each APIGatewayModels}}
     {{> apigateway_model}},
     {{/each}}
 
-    {{#each APIDomainNames}}
+    {{#each APIGatewayDomainNames}}
     {{> apigateway_domain_name}},
+    {{/each}}
+
+    {{#each APIGatewayDeployments}}
+    {{> apigateway_deployment}},
     {{/each}}
 
     {{#each AppStreamFleets}}

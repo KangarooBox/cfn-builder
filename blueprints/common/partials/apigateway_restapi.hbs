@@ -4,17 +4,23 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html
  --}}
-"api{{this.Name}}" : {
-  "Type" : "AWS::ApiGateway::RestApi",
+"apigwrest{{this.Name}}": {
+  "Type": "AWS::ApiGateway::RestApi",
   "Properties" : {
-    {{~#if this.Body}}"Body" : "{{{this.Body}}}",{{/if}}
-    {{~#if this.BodyS3Location}}"BodyS3Location" : { {{{inject this.BodyS3Location}}} },{{/if}}
-    {{~#if this.CloneFrom}}"CloneFrom" : "{{this.CloneFrom}}",{{/if}}
-    "Description" : "{{this.Description}}",
-    "FailOnWarnings" : {{default true this.FailOnWarnings}},
-    {{~#if this.Parameters}}
-    "Parameters" : [{{#each this.Parameters}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}],
+    {{#if this.ApiKeySourceType}}"ApiKeySourceType": "{{this.ApiKeySourceType}}",{{/if}}
+    {{#if this.BinaryMediaTypes}}"BinaryMediaTypes": [ {{#each this.BinaryMediaTypes}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{#if this.Body}}"Body": "{{{this.Body}}}",{{/if}}
+    {{#if this.BodyS3Location}}"BodyS3Location": { {{{inject this.BodyS3Location}}} },{{/if}}
+    {{#if this.CloneFrom}}"CloneFrom": "{{this.CloneFrom}}",{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.EndpointConfiguration}}"EndpointConfiguration": { {{{inject this.EndpointConfiguration}}} },{{/if}}
+    {{#if this.FailOnWarnings}}"FailOnWarnings": {{default true this.FailOnWarnings}},{{/if}}
+    {{#if this.MinimumCompressionSize}}"MinimumCompressionSize": {{this.MinimumCompressionSize}},{{/if}}
+    {{#if this.Parameters}}
+      "Parameters": [{{#each this.Parameters}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}],
     {{/if}}
-    "Name" : "{{this.Name}}"
+    "Name": "{{this.Name}}",
+    {{#if this.Policy}}"Policy": { {{{inject this.Policy}}} },{{/if}}
+    {{> tags}}
   }
 }

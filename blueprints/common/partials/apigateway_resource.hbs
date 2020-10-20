@@ -1,13 +1,13 @@
 {{!--
   Creates an API Gateway Resource
 
-  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-an-api-resource
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-resource.html
  --}}
-"apres{{this.Name}}" : {
-  "Type" : "AWS::ApiGateway::Resource",
-  "Properties" : {
-    "ParentId" : { "Fn::GetAtt" : ["api{{this.ParentId}}", "RootResourceId"] },
-    {{#if this.PathPart}}"PathPart" : "{{this.PathPart}}",{{/if}}
-    "RestApiId" : { "Ref" : "api{{this.RestApi}}" }
+"apigwresc{{this.Name}}": {
+  "Type": "AWS::ApiGateway::Resource",
+  "Properties": {
+    "ParentId": { "Fn::GetAtt": ["apigwrest{{this.ParentId}}", "RootResourceId"] },
+    "PathPart": "{{this.PathPart}}",
+    "RestApiId": { "Ref": "apigwrest{{this.RestApiId}}" }
   }
 }
