@@ -57,6 +57,13 @@
     {{#if this.TerminationPolicies}}"TerminationPolicies":[
       {{#each this.TerminationPolicies}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}
+    {{#if this.ServiceLinkedRoleARN}}"ServiceLinkedRoleARN":
+      {{#startsWith 'arn:aws:iam:' this.ServiceLinkedRoleARN}}
+        "{{this.ServiceLinkedRoleARN}}",
+      {{else}}
+        {"Fn::GetAtt":["iamr{{this.ServiceLinkedRoleARN}}", "Arn"]},
+      {{/startsWith}}
+    {{/if}}
     "MinSize":{{default this.MinSize 0}},
     "MaxSize":{{default this.MaxSize 0}},
     "DesiredCapacity":{{default this.DesiredCapacity 0}},
@@ -71,5 +78,4 @@
       "LaunchTemplate" : LaunchTemplateSpecification,
       "MixedInstancesPolicy" : MixedInstancesPolicy,
       "PlacementGroup" : String,
-      "ServiceLinkedRoleARN" : String,
  --}}
