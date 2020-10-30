@@ -1,0 +1,17 @@
+{{!--
+  A distribution configuration allows you to specify the name and description of
+  your output AMI, authorize other AWS accounts to launch the AMI, and replicate
+  the AMI to other AWS Regions.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-distributionconfiguration.html
+--}}
+
+"imgbldrdistconf{{sanitize this.Name ''}}": {
+  "Type": "AWS::ImageBuilder::DistributionConfiguration",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "Distributions": [ {{#each this.Distributions}}{ {{{inject this}}} }{{comma}}{{/each}} ],
+    {{> tags_map}}
+  }
+}

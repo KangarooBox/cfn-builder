@@ -3,13 +3,17 @@
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-infrastructureconfiguration.html
 --}}
 
-"imagebuilder{{sanitize this.Name ''}}":{
+"imgbldrinfaconf{{sanitize this.Name ''}}":{
   "Type" : "AWS::ImageBuilder::InfrastructureConfiguration",
   "Properties" : {
 
         "Name" : "{{this.Name}}",
 
-        "InstanceProfileName" : {{#ifObject this.InstanceProfileName}}{ {{{inject this.InstanceProfileName}}} }{{else}}"{{this.InstanceProfileName}}"{{/ifObject}},
+        "InstanceProfileName" : {{#ifObject this.InstanceProfileName}}
+            { {{{inject this.InstanceProfileName}}} }
+          {{else}}
+            { "Ref":"iamip{{this.InstanceProfileName}}" }
+          {{/ifObject}},
 
         {{#if this.Description}}
           "Description" : "{{this.Description}}",
@@ -51,11 +55,15 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
           {{/each}},
         {{/if}}
 
-        {{#if this.SecurityGroupIds}}
-          "SecurityGroupIds" :
+        {{#if this.SecurityGroupIds}}"SecurityGroupIds":[
           {{#each this.SecurityGroupIds}}
-            "{{this}}"{{comma}}
-          {{/each}},
+            {{#startsWith "sg-" this}}
+              "{{this}}"
+            {{else}}
+              {"Ref":"ec2sg{{this}}"}
+            {{/startsWith}}
+            {{#unless @last}},{{/unless}}
+          {{/each}}],
         {{/if}}
 
         {{#if this.ResourceTags}}

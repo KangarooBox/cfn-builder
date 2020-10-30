@@ -3,40 +3,39 @@
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html
 --}}
 
-"imagebuilder{{sanitize this.Name ''}}":{
-  "Type" : "AWS::ImageBuilder::ImagePipeline",
-  "Properties" : {
+"imgbldrimgpipe{{sanitize this.Name ''}}": {
+  "Type": "AWS::ImageBuilder::ImagePipeline",
+  "Properties": {
+    "Name": "{{this.Name}}",
 
-        "Name" : "{{this.Name}}",
+    "ImageRecipeArn": {"Ref": "imgbldrimgrecip{{sanitize this.ImageRecipeArn ''}}"},
 
-        "ImageRecipeArn" : {{#ifObject this.ImageRecipeArn}}{ {{{inject this.ImageRecipeArn}}} }{{else}}"{{this.ImageRecipeArn}}"{{/ifObject}},
+    "InfrastructureConfigurationArn": {"Ref": "imgbldrinfaconf{{sanitize this.InfrastructureConfigurationArn ''}}"},
 
-        "InfrastructureConfigurationArn" : {{#ifObject this.InfrastructureConfigurationArn}}{ {{{inject this.InfrastructureConfigurationArn}}} }{{else}}"{{this.InfrastructureConfigurationArn}}"{{/ifObject}},
+    {{#if this.Description}}
+      "Description": "{{this.Description}}",
+    {{/if}}
 
-        {{#if this.Description}}
-          "Description" : "{{this.Description}}",
-        {{/if}}
-        
-        {{#if this.DistributionConfigurationArn}}
-          "DistributionConfigurationArn" : "{{this.DistributionConfigurationArn}}",
-        {{/if}}
+    {{#if this.DistributionConfigurationArn}}
+      "DistributionConfigurationArn": {"Ref": "imgbldrdistconf{{sanitize this.DistributionConfigurationArn ''}}"},
+    {{/if}}
 
-        {{#if this.Status}}
-          "Status" : "{{this.Status}}",
-        {{/if}}
+    {{#if this.Status}}
+      "Status": "{{this.Status}}",
+    {{/if}}
 
-        {{#if this.EnhancedImageMetadataEnabled}}
-          "EnhancedImageMetadataEnabled" : {{default (toString this.EnhancedImageMetadataEnabled) false}},
-        {{/if}}
+    {{#if this.EnhancedImageMetadataEnabled}}
+      "EnhancedImageMetadataEnabled": {{default (toString this.EnhancedImageMetadataEnabled) false}},
+    {{/if}}
 
-        {{#if this.ImageTestsConfiguration}}
-          "ImageTestsConfiguration": { {{{inject this.ImageTestsConfiguration}}} },
-        {{/if}}
+    {{#if this.ImageTestsConfiguration}}
+      "ImageTestsConfiguration": { {{{inject this.ImageTestsConfiguration}}} },
+    {{/if}}
 
-        {{#if this.Schedule}}
-          "Schedule": { {{{inject this.Schedule}}} },
-        {{/if}}
+    {{#if this.Schedule}}
+      "Schedule": { {{{inject this.Schedule}}} },
+    {{/if}}
 
-      {{> tags_map}}
-    }
+    {{> tags_map}}
+  }
 }
