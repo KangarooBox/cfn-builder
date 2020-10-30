@@ -3,24 +3,22 @@
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html
 --}}
 
-"imagebuilder{{sanitize this.Name ''}}":{
-  "Type" : "AWS::ImageBuilder::Image",
-  "Properties" : {
-
-        "ImageRecipeArn" : "{{this.ImageRecipeArn}}",
-
-        "InfrastructureConfigurationArn" : "{{this.InfrastructureConfigurationArn}}"
+"imgbldrimg{{sanitize this.Name ''}}": {
+  "Type": "AWS::ImageBuilder::Image",
+  "Properties": {
+    "ImageRecipeArn": {"Ref": "imgbldrimgrecip{{sanitize this.ImageRecipeArn ''}}"},
+    "InfrastructureConfigurationArn": {"Ref": "imgbldrinfaconf{{sanitize this.InfrastructureConfigurationArn ''}}"},
 
       {{#if this.ImageTestsConfiguration}}
         "ImageTestsConfiguration": { {{{inject this.ImageTestsConfiguration}}} },
       {{/if}}
 
       {{#if this.EnhancedImageMetadataEnabled}}
-        "EnhancedImageMetadataEnabled" : {{default (toString this.EnhancedImageMetadataEnabled) false}},
+        "EnhancedImageMetadataEnabled": {{default (toString this.EnhancedImageMetadataEnabled) false}},
       {{/if}}
 
       {{#if this.DistributionConfigurationArn}}
-        "DistributionConfigurationArn" : "{{this.DistributionConfigurationArn}}",
+        "DistributionConfigurationArn": {"Ref": "imgbldrdistconf{{sanitize this.DistributionConfigurationArn ''}}"},
       {{/if}}
 
       {{> tags_map}}

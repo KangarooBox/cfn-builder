@@ -3,7 +3,7 @@
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagerecipe.html
 --}}
 
-"imagebuilder{{sanitize this.Name ''}}":{
+"imgbldrimgrecip{{sanitize this.Name ''}}":{
   "Type" : "AWS::ImageBuilder::ImageRecipe",
   "Properties" : {
 
@@ -24,10 +24,11 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
         "Components" : [
           {{#with this.Components}}
             {{#each this}}
-              {
-                {{{inject this}}}
-              }
-              {{comma}}
+              {{#startsWith 'arn:aws:' this}}
+                { "ComponentArn": "{{this}}" }
+              {{else}}
+                { "ComponentArn": { "Ref": "imgbldrcomp{{sanitize this ''}}" }}
+              {{/startsWith}}{{comma}}
             {{/each}}
           {{/with}}
         ],
