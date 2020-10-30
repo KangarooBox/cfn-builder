@@ -12,7 +12,7 @@
       "BucketEncryption": { {{{inject this.BucketEncryption}}} },
     {{/if}}
     {{#if this.AccessControl}}"AccessControl":"{{this.AccessControl}}",{{/if}}
-
+    {{#if this.CorsConfiguration}}"CorsConfiguration":{ {{{inject this.CorsConfiguration}}} },{{/if}}
     {{#if this.LifecycleConfiguration}}
     "LifecycleConfiguration":{
       {{{inject this.LifecycleConfiguration}}}
