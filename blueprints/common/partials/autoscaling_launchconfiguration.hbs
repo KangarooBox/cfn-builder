@@ -32,7 +32,12 @@
     {{#if this.KeyName}}"KeyName":"{{this.KeyName}}",{{/if}}
     {{#if this.SpotPrice}}"SpotPrice":"{{this.SpotPrice}}",{{/if}}
 
-    {{#if this.UserData}}"UserData": "{{this.UserData}}"
+    {{#if this.UserData}}
+      {{#ifObject this.UserData}}
+        "UserData": { {{{inject this.UserData}}} }
+      {{else}}
+        "UserData": "{{this.UserData}}"
+      {{/ifObject}}
     {{else}}
       {{> (whichPartial "AMI" "user_data_" this) }}
     {{/if}}
