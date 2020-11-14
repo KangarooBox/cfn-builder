@@ -130,6 +130,10 @@
     {{> codebuild_project}},
     {{/each}}
 
+    {{#each CodeBuildSourceCredentials}}
+    {{> codebuild_sourcecredential}},
+    {{/each}}
+
     {{#each CodeCommitRepositories}}
     {{> codecommit_repository}},
     {{/each}}
@@ -540,6 +544,10 @@
 
     {{#each Route53RecordSets}}
     {{> route53_recordset}},
+    {{/each}}
+
+    {{#each S3AccessPoints}}
+    {{> s3_accesspoint}},
     {{/each}}
 
     {{#each S3Buckets}}
