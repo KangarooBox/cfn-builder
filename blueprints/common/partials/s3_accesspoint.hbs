@@ -1,0 +1,19 @@
+{{!--
+  Creates an Amazon S3 access point that can be used to access S3 buckets.
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
+ --}}
+
+"s3ap{{sanitize this.Name ''}}": {
+  "Type": "AWS::S3::AccessPoint",
+  "Properties": {
+    {{#if this.CreationDate}}"CreationDate": "{{this.CreationDate}}",{{/if}}
+    {{#if this.Name}}"Name": "{{this.Name}}",{{/if}}
+    {{#if this.NetworkOrigin}}"NetworkOrigin": "{{this.NetworkOrigin}}",{{/if}}
+    {{#if this.Policy}}"Policy": { {{{inject this.Policy}}} },{{/if}}
+    {{#if this.PolicyStatus}}"PolicyStatus": { {{{inject this.PolicyStatus}}} },{{/if}}
+    {{#if this.PublicAccessBlockConfiguration}}"PublicAccessBlockConfiguration": { {{{inject this.PublicAccessBlockConfiguration}}} },{{/if}}
+    {{#if this.VpcConfiguration}}"VpcConfiguration": { {{{inject this.VpcConfiguration}}} },{{/if}}
+    "Bucket": "{{this.Bucket}}"
+  }
+}
