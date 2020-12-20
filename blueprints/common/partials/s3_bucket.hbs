@@ -24,6 +24,8 @@
       "LogFilePrefix":"{{this.LoggingConfiguration.LogFilePrefix}}"
     },{{/if}}
 
+    {{#if this.OwnershipControls}}"OwnershipControls": { {{{inject this.OwnershipControls}}} },{{/if}}
+
     {{#if this.PublicAccessBlockConfiguration}}
     {{#with this.PublicAccessBlockConfiguration}}
     "PublicAccessBlockConfiguration": {
