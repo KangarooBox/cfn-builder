@@ -24,6 +24,12 @@
       "LogFilePrefix":"{{this.LoggingConfiguration.LogFilePrefix}}"
     },{{/if}}
 
+    {{#if this.MetricsConfigurations}}
+      "MetricsConfigurations": [
+        {{#each this.MetricsConfigurations}}{ {{{inject this}}} }{{comma}}{{/each}}
+       ],
+    {{/if}}
+
     {{#if this.OwnershipControls}}"OwnershipControls": { {{{inject this.OwnershipControls}}} },{{/if}}
 
     {{#if this.PublicAccessBlockConfiguration}}
@@ -50,7 +56,7 @@
           {{#with this.Destination}}
             {{#if this.AccessControlTranslation}}
               "AccessControlTranslation": { {{{inject this.AccessControlTranslation}}} },
-              "Account": "{{this.Account}}"
+              "Account": "{{this.Account}}",
             {{/if}}
             {{#if this.EncryptionConfiguration}}"EncryptionConfiguration":{ {{{inject this.EncryptionConfiguration}}} },{{/if}}
             {{#if this.StorageClass}}"StorageClass":"{{this.StorageClass}}",{{/if}}
@@ -92,12 +98,12 @@
 
         {{#if this.QueueConfigurations}}
           "QueueConfigurations": [
-            {"test":"one"}
+            {{#each this.QueueConfigurations}}{ {{{inject this}}} }{{comma}}{{/each}}
         ]{{/if}}
 
         {{#if this.TopicConfigurations}}
           "TopicConfigurations": [
-            {"test":"one"}
+            {{#each this.TopicConfigurations}}{ {{{inject this}}} }{{comma}}{{/each}}
         ]{{/if}}
       },
     {{/with}}
