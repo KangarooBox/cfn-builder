@@ -98,12 +98,12 @@
 
         {{#if this.QueueConfigurations}}
           "QueueConfigurations": [
-            {"test":"one"}
+            {{#each this.QueueConfigurations}}{ {{{inject this}}} }{{comma}}{{/each}}
         ]{{/if}}
 
         {{#if this.TopicConfigurations}}
           "TopicConfigurations": [
-            {"test":"one"}
+            {{#each this.TopicConfigurations}}{ {{{inject this}}} }{{comma}}{{/each}}
         ]{{/if}}
       },
     {{/with}}
