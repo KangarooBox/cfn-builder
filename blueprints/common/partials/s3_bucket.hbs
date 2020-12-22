@@ -24,6 +24,12 @@
       "LogFilePrefix":"{{this.LoggingConfiguration.LogFilePrefix}}"
     },{{/if}}
 
+    {{#if this.MetricsConfigurations}}
+      "MetricsConfigurations": [
+        {{#each this.MetricsConfigurations}}{ {{{inject this}}} }{{comma}}{{/each}}
+       ],
+    {{/if}}
+
     {{#if this.OwnershipControls}}"OwnershipControls": { {{{inject this.OwnershipControls}}} },{{/if}}
 
     {{#if this.PublicAccessBlockConfiguration}}
