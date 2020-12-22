@@ -50,7 +50,7 @@
           {{#with this.Destination}}
             {{#if this.AccessControlTranslation}}
               "AccessControlTranslation": { {{{inject this.AccessControlTranslation}}} },
-              "Account": "{{this.Account}}"
+              "Account": "{{this.Account}}",
             {{/if}}
             {{#if this.EncryptionConfiguration}}"EncryptionConfiguration":{ {{{inject this.EncryptionConfiguration}}} },{{/if}}
             {{#if this.StorageClass}}"StorageClass":"{{this.StorageClass}}",{{/if}}
