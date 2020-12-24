@@ -43,33 +43,17 @@
     {{/with}}{{/if}}
 
     {{#if this.ReplicationConfiguration}}
-    {{#with this.ReplicationConfiguration}}
-    "ReplicationConfiguration":{
-      "Role":{{#startsWith "arn:aws:" this.Role}}"{{this.Role}}"
-        {{else}}{"Fn::GetAtt": ["iamr{{this.Role}}", "Arn"] }
-      {{/startsWith}},
-      "Rules":[
-      {{#each this.Rules}}{
-        {{#if this.Id}}"Id":"{{this.Id}}",{{/if}}
-        "Status":"{{this.Status}}",
-        "Destination":{
-          {{#with this.Destination}}
-            {{#if this.AccessControlTranslation}}
-              "AccessControlTranslation": { {{{inject this.AccessControlTranslation}}} },
-              "Account": "{{this.Account}}",
-            {{/if}}
-            {{#if this.EncryptionConfiguration}}"EncryptionConfiguration":{ {{{inject this.EncryptionConfiguration}}} },{{/if}}
-            {{#if this.StorageClass}}"StorageClass":"{{this.StorageClass}}",{{/if}}
-            "Bucket":"arn:aws:s3:::{{this.Bucket}}"
-          {{/with}}
+      {{#with this.ReplicationConfiguration}}
+        "ReplicationConfiguration": {
+          "Role":{{#startsWith "arn:aws:" this.Role}}"{{this.Role}}"
+            {{else}}{"Fn::GetAtt": ["iamr{{this.Role}}", "Arn"] }
+          {{/startsWith}},
+          "Rules":[
+            {{#each this.Rules}}{ {{{inject this}}} }{{comma}}{{/each}}
+          ]
         },
-        {{#if this.SourceSelectionCriteria}}"SourceSelectionCriteria": { {{{inject this.SourceSelectionCriteria}}} },{{/if}}
-        "Prefix":"{{this.Prefix}}"
-        }{{#unless @last}},{{/unless}}
-      {{/each}}
-    ]},
-    "VersioningConfiguration":{"Status":"Enabled"},
-    {{/with}}
+        "VersioningConfiguration":{"Status":"Enabled"},
+      {{/with}}
     {{/if}}
 
     {{#if this.VersioningConfiguration}}
