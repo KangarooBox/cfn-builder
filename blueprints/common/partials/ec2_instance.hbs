@@ -30,7 +30,17 @@
     "EbsOptimized":{{default this.EbsOptimized false}},
     {{#if this.HostId}}"HostId":"{{this.HostId}}",{{/if}}
     {{#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"iamip{{this.IamInstanceProfile}}"},{{/if}}
-    "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
+
+    {{#if this.AMI}}
+      "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}"
+    {{else}}
+      {{#ifObject this.ImageId}}
+        "ImageId": { {{{inject this.ImageId}}} }
+      {{else}}
+        "ImageId": "{{this.ImageId}}"
+      {{/ifObject}}
+    {{/if}},
+    
     {{#if this.InstanceInitiatedShutdownBehavior}}"InstanceInitiatedShutdownBehavior":"{{this.InstanceInitiatedShutdownBehavior}}",{{/if}}
     "InstanceType":"{{this.InstanceType}}",
     {{#if this.KernelId}}"KernelId":"{{this.KernelId}}",{{/if}}

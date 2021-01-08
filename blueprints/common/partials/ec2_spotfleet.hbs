@@ -62,7 +62,16 @@
 
           {{#if this.WeightedCapacity}}"WeightedCapacity": Number{{/if}}
 
-          "ImageId": "{{findAMI this.ImageId @root.Region.AMIs}}",
+          {{#if this.AMI}}
+            "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}"
+          {{else}}
+            {{#ifObject this.ImageId}}
+              "ImageId": { {{{inject this.ImageId}}} }
+            {{else}}
+              "ImageId": "{{this.ImageId}}"
+            {{/ifObject}}
+          {{/if}},
+          
           "InstanceType": "{{this.InstanceType}}",
           "TagSpecifications": [{
             "ResourceType": "instance",
