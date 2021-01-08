@@ -22,7 +22,17 @@
   "Properties":{
     "AssociatePublicIpAddress":{{default this.AssociatePublicIpAddress false}},
     "InstanceType":"{{this.InstanceType}}",
-    "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}",
+
+    {{#if this.AMI}}
+      "ImageId":"{{findAMI this.AMI @root.Region.AMIs}}"
+    {{else}}
+      {{#ifObject this.ImageId}}
+        "ImageId": { {{{inject this.ImageId}}} }
+      {{else}}
+        "ImageId": "{{this.ImageId}}"
+      {{/ifObject}}
+    {{/if}},
+
     "InstanceMonitoring":{{default this.InstanceMonitoring false}},
     {{#if this.SecurityGroups}}"SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
     {{#if this.IamInstanceProfile}}"IamInstanceProfile":{"Ref":"iamip{{this.IamInstanceProfile}}"},{{/if}}
