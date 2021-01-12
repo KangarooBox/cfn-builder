@@ -16,14 +16,14 @@
       "AliasTarget":{ {{{inject this.AliasTarget}}} },
       {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
         "HostedZoneId":"{{this.HostedZoneId}}",
-        "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",
+        "Name":"{{#if ../DNSName}}{{lowercase ../DNSName}}{{else}}{{lowercase ../Name}}.{{lowercase this.HostedZoneDomain}}{{/if}}",
       {{/with}}
       "Type": "A"
     {{else}}
       {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
         {{#ifEq this.Type ../DomainType}}
           "HostedZoneId":"{{this.HostedZoneId}}",
-          "Name":"{{#if ../DNSName}}{{../DNSName}}{{else}}{{lowercase ../Name}}.{{this.HostedZoneDomain}}{{/if}}",
+          "Name":"{{#if ../DNSName}}{{lowercase ../DNSName}}{{else}}{{lowercase ../Name}}.{{lowercase this.HostedZoneDomain}}{{/if}}",
         {{/ifEq}}
       {{/with}}
 
