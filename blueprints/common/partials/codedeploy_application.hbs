@@ -7,6 +7,6 @@
   "Type": "AWS::CodeDeploy::Application",
   "Properties": {
     {{#if this.ComputePlatform}}"ComputePlatform": "{{this.ComputePlatform}}",{{/if}}
-    "ApplicationName": "{{sanitize this.Name '_'}}"
+    "ApplicationName": "{{this.Name}}"
   }
 }
