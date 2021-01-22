@@ -1,0 +1,15 @@
+{{!--
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-ipset.html
+--}}
+
+"wafv2ipset{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFv2::IPSet",
+  "Properties": {
+    "Addresses": [ {{#each this.Addresses}}"{{this}}"{{comma}}{{/each}} ],
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "IPAddressVersion": "{{default this.IPAddressVersion 'IPV4'}}",
+    "Name": "{{this.Name}}",
+    "Scope": "{{default this.Scope 'REGIONAL'}}",
+    {{> tags}}
+  }
+}

@@ -642,6 +642,14 @@
     {{> wafregional_rule}},
     {{/each}}
 
+    {{#each WAFv2WebACLs}}
+    {{> wafv2_webacl}},
+    {{/each}}
+
+    {{#each WAFv2IPSets}}
+    {{> wafv2_ipset}},
+    {{/each}}
+
     {{#each WorkspacesWorkspaces}}
     {{> workspaces_workspace}},
     {{/each}}
