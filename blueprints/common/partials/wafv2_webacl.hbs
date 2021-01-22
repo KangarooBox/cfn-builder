@@ -1,0 +1,19 @@
+{{!--
+  Contains the Rules that identify the requests that you want to allow, block, or count.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html
+ --}}
+"wafv2wacl{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFv2::WebACL",
+  "Properties": {
+    "DefaultAction": { {{{inject this.DefaultAction}}} },
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "Name": "{{this.Name}}",
+    {{#if this.Rules}}"Rules": [
+      {{#each this.Rules}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+    "Scope": "{{this.Scope}}",
+    "VisibilityConfig": { {{{inject VisibilityConfig}}} },
+    {{> tags}}
+  }
+}
