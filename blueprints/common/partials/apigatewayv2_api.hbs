@@ -1,0 +1,67 @@
+{{!--
+  Creates an API Gateway HTTP API
+
+  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-an-api
+ --}}
+
+
+"apiv2{{this.Name}}": {
+  "Type" : "AWS::ApiGatewayV2::Api",
+  "Properties" : {
+
+      "Name": "{{this.Name}}",
+
+    {{#if this.ApiKeySelectionExpression}}
+      "ApiKeySelectionExpression": "{{this.ApiKeySelectionExpression}}",
+    {{/if}}
+    {{#if this.BasePath}}
+      "BasePath": "{{this.BasePath}}",
+    {{/if}}
+    {{#if this.Body}}
+      "Body": { {{{inject this.Body}}} },
+    {{/if}}
+    {{#if this.BodyS3Location}}
+      "BodyS3Location": { {{{inject this.BodyS3Location}}} },
+    {{/if}}
+    {{#if this.CorsConfiguration}}
+      "CorsConfiguration": { {{{inject this.CorsConfiguration}}} },
+    {{/if}}
+    {{#if this.CredentialsArn}}
+      "CredentialsArn" : "{{this.CredentialsArn}}",
+    {{/if}}
+    {{#if this.Description}}
+      "Description" : "{{this.Description}}",
+    {{/if}}
+    {{#if this.DisableExecuteApiEndpoint}}
+      "DisableExecuteApiEndpoint" : {{this.DisableExecuteApiEndpoint}},
+    {{/if}}
+    {{#if this.DisableSchemaValidation}}
+      "DisableSchemaValidation" : {{this.DisableSchemaValidation}},
+    {{/if}}
+    {{#if this.FailOnWarnings}}
+      "FailOnWarnings" : {{this.FailOnWarnings}},
+    {{/if}}
+    {{#if this.ProtocolType}}
+      "ProtocolType" : "{{this.ProtocolType}}",
+    {{/if}}
+    {{#if this.RouteKey}}
+      "RouteKey" : "{{this.RouteKey}}",
+    {{/if}}
+    {{#if this.RouteSelectionExpression}}
+      "RouteSelectionExpression" : "{{this.RouteSelectionExpression}}",
+    {{/if}}
+    {{#if this.Target}}
+      "Target": {{#ifObject this.Target}}
+        { {{{inject this.Target}}} }
+      {{else}}
+        { "Ref": "fun{{this.Target}}" }
+      {{/ifObject}},
+    {{/if}}
+    {{#if this.Version}}
+      "Version" : "{{this.Version}}",
+    {{/if}}
+
+    {{> tags_map}}
+
+    }
+}

@@ -1,0 +1,16 @@
+"apiv2dep{{this.Name}}": {
+  "Type" : "AWS::ApiGatewayV2::Deployment",
+  "Properties" : {
+
+    {{#if this.Description}}
+      "Description": "{{this.Description}}"
+    {{/if}}
+
+    "StageName": "{{this.StageName}}",
+    "ApiId": {{#ifObject this.ApiId}}
+        { {{{inject this.ApiId}}} }
+      {{else}}
+        { "Ref":"apiv2{{this.ApiId}}" }
+      {{/ifObject}}
+    }
+}

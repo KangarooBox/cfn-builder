@@ -1,0 +1,42 @@
+"apiv2stag{{this.Name}}": {
+  "Type" : "AWS::ApiGatewayV2::Stage",
+  "Properties" : {
+
+      "StageName": "{{this.StageName}}",
+      "ApiId": {{#ifObject this.ApiId}}
+          { {{{inject this.ApiId}}} }
+        {{else}}
+          { "Ref":"apiv2{{this.ApiId}}" }
+        {{/ifObject}},
+
+      {{#if this.AccessLogSettings}}
+        "AccessLogSettings": { {{{inject this.AccessLogSettings}}} },
+      {{/if}}
+      {{#if this.AccessPolicyId}}
+        "AccessPolicyId": "{{this.AccessPolicyId}}",
+      {{/if}}
+      {{#if this.AutoDeploy}}
+        "AutoDeploy": {{this.AutoDeploy}},
+      {{/if}}
+      {{#if this.ClientCertificateId}}
+        "ClientCertificateId": "{{this.ClientCertificateId}}",
+      {{/if}}
+      {{#if this.DefaultRouteSettings}}
+        "DefaultRouteSettings": { {{{inject this.DefaultRouteSettings}}} },
+      {{/if}}
+      {{#if this.DeploymentId}}
+        "DeploymentId": "{{this.DeploymentId}}",
+      {{/if}}
+      {{#if this.Description}}
+        "Description": "{{this.Description}}",
+      {{/if}}
+      {{#if this.RouteSettings}}
+        "RouteSettings": { {{{inject this.RouteSettings}}} },
+      {{/if}}
+      {{#if this.StageVariables}}
+        "StageVariables": { {{{inject this.StageVariables}}} },
+      {{/if}}
+
+      {{> tags_map}}
+    }
+}

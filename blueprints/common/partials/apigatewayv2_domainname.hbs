@@ -1,0 +1,16 @@
+"apiv2domnam{{this.Name}}": {
+  "Type" : "AWS::ApiGatewayV2::DomainName",
+  "Properties" : {
+
+      "DomainName": "{{this.DomainName}}",
+
+      {{#if this.DomainNameConfigurations}}
+        "DomainNameConfigurations": [ {{{inject this.DomainNameConfigurations}}} ],
+      {{/if}}
+      {{#if this.MutualTlsAuthentication}}
+        "MutualTlsAuthentication": { {{{inject this.MutualTlsAuthentication}}} },
+      {{/if}}
+
+      {{> tags_map}}
+    }
+}

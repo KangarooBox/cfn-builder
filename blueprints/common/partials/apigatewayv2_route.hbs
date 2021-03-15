@@ -1,0 +1,51 @@
+"apiv2rout{{this.Name}}": {
+  "Type" : "AWS::ApiGatewayV2::Route",
+  "Properties" : {
+
+      {{#if this.ApiKeyRequired}}
+        "ApiKeyRequired": {{this.ApiKeyRequired}},
+      {{/if}}
+      {{#if this.AuthorizationScopes}}
+        "AuthorizationScopes": [
+        {{#each this.AuthorizationScopes}}
+          "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}}
+        ],
+      {{/if}}
+      {{#if this.AuthorizationType}}
+        "AuthorizationType": "{{this.AuthorizationType}}",
+      {{/if}}
+      {{#if this.AuthorizerId}}
+        "AuthorizerId": "{{this.AuthorizerId}}",
+      {{/if}}
+      {{#if this.ModelSelectionExpression}}
+        "ModelSelectionExpression": "{{this.ModelSelectionExpression}}",
+      {{/if}}
+      {{#if this.OperationName}}
+        "OperationName": "{{this.OperationName}}",
+      {{/if}}
+      {{#if this.RequestModels}}
+        "RequestModels": { {{{inject this.RequestModels}}} },
+      {{/if}}
+      {{#if this.RequestParameters}}
+        "RequestParameters": { {{{inject this.RequestParameters}}} },
+      {{/if}}
+      {{#if this.RouteResponseSelectionExpression}}
+        "RouteResponseSelectionExpression": "{{this.RouteResponseSelectionExpression}}",
+      {{/if}}
+      {{#if this.Target}}
+        "Target": {{#ifObject this.Target}}
+          { {{{inject this.Target}}} }
+        {{else}}
+          {{this.Target}}
+        {{/ifObject}},
+      {{/if}}
+
+      "RouteKey": "{{this.RouteKey}}",
+      "ApiId": {{#ifObject this.ApiId}}
+        { {{{inject this.ApiId}}} }
+      {{else}}
+        { "Ref":"apiv2{{this.ApiId}}" }
+      {{/ifObject}}
+    }
+}
