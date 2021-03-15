@@ -5,7 +5,11 @@
       "DomainName": "{{this.DomainName}}",
 
       {{#if this.DomainNameConfigurations}}
-        "DomainNameConfigurations": [ {{{inject this.DomainNameConfigurations}}} ],
+        "DomainNameConfigurations": [
+        {{#each this.DomainNameConfigurations}}
+          "{{this}}"{{comma}}
+        {{/each}}
+        ],
       {{/if}}
       {{#if this.MutualTlsAuthentication}}
         "MutualTlsAuthentication": { {{{inject this.MutualTlsAuthentication}}} },
