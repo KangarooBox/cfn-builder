@@ -1,4 +1,10 @@
-"apiv2domnam{{sanitize this.Name}}": {
+{{!--
+  Creates an API GatewayV2 Custom Domain Name
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-domainname.html
+ --}}
+
+"apiv2domnam{{sanitize this.Name ''}}": {
   "Type" : "AWS::ApiGatewayV2::DomainName",
   "Properties" : {
 

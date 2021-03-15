@@ -1,4 +1,10 @@
-"apiv2dep{{sanitize this.Name}}": {
+{{!--
+  Creates an API GatewayV2 Deployment
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-deployment.html
+ --}}
+
+"apiv2dep{{sanitize this.Name ''}}": {
   "Type" : "AWS::ApiGatewayV2::Deployment",
   "Properties" : {
 

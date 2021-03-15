@@ -1,4 +1,10 @@
-"apiv2int{{sanitize this.Name}}":{
+{{!--
+  Creates an API GatewayV2 Integration
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-integration.html
+ --}}
+
+"apiv2int{{sanitize this.Name ''}}":{
   "Type" : "AWS::ApiGatewayV2::Integration",
   "Properties" : {
 

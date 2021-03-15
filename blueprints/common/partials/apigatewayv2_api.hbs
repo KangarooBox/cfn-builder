@@ -1,11 +1,11 @@
 {{!--
-  Creates an API Gateway HTTP API
+  Creates an API GatewayV2 HTTP API
 
-  https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-an-api
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-api.html
  --}}
 
 
-"apiv2{{sanitize this.Name}}": {
+"apiv2{{sanitize this.Name ''}}": {
   "Type" : "AWS::ApiGatewayV2::Api",
   "Properties" : {
 
