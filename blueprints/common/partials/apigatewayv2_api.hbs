@@ -5,11 +5,11 @@
  --}}
 
 
-"apiv2{{this.Name}}": {
+"apiv2{{sanitize this.Name}}": {
   "Type" : "AWS::ApiGatewayV2::Api",
   "Properties" : {
 
-      "Name": "{{this.Name}}",
+    "Name": "{{this.Name}}",
 
     {{#if this.ApiKeySelectionExpression}}
       "ApiKeySelectionExpression": "{{this.ApiKeySelectionExpression}}",
