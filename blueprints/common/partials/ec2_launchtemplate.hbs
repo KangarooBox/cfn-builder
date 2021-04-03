@@ -76,11 +76,13 @@
         {{/ifObject}}
       {{else}}
         {{> (whichPartial "AMI" "user_data_" this) }}
-      {{/if}},
+      {{/if}}
+{{!--
       "TagSpecifications": [
         { "ResourceType": "launch-template",
         {{> tags}} }
       ]
+ --}}
     },
     "LaunchTemplateName": "{{this.Name}}"
   }

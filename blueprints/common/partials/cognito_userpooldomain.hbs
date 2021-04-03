@@ -8,6 +8,6 @@
   "Properties": {
     {{#if this.CustomDomainConfig}}"CustomDomainConfig": { {{{inject this.CustomDomainConfig}}} },{{/if}}
     "Domain": "{{this.Domain}}",
-    "UserPoolId": { "Ref": "cogup{{this.UserPoolId}}" }
+    "UserPoolId": { "Ref": "cogup{{sanitize this.UserPoolId ''}}" }
   }
 }
