@@ -1,0 +1,13 @@
+{{!--
+  Creates an IAM resource that describes an identity provider (IdP) that supports SAML 2.0.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-samlprovider.html
+ --}}
+"iamsamlprov{{sanitize this.Name ''}}": {
+  "Type": "AWS::IAM::SAMLProvider",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    "SamlMetadataDocument": "{{{inject this.SamlMetadataDocument}}}",
+    {{> tags}}
+  }
+}
