@@ -1,0 +1,15 @@
+{{!--
+  The AWS::CodeStarConnections::Connection resource can be used to connect external
+  source providers with services like AWS CodePipeline.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestarconnections-connection.html
+ --}}
+"csconnconn{{sanitize this.Name ''}}": {
+  "Type": "AWS::CodeStarConnections::Connection",
+  "Properties": {
+    "ConnectionName": "{{this.Name}}",
+    {{#if this.HostArn}}"HostArn": "{{this.HostArn}}",{{/if}}
+    {{#if this.ProviderType}}"ProviderType": "{{this.ProviderType}}",{{/if}}
+    {{> tags}}
+  }
+}
