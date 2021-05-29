@@ -170,6 +170,10 @@
     {{> codedeploy_deploymentgroup}},
     {{/each}}
 
+    {{#each CodeStarConnections}}
+    {{> codestarconnections_connection}},
+    {{/each}}
+
     {{#each CodeStarNotificationsNotificationRules}}
     {{> codestarnotifications_notificationrule}},
     {{/each}}
