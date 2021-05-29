@@ -66,6 +66,30 @@
     {{> apigateway_deployment}},
     {{/each}}
 
+    {{#each APIGatewayV2HttpAPIs}}
+    {{> apigatewayv2_api}},
+    {{/each}}
+
+    {{#each APIGatewayV2Integrations}}
+    {{> apigatewayv2_integration}},
+    {{/each}}
+
+    {{#each APIGatewayV2Routes}}
+    {{> apigatewayv2_route}},
+    {{/each}}
+
+    {{#each APIGatewayV2Stages}}
+    {{> apigatewayv2_stage}},
+    {{/each}}
+
+    {{#each APIGatewayV2DomainNames}}
+    {{> apigatewayv2_domainname}},
+    {{/each}}
+
+    {{#each APIGatewayV2Deployments}}
+    {{> apigatewayv2_deployment}},
+    {{/each}}
+
     {{#each AppStreamFleets}}
     {{> appstream_fleet}},
     {{/each}}
@@ -144,6 +168,10 @@
 
     {{#each CodeDeployDeploymentGroups}}
     {{> codedeploy_deploymentgroup}},
+    {{/each}}
+
+    {{#each CodeStarConnections}}
+    {{> codestarconnections_connection}},
     {{/each}}
 
     {{#each CodeStarNotificationsNotificationRules}}
@@ -420,6 +448,10 @@
 
     {{#each IAMRoles}}
     {{> iam_role}},
+    {{/each}}
+
+    {{#each IAMSAMLProviders}}
+    {{> iam_samlprovider}},
     {{/each}}
 
     {{#each IAMUsers}}

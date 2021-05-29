@@ -1,0 +1,26 @@
+{{!--
+  Creates an API GatewayV2 Custom Domain Name
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-domainname.html
+ --}}
+
+"apiv2domnam{{sanitize this.Name ''}}": {
+  "Type" : "AWS::ApiGatewayV2::DomainName",
+  "Properties" : {
+
+      "DomainName": "{{this.DomainName}}",
+
+      {{#if this.DomainNameConfigurations}}
+        "DomainNameConfigurations": [
+        {{#each this.DomainNameConfigurations}}
+          "{{this}}"{{comma}}
+        {{/each}}
+        ],
+      {{/if}}
+      {{#if this.MutualTlsAuthentication}}
+        "MutualTlsAuthentication": { {{{inject this.MutualTlsAuthentication}}} },
+      {{/if}}
+
+      {{> tags_map}}
+    }
+}
