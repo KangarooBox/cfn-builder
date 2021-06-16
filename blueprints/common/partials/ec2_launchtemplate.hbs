@@ -1,0 +1,89 @@
+{{!--
+ Creates a new Amazon Autoscaling Launch Template.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-launchtemplate.html
+ --}}
+"ec2lt{{sanitize this.Name ''}}": {
+  "Type": "AWS::EC2::LaunchTemplate",
+  "Properties": {
+    "LaunchTemplateData": {
+      {{#if this.BlockDeviceMappings}}
+        "BlockDeviceMappings":[{{#each this.BlockDeviceMappings}}{ {{{inject this}}} }{{comma}}{{/each}}],
+      {{/if}}
+
+      {{#if this.CapacityReservationSpecification}}"CapacityReservationSpecification": CapacityReservationSpecification,{{/if}}
+      {{#if this.CpuOptions}}"CpuOptions": CpuOptions,{{/if}}
+      {{#if this.CreditSpecification}}"CreditSpecification": CreditSpecification,{{/if}}
+      {{#if this.DisableApiTermination}}"DisableApiTermination": Boolean,{{/if}}
+      {{#if this.EbsOptimized}}"EbsOptimized": Boolean,{{/if}}
+      {{#if this.ElasticGpuSpecifications}}"ElasticGpuSpecifications": [ ElasticGpuSpecification, ... ],{{/if}}
+      {{#if this.ElasticInferenceAccelerators}}"ElasticInferenceAccelerators": [ LaunchTemplateElasticInferenceAccelerator, ... ],{{/if}}
+      {{#if this.EnclaveOptions}}"EnclaveOptions": EnclaveOptions,{{/if}}
+      {{#if this.HibernationOptions}}"HibernationOptions": HibernationOptions,{{/if}}
+      {{#if this.IamInstanceProfile}}"IamInstanceProfile": {"Arn": {"Fn::GetAtt":["iamip{{this.IamInstanceProfile}}","Arn"]} },{{/if}}
+      {{#ifObject this.ImageId}}
+        "ImageId": { {{{inject this.ImageId}}} },
+      {{else}}
+        "ImageId": "{{this.ImageId}}",
+      {{/ifObject}}
+
+      {{#if this.InstanceInitiatedShutdownBehavior}}"InstanceInitiatedShutdownBehavior": "{{this.InstanceInitiatedShutdownBehavior}}",{{/if}}
+      {{#if this.InstanceMarketOptions}}"InstanceMarketOptions": { {{{inject this.InstanceMarketOptions}}} },{{/if}}
+      {{#if this.InstanceType}}"InstanceType": "{{this.InstanceType}}",{{/if}}
+      {{#if this.KernelId}}"KernelId": "{{this.KernelId}}",{{/if}}
+      {{#if this.KeyName}}"KeyName": "{{this.KeyName}}",{{/if}}
+      {{#if this.LicenseSpecifications}}"LicenseSpecifications": [ LicenseSpecification, ... ],{{/if}}
+      {{#if this.MetadataOptions}}"MetadataOptions": MetadataOptions,{{/if}}
+      {{#if this.Monitoring}}"Monitoring": { {{{inject this.Monitoring}}} },{{/if}}
+      {{#if this.NetworkInterfaces}}"NetworkInterfaces": [
+        {{#each this.NetworkInterfaces}} {
+          {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+          {{#if this.DeviceIndex includeZero=true}}"DeviceIndex": {{this.DeviceIndex}},{{/if}}
+          {{#if this.Groups}}"Groups":[{{#each this.Groups}}{"Ref":"ec2sg{{this}}"}{{comma}}{{/each}}],{{/if}}
+          {{#if this.InterfaceType}}"InterfaceType": "{{this.InterfaceType}}",{{/if}}
+          {{#if this.Ipv6AddressCount}}"Ipv6AddressCount": {{this.Ipv6AddressCount}},{{/if}}
+          {{#if this.Ipv6Addresses}}"Ipv6Addresses":[{{#each this.Ipv6Addresses}}"{{this}}"{{comma}}{{/each}}],{{/if}}
+          {{#if this.NetworkCardIndex}}"NetworkCardIndex": {{this.NetworkCardIndex}},{{/if}}
+          {{#if this.NetworkInterfaceId}}"NetworkInterfaceId": "{{this.NetworkInterfaceId}}",{{/if}}
+          {{#if this.PrivateIpAddress}}"PrivateIpAddress": "{{this.PrivateIpAddress}}",{{/if}}
+          {{#if this.PrivateIpAddresses}}"PrivateIpAddresses":[
+            {{#each this.PrivateIpAddresses}}{ {{{inject this}}} }{{comma}}{{/each}}
+          ],{{/if}}
+          {{#if this.SecondaryPrivateIpAddressCount}}"SecondaryPrivateIpAddressCount": {{this.SecondaryPrivateIpAddressCount}},{{/if}}
+          {{#if this.SubnetId}}
+            {{#each @root.Region.Subnets as |subnet name|}}
+              {{#each subnet.addresses}}
+                {{#ifEq ../../SubnetId name}}
+                  "SubnetId":"{{this.Id}}",
+                {{/ifEq}}
+              {{/each}}
+            {{/each}}
+          {{/if}}
+          "AssociateCarrierIpAddress": {{default (toString this.AssociateCarrierIpAddress) false}},
+          "AssociatePublicIpAddress": {{default (toString this.AssociatePublicIpAddress) false}},
+          "DeleteOnTermination": {{default (toString this.DeleteOnTermination) true}}
+        }{{comma}}{{/each}}
+      ],{{/if}}
+      {{#if this.Placement}}"Placement": { {{{inject this.Placement}}} },{{/if}}
+      {{#if this.RamDiskId}}"RamDiskId": "{{this.RamDiskId}}",{{/if}}
+      {{#if this.SecurityGroups}}"SecurityGroups": [{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{comma}}{{/each}}],{{/if}}
+      {{#if this.SecurityGroupIds}}"SecurityGroupIds": [{{#each this.SecurityGroupIds}}{"Ref":"ec2sg{{this}}"}{{comma}}{{/each}}],{{/if}}
+      {{#if this.UserData}}
+        {{#ifObject this.UserData}}
+          "UserData": { {{{inject this.UserData}}} }
+        {{else}}
+          "UserData": "{{this.UserData}}"
+        {{/ifObject}}
+      {{else}}
+        {{> (whichPartial "AMI" "user_data_" this) }}
+      {{/if}}
+{{!--
+      "TagSpecifications": [
+        { "ResourceType": "launch-template",
+        {{> tags}} }
+      ]
+ --}}
+    },
+    "LaunchTemplateName": "{{this.Name}}"
+  }
+}

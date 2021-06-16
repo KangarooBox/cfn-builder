@@ -4,7 +4,7 @@
 
   https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codedeploy-deploymentgroup.html
  --}}
-"cddg{{this.Name}}": {
+"cddg{{sanitize this.Name ''}}": {
   "Type": "AWS::CodeDeploy::DeploymentGroup",
   "Properties": {
     {{!-- "AlarmConfiguration": AlarmConfiguration, --}}
@@ -35,12 +35,12 @@
     {{!-- "TriggerConfigurations": [ TriggerConfig, ... ] --}}
     {{#if this.Deployment}}"Deployment": { {{{inject this.Deployment}}} },{{/if}}
     "AutoScalingGroups": [
-      {{#each this.AutoScalingGroups}}{"Ref":"asg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}
+      {{#each this.AutoScalingGroups}}{"Ref":"asg{{sanitize this ''}}"}{{#unless @last}},{{/unless}}{{/each}}
     ],
     "ServiceRoleArn": {{#startsWith "arn:aws:" this.ServiceRoleArn}}"{{this.ServiceRoleArn}}"
       {{else}}{"Fn::GetAtt":["iamr{{this.ServiceRoleArn}}","Arn"]}
     {{/startsWith}},
     "DeploymentGroupName": "{{this.Name}}",
-    "ApplicationName": "{{sanitize this.ApplicationName '_'}}"
+    "ApplicationName": "{{this.ApplicationName}}"
   }
 }

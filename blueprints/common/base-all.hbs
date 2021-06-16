@@ -266,6 +266,10 @@
     {{> ec2_flowlog}},
     {{/each}}
 
+    {{#each EC2LaunchTemplates}}
+    {{> ec2_launchtemplate}},
+    {{/each}}
+
     {{#each EC2NetworkInterfaces}}
     {{> ec2_networkinterface}},
     {{/each}}

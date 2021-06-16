@@ -12,6 +12,6 @@
     {{~#if this.MinSize}}"MinSize":{{this.MinSize}},{{/if}}
     {{~#if this.Recurrence}}"Recurrence":"{{this.Recurrence}}",{{/if}}
     {{~#if this.StartTime}}"StartTime":{{this.StartTime}},{{/if}}
-    "AutoScalingGroupName":{"Ref":"asg{{this.AutoScalingGroupName}}"}
+    "AutoScalingGroupName":{"Ref":"asg{{sanitize this.AutoScalingGroupName ''}}"}
   }
 }

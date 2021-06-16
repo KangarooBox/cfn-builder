@@ -8,7 +8,8 @@
   "Properties":{
     "AutoScalingGroupName": "{{this.Name}}",
     {{#if this.Cooldown}}"Cooldown": "{{this.Cooldown}}",{{/if}}
-    "LaunchConfigurationName":{ "Ref":"aslc{{this.LaunchConfigurationName}}" },
+    {{#if this.LaunchConfigurationName}}"LaunchConfigurationName":{ "Ref":"aslc{{sanitize this.LaunchConfigurationName ''}}" },{{/if}}
+    {{#if this.LaunchTemplate}}"LaunchTemplate":{ {{{inject this.LaunchTemplate}}} },{{/if}}
     {{#if this.AvailabilityZones}}
       "AvailabilityZones": [{{#each this.AvailabilityZones}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
@@ -47,10 +48,10 @@
       {{/each}}],
     {{/with}}{{/if}}
     {{#if this.LoadBalancerNames}}
-      "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
+      "LoadBalancerNames":[{{#each this.LoadBalancerNames}}{"Ref":"elb{{sanitize this ''}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
     {{#if this.TargetGroupARNs}}
-      "TargetGroupARNs":[{{#each this.TargetGroupARNs}}{"Ref":"elbv2tg{{this}}"}{{#unless @last}},{{/unless}}{{/each}} ],
+      "TargetGroupARNs":[{{#each this.TargetGroupARNs}}{"Ref":"elbv2tg{{sanitize this ''}}"}{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
       "HealthCheckGracePeriod":{{default this.HealthCheckGracePeriod 300}},
     {{#if this.HealthCheckType}}"HealthCheckType":"{{this.HealthCheckType}}",{{/if}}
@@ -75,7 +76,6 @@
 
 {{!-- TODO
       "InstanceId" : String,
-      "LaunchTemplate" : LaunchTemplateSpecification,
       "MixedInstancesPolicy" : MixedInstancesPolicy,
       "PlacementGroup" : String,
  --}}
