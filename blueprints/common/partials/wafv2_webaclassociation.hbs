@@ -1,0 +1,26 @@
+{{!--
+  Use a web ACL association to define an association between a web ACL and a regional application
+  resource, to protect the resource. A regional application can be an Application Load Balancer (ALB),
+  an Amazon API Gateway REST API, or an AWS AppSync GraphQL API.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webaclassociation.html
+ --}}
+
+"wafv2wacl{{sanitize this.Name ''}}": {
+  "Type": "AWS::WAFv2::WebACLAssociation",
+  "Properties": {
+    "ResourceArn":
+    {{#startsWith 'aws:arn:' this.ResourceArn}}"
+      {{this.ResourceArn}}"
+    {{else}}
+      {"Ref":"elbv2{{sanitize this.ResourceArn ''}}"}
+    {{/startsWith}},
+
+    "WebACLArn":
+      {{#ifObject this.WebACLArn}}
+        { {{{inject this.WebACLArn}}} }
+      {{else}}
+        { "Ref":"wafrwacl{{sanitize this.WebACLArn ''}}" }
+      {{/ifObject}}
+  }
+}
