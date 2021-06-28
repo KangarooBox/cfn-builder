@@ -682,6 +682,10 @@
     {{> wafv2_webacl}},
     {{/each}}
 
+    {{#each WAFv2WebACLAssociations}}
+    {{> wafv2_webaclassociation}},
+    {{/each}}
+
     {{#each WAFv2IPSets}}
     {{> wafv2_ipset}},
     {{/each}}
