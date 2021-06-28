@@ -9,7 +9,7 @@
   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
   {{#if this.DependsOn}}"DependsOn": "{{this.DependsOn}}",{{/if}}
   "Properties": {
-    "Name": "{{this.Name}}-{{@root.EnvName}}",
+    "Name": "{{this.Name}}",
     "Scheme": "{{this.Scheme}}",
     {{#if this.SubnetMappings}}
       "SubnetMappings": [
