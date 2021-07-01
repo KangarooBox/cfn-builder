@@ -6,7 +6,7 @@
 "elbv2tg{{sanitize this.Name ''}}": {
   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
   "Properties": {
-    "Name": "{{this.Name}}-{{@root.EnvName}}",
+    "Name": "{{this.Name}}",
     "Port": {{this.Port}},
     "Protocol": "{{uppercase this.Protocol}}",
     {{#if this.HealthCheckIntervalSeconds}}"HealthCheckIntervalSeconds": {{this.HealthCheckIntervalSeconds}},{{/if}}
