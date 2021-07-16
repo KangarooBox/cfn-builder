@@ -606,6 +606,14 @@
     {{> securityhub_hub}},
     {{/each}}
 
+    {{#each SESReceiptRules}}
+    {{> ses_receiptrule}},
+    {{/each}}
+
+    {{#each SESReceiptRuleSets}}
+    {{> ses_receiptruleset}},
+    {{/each}}
+
     {{#each SNSSubscriptions}}
     {{> sns_subscription}},
     {{/each}}

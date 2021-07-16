@@ -1,0 +1,13 @@
+{{!--
+  Specifies a receipt rule
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ses-receiptrule.html
+--}}
+"sesrrule{{sanitize this.Name ''}}": {
+  "Type": "AWS::SES::ReceiptRule",
+  "Properties": {
+    {{#if this.After}}"After": "{{this.After}}",{{/if}}
+    "Rule": { {{{inject this.Rule}}} },
+    "RuleSetName": "{{this.RuleSetName}}"
+  }
+}
