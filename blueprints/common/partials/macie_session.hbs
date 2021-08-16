@@ -1,0 +1,14 @@
+{{!--
+  The AWS::Macie::Session resource represents the Amazon Macie service and
+  configuration settings for an account. A Session is created for each AWS
+  Region in which you enable Macie.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-session.html
+ --}}
+"macieses{{sanitize this.Name ''}}": {
+  "Type": "AWS::Macie::Session",
+  "Properties": {
+    {{#if this.FindingPublishingFrequency}}"FindingPublishingFrequency": "{{this.FindingPublishingFrequency}}",{{/if}}
+    "Status": "{{default this.Status 'ENABLED'}}"
+  }
+}

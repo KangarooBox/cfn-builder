@@ -1,0 +1,15 @@
+{{!--
+  Create an empty receipt rule set
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ses-receiptruleset.html
+--}}
+"sesrrset{{sanitize this.Name ''}}": {
+  "Type": "AWS::SES::ReceiptRuleSet",
+  "Properties": {
+    {{#if this.RuleSetName}}
+      "RuleSetName": "{{this.RuleSetName}}"
+    {{else}}
+      "RuleSetName": "{{this.Name}}"
+    {{/if}}
+  }
+}
