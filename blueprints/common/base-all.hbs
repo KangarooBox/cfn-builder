@@ -538,6 +538,10 @@
     {{> logs_metricfilter}},
     {{/each}}
 
+    {{#each MacieSessions}}
+    {{> macie_session}},
+    {{/each}}
+
     {{#each OpsWorksELBAttachments}}
     {{> opsworks_elasticloadbalancerattachment}},
     {{/each}}
