@@ -4,7 +4,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html
  --}}
-"apigwrest{{this.Name}}": {
+"apigwrest{{sanitize this.Name ''}}": {
   "Type": "AWS::ApiGateway::RestApi",
   "Properties" : {
     {{#if this.ApiKeySourceType}}"ApiKeySourceType": "{{this.ApiKeySourceType}}",{{/if}}

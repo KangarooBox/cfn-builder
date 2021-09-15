@@ -13,7 +13,7 @@
       {{#if this.DomainNameConfigurations}}
         "DomainNameConfigurations": [
         {{#each this.DomainNameConfigurations}}
-          "{{this}}"{{comma}}
+          { {{{inject this}}} }{{comma}}
         {{/each}}
         ],
       {{/if}}
