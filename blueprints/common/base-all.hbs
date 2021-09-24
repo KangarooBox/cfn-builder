@@ -650,6 +650,14 @@
     {{> sqs_queue_policy}},
     {{/each}}
 
+    {{#each TransferServers}}
+    {{> transfer_server}},
+    {{/each}}
+
+    {{#each TransferUsers}}
+    {{> transfer_user}},
+    {{/each}}
+
     {{#each WAFWebACLs}}
     {{> waf_webacl}},
     {{/each}}

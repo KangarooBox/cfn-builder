@@ -1,0 +1,56 @@
+{{!--
+  Creates an Image Builder Image
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html
+--}}
+
+"tu{{sanitize this.Name ''}}": {
+  "Type": "AWS::Transfer::User",
+  "Properties": {
+
+    "Role": "{{ this.Role }}",
+
+    "ServerId": {{#ifObject this.ServerId}}
+        { {{{inject this.ServerId}}} }
+      {{else}}
+        { "Ref":"ts{{this.ServerId}}" }
+      {{/ifObject}},
+
+    "UserName": "{{this.UserName}}",
+
+    {{#if this.HomeDirectory}}
+      "HomeDirectory": "{{ this.HomeDirectory }}",
+    {{/if}}
+
+    {{# if this.HomeDirectoryMappings }}
+      {{#with this.HomeDirectoryMappings}}
+        "HomeDirectoryMappings": [
+          {{#each this}}
+            { {{{inject this}}} }{{comma}}
+          {{/each}} ],
+      {{/with}}
+    {{/if}}
+
+    {{#if this.HomeDirectoryType}}
+      "HomeDirectoryType": "{{ this.HomeDirectoryType }}",
+    {{/if}}
+
+    {{#if this.Policy}}
+      "Policy": "{{ this.Policy }}",
+    {{/if}}
+
+    {{#if this.PosixProfile}}
+      "PosixProfile": { {{{inject this.PosixProfile}}} },
+    {{/if}}
+
+    {{# if this.SshPublicKeys }}
+      {{#with this.SshPublicKeys}}
+        "SshPublicKeys": [
+          {{#each this}}
+            { {{{inject this}}} }{{comma}}
+          {{/each}} ],
+      {{/with}}
+    {{/if}}
+
+    {{> tags}}
+    }
+}

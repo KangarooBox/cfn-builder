@@ -1,0 +1,55 @@
+{{!--
+  Creates an Image Builder Image
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html
+--}}
+
+"ts{{sanitize this.Name ''}}": {
+  "Type": "AWS::Transfer::Server",
+  "Properties": {
+    {{#if this.Certificate}}
+      "Certificate": "{{ this.Certificate }}",
+    {{/if}}
+
+    {{#if this.Domain}}
+      "Domain": "{{ this.Domain }}",
+    {{/if}}
+
+    {{#if this.EndpointDetails}}
+      "EndpointDetails": { {{{inject this.EndpointDetails}}} },
+    {{/if}}
+
+    {{#if this.EndpointType}}
+      "EndpointType": "{{ this.EndpointType }}",
+    {{/if}}
+
+    {{#if this.IdentityProviderDetails}}
+      "IdentityProviderDetails": { {{{inject this.IdentityProviderDetails}}} },
+    {{/if}}
+    {{#if this.IdentityProviderType}}
+      "IdentityProviderType": "{{ this.IdentityProviderType }}",
+    {{/if}}
+    {{#if this.LoggingRole}}
+      "LoggingRole": "{{ this.LoggingRole }}",
+    {{/if}}
+    {{#if this.ProtocolDetails}}
+      "ProtocolDetails": { {{{inject this.ProtocolDetails}}} },
+    {{/if}}
+    {{#if this.SecurityPolicyName}}
+      "SecurityPolicyName": "{{ this.SecurityPolicyName }}",
+    {{/if}}
+    {{# if this.Protocols }}
+      {{#with this.Protocols}}
+        "Protocols": [
+          {{#each this}}
+            "{{this}}"{{comma}}
+          {{/each}} ],
+      {{/with}}
+    {{/if}}
+
+    {{#if this.WorkflowDetails}}
+      "WorkflowDetails: { {{{inject this.WorkflowDetails}}} },
+    {{/if}}
+
+    {{> tags}}
+    }
+}
