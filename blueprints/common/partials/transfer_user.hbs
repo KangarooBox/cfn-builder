@@ -1,6 +1,6 @@
 {{!--
-  Creates an Image Builder Image
-https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html
+  Creates a Transfer Family User
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-user.html
 --}}
 
 "tu{{sanitize this.Name ''}}": {
@@ -10,13 +10,13 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imag
     "Role": {{#ifObject this.Role}}
         { {{{inject this.Role}}} }
       {{else}}
-        {{this.Role}}"
+        "{{this.Role}}"
       {{/ifObject}},
 
     "ServerId": {{#ifObject this.ServerId}}
         { {{{inject this.ServerId}}} }
       {{else}}
-        { "Ref":"ts{{this.ServerId}}" }
+        { "Ref":"ts{{sanitize this.ServerId ''}}" }
       {{/ifObject}},
 
     "UserName": "{{this.UserName}}",
