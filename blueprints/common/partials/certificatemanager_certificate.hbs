@@ -7,16 +7,14 @@
   "Type": "AWS::CertificateManager::Certificate",
   "Properties": {
     "DomainName": "{{this.DomainName}}",
-    {{#if this.DomainValidationOptions}} "DomainValidationOptions": [
-      { {{#if this.ValidationDomain}}"ValidationDomain": "{{this.ValidationDomain}}",{{/if}}
-        "DomainName": "{{this.DomainName}}"
+    {{#if this.DomainValidationOptions}} "DomainValidationOptions": [{
+      {{#if this.ValidationDomain}}"ValidationDomain": "{{this.ValidationDomain}}",{{/if}}
+      "DomainName": "{{this.DomainName}}"
+      {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
+        ,"HostedZoneId":"{{this.HostedZoneId}}"
+      {{/with}}
+    }],{{/if}}
 
-        {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
-          ,"HostedZoneId":"{{this.HostedZoneId}}"
-        {{/with}}
-
-      }
-    ],{{/if}}
     {{#if this.SubjectAlternativeNames}}"SubjectAlternativeNames": [
       {{#each this.SubjectAlternativeNames}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}

@@ -51,7 +51,7 @@
       "ApiId": {{#ifObject this.ApiId}}
         { {{{inject this.ApiId}}} }
       {{else}}
-        { "Ref":"apiv2{{this.ApiId}}" }
+        { "Ref":"apiv2{{sanitize this.ApiId ''}}" }
       {{/ifObject}}
     }
 }

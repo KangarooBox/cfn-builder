@@ -3,7 +3,7 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html
  --}}
-"apigwmeth{{this.Name}}": {
+"apigwmeth{{sanitize this.Name ''}}": {
   "Type": "AWS::ApiGateway::Method",
   "Properties": {
     {{#if this.AuthorizationType}}"AuthorizationType": "{{this.AuthorizationType}}",{{/if}}
@@ -42,8 +42,8 @@
 
     {{#if this.RequestModels }}"RequestModels": { {{{inject this.RequestModels}}} },{{/if}}
     {{#if this.RequestParameters }}"RequestParameters": { {{{inject this.RequestParameters}}} },{{/if}}
-    {{#if this.ResourceId }}"ResourceId": { "Ref": "apigwresc{{this.ResourceId}}" },{{/if}}
-    {{#if this.RestApiId }}"RestApiId": { "Ref": "apigwrest{{this.RestApiId}}" },{{/if}}
+    {{#if this.ResourceId }}"ResourceId": { "Ref": "apigwresc{{sanitize this.ResourceId ''}}" },{{/if}}
+    {{#if this.RestApiId }}"RestApiId": { "Ref": "apigwrest{{sanitize this.RestApiId ''}}" },{{/if}}
     "ApiKeyRequired": {{default this.ApiKeyRequired false}}
   }
 }

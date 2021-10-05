@@ -33,7 +33,7 @@
       "IntegrationUri": {{#ifObject this.IntegrationUri}}
         { {{{inject this.IntegrationUri}}} }
       {{else}}
-        { "Fn::GetAtt" : [ "fun{{this.IntegrationUri}}", "Arn" ] }
+        { "Fn::GetAtt" : [ "fun{{sanitize this.IntegrationUri ''}}", "Arn" ] }
       {{/ifObject}},
     {{/if}}
     {{#if this.PassthroughBehavior}}
@@ -64,7 +64,7 @@
     "ApiId": {{#ifObject this.ApiId}}
        { {{{inject this.ApiId}}} }
      {{else}}
-       { "Ref":"apiv2{{this.ApiId}}" }
+       { "Ref":"apiv2{{sanitize this.ApiId ''}}" }
      {{/ifObject}},
 
      "IntegrationMethod": "{{this.IntegrationMethod}}"

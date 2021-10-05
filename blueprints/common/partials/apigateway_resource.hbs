@@ -3,11 +3,11 @@
 
   https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-resource.html
  --}}
-"apigwresc{{this.Name}}": {
+"apigwresc{{sanitize this.Name ''}}": {
   "Type": "AWS::ApiGateway::Resource",
   "Properties": {
-    "ParentId": { "Fn::GetAtt": ["apigwrest{{this.ParentId}}", "RootResourceId"] },
+    "ParentId": { "Fn::GetAtt": ["apigwrest{{sanitize this.ParentId ''}}", "RootResourceId"] },
     "PathPart": "{{this.PathPart}}",
-    "RestApiId": { "Ref": "apigwrest{{this.RestApiId}}" }
+    "RestApiId": { "Ref": "apigwrest{{sanitize this.RestApiId ''}}" }
   }
 }
