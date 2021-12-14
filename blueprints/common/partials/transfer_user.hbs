@@ -7,17 +7,13 @@
   "Type": "AWS::Transfer::User",
   "Properties": {
 
-    "Role": {{#ifObject this.Role}}
-        { {{{inject this.Role}}} }
-      {{else}}
-        "{{this.Role}}"
-      {{/ifObject}},
+    "Role": {{#startsWith "arn:aws:" this.Role}}"{{this.Role}}"
+      {{else}}{"Fn::GetAtt": "iamr{{this.Role}}.Arn" }
+    {{/startsWith}},
 
-    "ServerId": {{#ifObject this.ServerId}}
-        { {{{inject this.ServerId}}} }
-      {{else}}
-        { "Ref":"ts{{sanitize this.ServerId ''}}" }
-      {{/ifObject}},
+    "ServerId": {{#startsWith "arn:aws:" this.ServerId}}"{{this.ServerId}}"
+      {{else}}{"Fn::GetAtt": "ts{{this.ServerId}}.ServerId" }
+    {{/startsWith}},
 
     "UserName": "{{this.UserName}}",
 

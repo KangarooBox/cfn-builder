@@ -29,7 +29,9 @@
       "IdentityProviderType": "{{ this.IdentityProviderType }}",
     {{/if}}
     {{#if this.LoggingRole}}
-      "LoggingRole": "{{ this.LoggingRole }}",
+      "LoggingRole": {{#startsWith "arn:aws:" this.LoggingRole}}"{{this.LoggingRole}}"
+        {{else}}{"Fn::GetAtt": "iamr{{this.LoggingRole}}.Arn" }
+      {{/startsWith}},
     {{/if}}
     {{#if this.ProtocolDetails}}
       "ProtocolDetails": { {{{inject this.ProtocolDetails}}} },
