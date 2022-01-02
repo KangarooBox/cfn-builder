@@ -9,6 +9,7 @@
     "Name": "{{this.Name}}",
     "Port": {{this.Port}},
     "Protocol": "{{uppercase this.Protocol}}",
+    {{#if this.ProtocolVersion}}"Protocol": "{{uppercase this.ProtocolVersion}}",{{/if}}
     {{#if this.HealthCheckIntervalSeconds}}"HealthCheckIntervalSeconds": {{this.HealthCheckIntervalSeconds}},{{/if}}
     {{#if this.HealthCheckPath}}"HealthCheckPath": "{{this.HealthCheckPath}}",{{/if}}
     {{#if this.HealthCheckPort}}"HealthCheckPort": "{{this.HealthCheckPort}}",{{/if}}
@@ -16,7 +17,9 @@
     {{#if this.HealthCheckTimeoutSeconds}}"HealthCheckTimeoutSeconds": {{this.HealthCheckTimeoutSeconds}},{{/if}}
     {{#if this.HealthyThresholdCount}}"HealthyThresholdCount": {{this.HealthyThresholdCount}},{{/if}}
     {{#if this.UnhealthyThresholdCount}}"UnhealthyThresholdCount": {{this.UnhealthyThresholdCount}},{{/if}}
+    {{#if this.IpAddressType}}"IpAddressType": "{{this.IpAddressType}}",{{/if}}
     {{#if this.Matcher}}"Matcher": { "HttpCode": "{{this.Matcher.HttpCode}}" },{{/if}}
+    {{#if this.TargetType}}"TargetType":"{{this.TargetType}}",{{/if}}
     {{#if this.TargetGroupAttributes}}
     "TargetGroupAttributes": [
       {{#each this.TargetGroupAttributes}}
@@ -28,11 +31,21 @@
     {{#if this.Targets}}"Targets": [
       {{#each this.Targets}}
         {{#startsWith 'i-' this.Id}}
-        { "Id": "{{this.Id}}", "Port": "{{this.Port}}" }{{#unless @last}},{{/unless}}
+          { "Id": "{{this.Id}}", "Port": "{{this.Port}}" }
         {{else}}
-        { "Id": {"Ref":"ec2{{this.Id}}"}, "Port": "{{this.Port}}" }{{#unless @last}},{{/unless}}
+          {{#startsWith 'arn:aws:' this.Id}} {
+            {{#if this.Port}}"Port": "{{this.Port}}",{{/if}}
+            "Id": "{{this.Id}}" }
+          {{else}} {
+            {{#if this.Port}}"Port": "{{this.Port}}",{{/if}}
+            {{#ifEq ../TargetType 'alb'}}
+              "Id": {"Ref":"elbv2{{sanitize this.Id ''}}"}
+            {{else}}
+              "Id": {"Ref":"ec2{{this.Id}}"}
+            {{/ifEq}} }
+          {{/startsWith}}
         {{/startsWith}}
-      {{/each}}
+      {{comma}}{{/each}}
     ],{{/if}}
     "VpcId":"{{@root.Region.VPCId}}",
     {{> tags}}
