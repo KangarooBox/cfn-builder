@@ -10,9 +10,14 @@
     {{#if this.DomainValidationOptions}} "DomainValidationOptions": [{
       {{#if this.ValidationDomain}}"ValidationDomain": "{{this.ValidationDomain}}",{{/if}}
       "DomainName": "{{this.DomainName}}"
-      {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
-        ,"HostedZoneId":"{{this.HostedZoneId}}"
-      {{/with}}
+
+      {{#if this.DomainValidationOptions.HostedZoneId}}
+        ,"HostedZoneId":"{{this.DomainValidationOptions.HostedZoneId}}"
+      {{else}}
+        {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
+          ,"HostedZoneId":"{{this.HostedZoneId}}"
+        {{/with}}
+      {{/if}}
     }],{{/if}}
 
     {{#if this.SubjectAlternativeNames}}"SubjectAlternativeNames": [

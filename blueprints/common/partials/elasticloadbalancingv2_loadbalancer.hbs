@@ -13,11 +13,16 @@
     "Scheme": "{{this.Scheme}}",
     {{#if this.SubnetMappings}}
       "SubnetMappings": [
-        {{#ifEq this.Type 'network'}}
-          {{!-- { "AllocationId": "{{this.SubnetMappings.AllocationId}}", --}}
+        {{#if this.SubnetMappings.PrivateIPv4Address}}
+          { "PrivateIPv4Address": "{{this.SubnetMappings.PrivateIPv4Address}}",
         {{else}}
-          { "AllocationId": { "Fn::GetAtt": ["ec2eip{{sanitize this.SubnetMappings.AllocationId ''}}","AllocationId"]},
-        {{/ifEq}}
+          {{#ifEq this.Type 'network'}}
+            { "AllocationId": { "Fn::GetAtt": ["{{this.SubnetMappings.AllocationId}}", "AllocationId"] },
+          {{else}}
+            { "AllocationId": { "Fn::GetAtt": ["ec2eip{{sanitize this.SubnetMappings.AllocationId ''}}","AllocationId"]},
+          {{/ifEq}}
+        {{/if}}
+
         {{!-- Restrict to a specific subnet AZ (a,b,c,d,e,etc.) --}}
         {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
           {{#each this}}
@@ -68,23 +73,38 @@
   "Properties": {
     {{#if this.Certificates}}"Certificates": [
       {{#each this.Certificates}}
-        {{#startsWith "arn:aws:acm:" this}}
-          { "CertificateArn":"{{this}}" }
+        {{#ifObject this}}
+          { {{{inject this}}} }
         {{else}}
-          { "CertificateArn": { "Ref":"acmc{{sanitize this ''}}" }}
-        {{/startsWith}}
-      {{#unless @last}},{{/unless}}{{/each}}],
+          {{#startsWith "arn:aws:acm:" this}}
+            { "CertificateArn":"{{this}}" }
+          {{else}}
+            { "CertificateArn": { "Ref":"acmc{{sanitize this ''}}" }}
+          {{/startsWith}}
+        {{/ifObject}}
+      {{comma}}{{/each}}],
     {{/if}}
     {{#if this.SslPolicy}}"SslPolicy": "{{this.SslPolicy}}",{{/if}}
+
     "DefaultActions": [
       {{#each this.DefaultActions}}
-      {{#if this.RedirectConfig}}
-        { "Type":"{{this.Type}}", "RedirectConfig":{ {{{inject this.RedirectConfig}}} }}
-      {{else}}
-        { "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}
-      {{/if}}
-      {{#unless @last}},{{/unless}}{{/each}}
+        { "Type":"{{lowercase this.Type}}",
+        {{#switch (lowercase this.Type)}}
+          {{#case "authenticate-cognito"}}{{/case}}
+          {{#case "authenticate-oidc"}}{{/case}}
+          {{#case "fixed-response"}}
+            "FixedResponseConfig": { "StatusCode": "{{this.FixedResponseConfig.StatusCode}}" }}
+          {{/case}}
+          {{#case "redirect"}}
+            "RedirectConfig": { {{{inject this.RedirectConfig}}} }}
+          {{/case}}
+          {{#case "forward"}}
+            "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"} }
+          {{/case}}
+        {{/switch}}
+      {{comma}}{{/each}}
     ],
+
     "LoadBalancerArn": { "Ref": "elbv2{{sanitize ../Name ''}}" },
     "Port": "{{this.Port}}",
     "Protocol": "{{uppercase this.Protocol}}"
@@ -95,14 +115,43 @@
   ,"elbv2lisrul{{sanitize ../../Name ''}}{{../this.Port}}{{@index}}": {
     "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
     "Properties": {
-      "Actions": [ {{#each this.Actions}}{ "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"}, "Type":"{{this.Type}}"}{{#unless @last}},{{/unless}}{{/each}}],
+      "Actions": [
+        {{#each this.Actions}}
+          { "Type":"{{lowercase this.Type}}",
+          {{#switch (lowercase this.Type)}}
+            {{#case "authenticate-cognito"}}{{/case}}
+            {{#case "authenticate-oidc"}}{{/case}}
+            {{#case "fixed-response"}}
+              "FixedResponseConfig": { "StatusCode": "{{this.StatusCode}}" }}
+            {{/case}}
+            {{#case "redirect"}}
+              "RedirectConfig": { {{{inject this.RedirectConfig}}} }}
+            {{/case}}
+            {{#case "forward"}}
+              "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"} }
+            {{/case}}
+          {{/switch}}
+        {{comma}}{{/each}}
+      ],
       "Conditions": [
-      {{#each this.Conditions}}{ "Field": "{{this.Field}}", "Values":[
-        {{#each this.Values}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
-        ]}{{#unless @last}},{{/unless}}{{/each}}
+        {{#each this.Conditions}}
+          { "Field": "{{ lowercase this.Field }}",
+          {{#switch (lowercase this.Field)}}
+            {{#case "http-header"}}{{/case}}
+            {{#case "http-request-method"}}{{/case}}
+            {{#case "host-header"}}{{/case}}
+            {{#case "path-pattern"}}
+              "PathPatternConfig": { "Values": [{{#each this.PathPatternConfig.Values}}"{{this}}"{{comma}}{{/each}}] }}
+              {{/case}}
+            {{#case "query-string"}}{{/case}}
+            {{#case "source-ip"}}
+              "SourceIpConfig": { "Values": [{{#each this.SourceIpConfig.Values}}"{{this}}"{{comma}}{{/each}}] }}
+              {{/case}}
+          {{/switch}}
+        {{comma}}{{/each}}
       ],
       "ListenerArn": {"Ref": "elbv2lis{{sanitize ../../Name ''}}{{../this.Port}}" },
-      "Priority": {{this.Priority}}
+      "Priority": "{{this.Priority}}"
     }
   }{{/each}}
-{{#unless @last}},{{/unless}}{{/each}}
+{{comma}}{{/each}}
