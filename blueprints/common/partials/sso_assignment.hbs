@@ -1,0 +1,23 @@
+{{!--
+  Assigns access to a Principal for a specified AWS account using a specified permission set.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html
+ --}}
+"ssoassign{{sanitize this.Name ''}}": {
+  "Type": "AWS::SSO::Assignment",
+  "Properties": {
+    "InstanceArn": "{{this.InstanceArn}}",
+
+    "PermissionSetArn":
+      {{#startsWith 'arn:' this.PermissionSetArn}}
+        "{{this.PermissionSetArn}}",
+      {{else}}
+        { "Fn::GetAtt": ["ssopermset{{sanitize this.PermissionSetArn ''}}","PermissionSetArn"] },
+      {{/startsWith}}
+
+    "PrincipalId": "{{this.PrincipalId}}",
+    "PrincipalType": "{{this.PrincipalType}}",
+    "TargetId": "{{@root.Account.ID}}",
+    "TargetType": "AWS_ACCOUNT"
+  }
+}
