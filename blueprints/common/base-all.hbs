@@ -642,6 +642,14 @@
     {{> ssm_parameter}},
     {{/each}}
 
+    {{#each SSOAssignments}}
+    {{> sso_assignment}},
+    {{/each}}
+
+    {{#each SSOPermissionSets}}
+    {{> sso_permissionset}},
+    {{/each}}
+
     {{#each SQSQueues}}
     {{> sqs_queue}},
     {{/each}}
