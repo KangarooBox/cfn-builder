@@ -502,6 +502,10 @@
     {{> inspector_resourcegroup}},
     {{/each}}
 
+    {{#each InspectorV2Filters}}
+    {{> inspectorv2_filter}},
+    {{/each}}
+
     {{#each KinesisStreams}}
     {{> kinesis_stream}},
     {{/each}}

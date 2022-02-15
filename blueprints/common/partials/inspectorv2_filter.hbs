@@ -1,0 +1,14 @@
+{{!--
+  Create AWS Inspector filters (suppression rules, etc.)
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-inspectorv2-filter.html
+ --}}
+"insp2filter{{sanitize this.Name ''}}": {
+  "Type": "AWS::InspectorV2::Filter",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    "Description": "{{default this.Description this.Name}}",
+    "FilterAction": "{{this.FilterAction}}",
+    "FilterCriteria": { {{{inject this.FilterCriteria}}} }
+  }
+}
