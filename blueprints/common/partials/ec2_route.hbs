@@ -19,6 +19,12 @@
       {"Ref":"ec2vpngw{{this.GatewayId}}"}
       {{/startsWith}},
     {{/if}}
+    {{#if this.InternetGatewayId}}"GatewayId": {{#startsWith 'igw-' this.InternetGatewayId}}
+      "{{this.InternetGatewayId}}"
+      {{else}}
+      {"Ref":"ec2intgw{{this.InternetGatewayId}}"}
+      {{/startsWith}},
+    {{/if}}
     {{#if this.InstanceId}}"InstanceId":{{#startsWith "i-" this.InstanceId}}"{{this.InstanceId}}"
       {{else}}{"Ref":"ec2{{this.InstanceId}}"}{{/startsWith}},
     {{/if}}

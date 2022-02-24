@@ -350,6 +350,10 @@
     {{> ec2_instance}},
     {{/each}}
 
+    {{#each EC2InternetGateways}}
+    {{> ec2_internetgateway}},
+    {{/each}}
+
     {{#each EC2Routes}}
     {{> ec2_route}},
     {{/each}}
@@ -428,6 +432,10 @@
 
     {{#each ElasticLoadBalancerV2TargetGroups}}
     {{> elasticloadbalancingv2_targetgroup}},
+    {{/each}}
+
+    {{#each EventsApiDestinations}}
+    {{> events_apidestination}},
     {{/each}}
 
     {{#each EventsRules}}

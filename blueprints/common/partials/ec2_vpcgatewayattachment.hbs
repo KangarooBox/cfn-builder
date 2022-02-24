@@ -6,8 +6,8 @@
 "ec2vpcgwa{{this.Name}}":{
   "Type": "AWS::EC2::VPCGatewayAttachment",
   "Properties": {
-    {{#if this.InternetGatewayId}}"InternetGatewayId": "{{this.InternetGatewayId}}",{{/if}}
-    {{#if this.VpnGatewayId}}"VpnGatewayId": {"Ref": "ec2vpngw{{this.VpnGatewayId}}"} ,{{/if}}
+    {{#if this.InternetGatewayId}}"InternetGatewayId": {"Ref": "ec2intgw{{sanitize this.InternetGatewayId ''}}"} ,{{/if}}
+    {{#if this.VpnGatewayId}}"VpnGatewayId": {"Ref": "ec2vpngw{{sanitize this.VpnGatewayId ''}}"} ,{{/if}}
 
     {{> vpcid}}
   }
