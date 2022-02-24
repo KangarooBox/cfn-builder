@@ -15,7 +15,7 @@
       {{/with}}
     {{/with}}
 
-    {{> vpcid ../this}},
+    {{> vpcid this}},
     {{> tags Name=(concat @root.EnvVersion @root.EnvName " " this.Name "(" this.AZ ")")}}
   }
 }

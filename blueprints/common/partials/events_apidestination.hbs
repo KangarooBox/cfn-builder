@@ -1,0 +1,20 @@
+{{!--
+  Creates an API destination, which is an HTTP invocation endpoint configured as a target for events.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-apidestination.html
+ --}}
+"evtrule{{sanitize this.Name ''}}":{
+  "Type": "AWS::Events::ApiDestination",
+  "Properties": {
+      "ConnectionArn": {{#startsWith "arn:aws:" this.ConnectionArn}}
+          "{{this.ConnectionArn}}"
+        {{else}}
+          { "Fn::GetAtt":[ "{{this.ConnectionArn}}", "Arn"] }
+        {{/startsWith}},
+      {{#if this.Description}}"Description":"{{this.Description}} ({{lowercase @root.ProjectName}}-{{lowercase @root.EnvName}})",{{/if}}
+      "HttpMethod": "{{this.HttpMethod}}",
+      "InvocationEndpoint": "{{this.InvocationEndpoint}}",
+      "InvocationRateLimitPerSecond": {{default this.InvocationRateLimitPerSecond 1}},
+      "Name": "{{this.Name}}"
+    }
+}
