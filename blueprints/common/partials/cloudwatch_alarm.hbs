@@ -18,8 +18,11 @@
       {{/ifObject}}
     {{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}
-    {{#if this.AlarmDescription}}"AlarmDescription": "{{this.AlarmDescription}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
-
+    {{#if this.AlarmDescription}}
+      "AlarmDescription": "{{this.AlarmDescription}}",
+    {{else}}
+      "AlarmDescription": "{{this.AlarmName}} ({{@root.ProjectName}}{{@root.EnvName}})",
+    {{/if}}
     {{#if this.DatapointsToAlarm}}"DatapointsToAlarm": "{{this.DatapointsToAlarm}}",{{/if}}
     {{#if this.Dimensions}}"Dimensions": [
     {{#each this.Dimensions}}
