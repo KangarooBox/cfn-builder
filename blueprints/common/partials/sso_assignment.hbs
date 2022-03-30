@@ -17,7 +17,7 @@
 
     "PrincipalId": "{{this.PrincipalId}}",
     "PrincipalType": "{{this.PrincipalType}}",
-    "TargetId": "{{@root.Account.ID}}",
-    "TargetType": "AWS_ACCOUNT"
+    "TargetId": "{{default this.TargetId @root.Account.ID}}",
+    "TargetType": "{{default this.TargetType 'AWS_ACCOUNT'}}"
   }
 }

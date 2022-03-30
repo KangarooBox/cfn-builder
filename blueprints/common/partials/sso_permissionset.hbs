@@ -11,7 +11,7 @@
     {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
     {{#if this.InlinePolicy}}"InlinePolicy": { {{{inject this.InlinePolicy}}} } ,{{/if}}
     {{#if this.ManagedPolicies}}"ManagedPolicies": [
-      {{#each this.ManagedPolicies}}{{this}}{{comma}}{{/each}}
+      {{#each this.ManagedPolicies}}"{{this}}"{{comma}}{{/each}}
     ],{{/if}}
     {{#if this.RelayStateType}}"RelayStateType": "{{this.RelayStateType}}",{{/if}}
     {{#if this.SessionDuration}}"SessionDuration": "{{this.SessionDuration}}",{{/if}}
