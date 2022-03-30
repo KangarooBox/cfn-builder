@@ -25,43 +25,23 @@
     {{/if}}
     {{#if this.DatapointsToAlarm}}"DatapointsToAlarm": "{{this.DatapointsToAlarm}}",{{/if}}
     {{#if this.Dimensions}}"Dimensions": [
-    {{#each this.Dimensions}}
-      {{#switch this.Name}}
-        {{#case "AutoScalingGroupName" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Ref":"asg{{this.Value}}"} }
-        {{/case}}
-
-        {{#case "InstanceId" break=true}}
-        { "Name": "{{this.Name}}", "Value":
-          {{#startsWith "i-" this.Value}}
-          "{{this.Value}}"
-          {{else}}
-          {"Ref":"ec2{{this.Value}}"}
-          {{/startsWith}}
-        }
-        {{/case}}
-
-        {{#case "LoadBalancer" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2{{this.Value}}","LoadBalancerFullName"]} }
-        {{/case}}
-
-        {{#case "TargetGroup" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Fn::GetAtt":["elbv2tg{{this.Value}}","TargetGroupFullName"]} }
-        {{/case}}
-
-        {{#case "HealthCheckId" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Ref":"53hc{{@root.ProjectName}}"} }
-        {{/case}}
-
-        {{#case "UserPoolId" break=true}}
-          { "Name": "{{this.Name}}", "Value": {"Ref":"cogup{{sanitize this.Value ''}}"} }
-        {{/case}}
-
-        {{#sdefault}}
-          { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
-        {{/sdefault}}
-      {{/switch}}
-    {{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+      {{#each this.Dimensions}}
+        {{#switch this.Name}}
+          {{#case "InstanceId" break=true}}
+            { "Name": "{{this.Name}}", "Value":
+              {{#startsWith "i-" this.Value}}
+                "{{this.Value}}"
+              {{else}}
+                { "Ref":"ec2{{this.Value}}" }
+              {{/startsWith}}
+            }
+          {{/case}}
+          {{#sdefault}}
+            { "Name": "{{this.Name}}", "Value": "{{this.Value}}" }
+          {{/sdefault}}
+        {{/switch}}
+      {{comma}}{{/each}}
+    ],{{/if}}
 
     {{#if this.InsufficientDataActions}}"InsufficientDataActions": [ "{{this.}}", ... ],{{/if}}
     {{#if this.OKActions}}"OKActions": [{{#each this.OKActions}}
