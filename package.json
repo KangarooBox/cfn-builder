@@ -12,7 +12,7 @@
     "url": "https://github.com/rnhurt/cfn-builder/issues"
   },
   "dependencies": {
-    "async": "^2.6.3",
+    "async": "^3.2.2",
     "aws-sdk": "^2.610.0",
     "cli-table3": "^0.5.1",
     "colors": "^1.4.0",
