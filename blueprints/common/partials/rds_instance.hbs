@@ -25,7 +25,7 @@
   "Type":"AWS::RDS::DBInstance",
   {{~#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
   "Properties":{
-    {{#if this.DBParameterGroupName}}"DBParameterGroupName":{ "Ref":"rdsPG{{this.DBParameterGroupName}}" }, {{/if}}
+    {{#if this.DBParameterGroupName}}"DBParameterGroupName":{ "Ref":"rdsdbparmgrp{{sanitize this.DBParameterGroupName ''}}" }, {{/if}}
     {{#if this.OptionGroupName}}"OptionGroupName":"{{this.OptionGroupName}}",{{/if}}
     {{#if this.AllocatedStorage}}"AllocatedStorage":"{{this.AllocatedStorage}}",{{/if}}
     {{#if this.StorageType}}"StorageType":"{{this.StorageType}}",{{/if}}
