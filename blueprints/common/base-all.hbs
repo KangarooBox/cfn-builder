@@ -578,6 +578,10 @@
     {{> rds_instance}},
     {{/each}}
 
+    {{#each RDSDBParameterGroups}}
+    {{> rds_dbparametergroup}},
+    {{/each}}
+
     {{#each RedshiftClusters}}
     {{> redshift_cluster}},
     {{/each}}

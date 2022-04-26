@@ -1,0 +1,14 @@
+{{!--
+  The AWS::RDS::DBParameterGroup resource creates a custom parameter group for an RDS database family.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbparametergroup.html
+ --}}
+"rdsdbparmgrp{{sanitize this.Name ''}}": {
+  "Type": "AWS::RDS::DBParameterGroup",
+  "Properties": {
+    "Description": "{{this.Description}}",
+    "Family": "{{this.Family}}",
+    "Parameters": { {{{inject this.Parameters}}} },
+    {{> tags}}
+  }
+}
