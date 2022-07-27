@@ -8,7 +8,7 @@
   "Properties": {
     {{#if this.GroupName}}"GroupName": "{{this.GroupName}}",{{/if}}
     "GroupDescription": "{{this.GroupDescription}}",
-    "VpcId": "{{@root.Region.VPCId}}",
+    "VpcId": {{#if this.VpcId}}"{{this.VpcId}}"{{else}}"{{@root.Region.VPCId}}"{{/if}},
     "SecurityGroupIngress": [
       {{#each this.SecurityGroupIngress}}
       { "IpProtocol": "{{this.IpProtocol}}",

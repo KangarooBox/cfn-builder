@@ -23,7 +23,7 @@
 
 "rds{{sanitize this.Name ''}}{{this.AvailabilityZone}}":{
   "Type":"AWS::RDS::DBInstance",
-  {{~#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
+  {{#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
   "Properties":{
     {{#if this.DBParameterGroupName}}"DBParameterGroupName":{ "Ref":"rdsdbparmgrp{{sanitize this.DBParameterGroupName ''}}" }, {{/if}}
     {{#if this.OptionGroupName}}"OptionGroupName":"{{this.OptionGroupName}}",{{/if}}
@@ -44,13 +44,30 @@
     "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.Name ''}}" },
     "PubliclyAccessible":{{default (toString this.PubliclyAccessible) false}},
     "CopyTagsToSnapshot":{{default (toString this.CopyTagsToSnapshot) false}},
-    {{~#if this.DBInstanceIdentifier}}
-    "DBInstanceIdentifier": "{{this.DBInstanceIdentifier}}",
-    {{else}}
-    "DBInstanceIdentifier":"{{truncate this.Name (subtract 14 (add (length @root.EnvVersion) (length @root.EnvName)))}}-{{@root.EnvVersion}}{{@root.EnvName}}",
+
+    {{#if this.KmsKeyId}}
+      {{#startsWith 'arn:aws:' this.KmsKeyId}}
+        "KmsKeyId": "{{this.KmsKeyId}}",
+      {{else}}
+        "KmsKeyId": { "Fn::GetAtt":[ "kmskey{{sanitize this.KmsKeyId ''}}", "Arn"] },
+      {{/startsWith}}
     {{/if}}
+
+    {{#if this.LicenseModel}}"LicenseModel": "{{this.LicenseModel}}",{{/if}}
+    {{#if this.MaxAllocatedStorage}}"MaxAllocatedStorage": {{this.MaxAllocatedStorage}},{{/if}}
+    {{#if this.MonitoringInterval}}"MonitoringInterval": {{this.MonitoringInterval}},{{/if}}
+    {{#if this.MonitoringRoleArn}}"MonitoringRoleArn": "{{this.MonitoringRoleArn}}",{{/if}}
+
+    {{#if this.DBInstanceIdentifier}}
+      "DBInstanceIdentifier": "{{this.DBInstanceIdentifier}}",
+    {{/if}}
+
     {{#if this.DBSnapshotIdentifier}}
-      "DBSnapshotIdentifier":"{{this.DBSnapshotIdentifier}}",
+      {{#ifObject this.DBSnapshotIdentifier}}
+        "DBSnapshotIdentifier": { {{{inject this.DBSnapshotIdentifier}}} },
+      {{else}}
+        "DBSnapshotIdentifier":"{{this.DBSnapshotIdentifier}}",
+      {{/ifObject}}
       "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 0}},
     {{else}}
       "Engine":"{{this.Engine}}",
