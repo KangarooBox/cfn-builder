@@ -126,6 +126,18 @@
     {{> autoscaling_launchconfiguration}},
     {{/each}}
 
+    {{#each BackupBackupPlans}}
+    {{> backup_backupplan}},
+    {{/each}}
+
+    {{#each BackupBackupSelections}}
+    {{> backup_backupselection}},
+    {{/each}}
+
+    {{#each BackupBackupVaults}}
+    {{> backup_backupvault}},
+    {{/each}}
+
     {{#each CloudFrontDistributions}}
     {{> cloudfront_distribution}},
     {{/each}}
@@ -614,8 +626,8 @@
     {{> s3_bucketpolicy}},
     {{/each}}
 
-    {{#each SecretsManagerSecrets}}
-    {{> secretsmanager_secret}},
+    {{#each SecretsManagerResourcePolicies}}
+    {{> secretsmanager_resourcepolicy}},
     {{/each}}
 
     {{#each SecretsManagerSecrets}}
