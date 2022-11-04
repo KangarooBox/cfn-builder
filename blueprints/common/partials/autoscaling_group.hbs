@@ -9,7 +9,17 @@
     "AutoScalingGroupName": "{{this.Name}}",
     {{#if this.Cooldown}}"Cooldown": "{{this.Cooldown}}",{{/if}}
     {{#if this.LaunchConfigurationName}}"LaunchConfigurationName":{ "Ref":"aslc{{sanitize this.LaunchConfigurationName ''}}" },{{/if}}
-    {{#if this.LaunchTemplate}}"LaunchTemplate":{ {{{inject this.LaunchTemplate}}} },{{/if}}
+    {{#if this.LaunchTemplate}}"LaunchTemplate": {
+      {{#with this.LaunchTemplate}}
+        {{#if this.LaunchTemplateId}}"LaunchTemplateId": { "Ref": "{{this.LaunchTemplateId}}" },{{/if}}
+        {{#if this.LaunchTemplateName}}"LaunchTemplateName": "{{this.LaunchTemplateName}}",{{/if}}
+        {{#if this.Version}}
+          "Version": "{{this.Version}}"
+        {{else}}
+          "Version": { "Fn::GetAtt": [ "ec2lt{{sanitize this.LaunchTemplateName ''}}", "LatestVersionNumber" ] }
+        {{/if}}
+      {{/with}}
+    },{{/if}}
     {{#if this.AvailabilityZones}}
       "AvailabilityZones": [{{#each this.AvailabilityZones}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
     {{/if}}
@@ -40,6 +50,7 @@
     {{#if this.MetricsCollection}}
       "MetricsCollection": [ {{#each this.MetricsCollection}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],
     {{/if}}
+    {{#if this.MixedInstancesPolicy}}"MixedInstancesPolicy": { {{{inject this.MixedInstancesPolicy}}} },{{/if}}
     {{#if this.NotificationConfigurations}}{{#with this.NotificationConfigurations}}
       "NotificationConfigurations": [{{#each this}}
         { "NotificationTypes": [{{#each this.NotificationTypes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
@@ -76,6 +87,5 @@
 
 {{!-- TODO
       "InstanceId" : String,
-      "MixedInstancesPolicy" : MixedInstancesPolicy,
       "PlacementGroup" : String,
  --}}
