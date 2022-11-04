@@ -6,18 +6,40 @@
 "fun{{sanitize this.Name ''}}":{
   "Type":"AWS::Lambda::Function",
   "Properties":{
+    {{#if this.Architectures}}
+    "Architectures": [ {{{inject this.Architectures}}} ],
+    {{/if}}
     "Code":{
     {{#if this.ZipFile}}
       "ZipFile":{ "Fn::Join": ["\n", [ {{#each this.ZipFile}}"{{{this}}}"{{#unless @last}},{{/unless}}{{/each}} ] ]}
-    {{else}}
+    {{/if}}
+    {{#if this.ImageUri}}
+      "ImageUri": {{#ifObject this.ImageUri}}{ {{{inject this.ImageUri}}} }{{else}}"{{this.ImageUri}}"{{/ifObject}}
+    {{/if}}
+    {{#if this.S3Bucket}}
       {{#if this.S3ObjectVersion}}"S3ObjectVersion":"{{this.S3ObjectVersion}}",{{/if~}}
       "S3Bucket":"{{this.S3Bucket}}",
       "S3Key":{{#ifObject this.S3Key}}{ {{{inject this.S3Key}}} }{{else}}"{{this.S3Key}}"{{/ifObject}}
     {{/if}}
     },
+    {{#if this.CodeSigningConfigArn}}
+      "CodeSigningConfigArn": "{{this.CodeSigningConfigArn}}"
+    {{/if}}
+    {{#if this.DeadLetterConfig}}
+      "DeadLetterConfig": { {{{inject this.DeadLetterConfig}}} }
+    {{/if}}
     "Description":"{{this.Description}}",
-    "Handler":"{{this.Handler}}",
+    {{#if this.Handler}}"Handler":"{{this.Handler}}",{{/if}}
     {{#if this.Environment}}"Environment": { "Variables": { {{{inject this.Environment}}} } },{{/if}}
+    {{#if this.EphemeralStorage}}
+      "EphemeralStorage": { {{{inject this.EphemeralStorage}}} }
+    {{/if}}
+    {{#if this.FileSystemConfigs}}
+      "FileSystemConfigs": [ {{#each this.FileSystemConfigs}}{ {{{inject this}}} }{{comma}}{{/each}}],
+    {{/if}}
+    {{#if this.ImageConfig}}
+    "ImageConfig": { {{{inject this.ImageConfig}}} }
+    {{/if}}
     {{#if this.KmsKeyArn}}"KmsKeyArn":
       {{#startsWith "arn:aws:" this.KmsKeyArn}}
       "{{this.KmsKeyArn}}"
@@ -25,8 +47,20 @@
       {"Fn::GetAtt":["kms{{this.KmsKeyArn}}","Arn"]}
       {{/startsWith}},
     {{/if}}
+    {{#if this.Layers}}
+    "Layers": [ {{{inject this.Layers}}} ],
+    {{/if}}
     {{#if this.MemorySize}}"MemorySize":{{this.MemorySize}},{{/if}}
+    {{#if this.PackageType}}
+      "PackageType": "{{this.PackageType}}"
+    {{/if}}
+    {{#if this.ReservedConcurrentExecutions}}
+      "ReservedConcurrentExecutions": {{this.ReservedConcurrentExecutions}}
+    {{/if}}
     {{#if this.Timeout}}"Timeout":{{this.Timeout}},{{/if}}
+    {{#if this.TracingConfig}}
+      "TracingConfig": { {{{inject this.TracingConfig}}} }
+    {{/if}}
     {{#if this.VpcConfig}}"VpcConfig":{
       "SecurityGroupIds":[{{#each this.VpcConfig.SecurityGroupIds}}
         {{#startsWith "sg-" this}}"{{this}}"{{else}}{"Ref":"ec2sg{{this}}"}{{/startsWith}}
