@@ -30,10 +30,11 @@
       {{#if this.InstanceInitiatedShutdownBehavior}}"InstanceInitiatedShutdownBehavior": "{{this.InstanceInitiatedShutdownBehavior}}",{{/if}}
       {{#if this.InstanceMarketOptions}}"InstanceMarketOptions": { {{{inject this.InstanceMarketOptions}}} },{{/if}}
       {{#if this.InstanceType}}"InstanceType": "{{this.InstanceType}}",{{/if}}
+      {{#if this.InstanceRequirements}}"InstanceRequirements": { {{{inject this.InstanceRequirements}}} },{{/if}}
       {{#if this.KernelId}}"KernelId": "{{this.KernelId}}",{{/if}}
       {{#if this.KeyName}}"KeyName": "{{this.KeyName}}",{{/if}}
       {{#if this.LicenseSpecifications}}"LicenseSpecifications": [ LicenseSpecification, ... ],{{/if}}
-      {{#if this.MetadataOptions}}"MetadataOptions": MetadataOptions,{{/if}}
+      {{#if this.MetadataOptions}}"MetadataOptions": { {{{inject this.MetadataOptions}}} },{{/if}}
       {{#if this.Monitoring}}"Monitoring": { {{{inject this.Monitoring}}} },{{/if}}
       {{#if this.NetworkInterfaces}}"NetworkInterfaces": [
         {{#each this.NetworkInterfaces}} {
@@ -76,13 +77,10 @@
         {{/ifObject}}
       {{else}}
         {{> (whichPartial "AMI" "user_data_" this) }}
-      {{/if}}
-{{!--
+      {{/if}},
       "TagSpecifications": [
-        { "ResourceType": "launch-template",
-        {{> tags}} }
+        { "ResourceType": "instance", {{> tags}} }
       ]
- --}}
     },
     "LaunchTemplateName": "{{this.Name}}"
   }
