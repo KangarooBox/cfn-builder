@@ -6,7 +6,7 @@
 "ssopermset{{sanitize this.Name ''}}": {
   "Type": "AWS::SSO::PermissionSet",
   "Properties": {
-    "Name": "{{this.Name}}",
+    "Name": {{#if this.SetName}}"{{this.SetName}}"{{else}}"{{this.Name}}"{{/if}},
     "InstanceArn": "{{this.InstanceArn}}",
     {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
     {{#if this.InlinePolicy}}"InlinePolicy": { {{{inject this.InlinePolicy}}} } ,{{/if}}
