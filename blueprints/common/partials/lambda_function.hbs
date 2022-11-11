@@ -23,28 +23,28 @@
     {{/if}}
     },
     {{#if this.CodeSigningConfigArn}}
-      "CodeSigningConfigArn": "{{this.CodeSigningConfigArn}}"
+      "CodeSigningConfigArn": "{{this.CodeSigningConfigArn}}",
     {{/if}}
     {{#if this.DeadLetterConfig}}
-      "DeadLetterConfig": { {{{inject this.DeadLetterConfig}}} }
+      "DeadLetterConfig": { {{{inject this.DeadLetterConfig}}} },
     {{/if}}
     "Description":"{{this.Description}}",
     {{#if this.Handler}}"Handler":"{{this.Handler}}",{{/if}}
     {{#if this.Environment}}"Environment": { "Variables": { {{{inject this.Environment}}} } },{{/if}}
     {{#if this.EphemeralStorage}}
-      "EphemeralStorage": { {{{inject this.EphemeralStorage}}} }
+      "EphemeralStorage": { {{{inject this.EphemeralStorage}}} },
     {{/if}}
     {{#if this.FileSystemConfigs}}
       "FileSystemConfigs": [ {{#each this.FileSystemConfigs}}{ {{{inject this}}} }{{comma}}{{/each}}],
     {{/if}}
     {{#if this.ImageConfig}}
-    "ImageConfig": { {{{inject this.ImageConfig}}} }
+    "ImageConfig": { {{{inject this.ImageConfig}}} },
     {{/if}}
     {{#if this.KmsKeyArn}}"KmsKeyArn":
       {{#startsWith "arn:aws:" this.KmsKeyArn}}
-      "{{this.KmsKeyArn}}"
+      "{{this.KmsKeyArn}}",
       {{else}}
-      {"Fn::GetAtt":["kms{{this.KmsKeyArn}}","Arn"]}
+      {"Fn::GetAtt":["kms{{this.KmsKeyArn}}","Arn"]},
       {{/startsWith}},
     {{/if}}
     {{#if this.Layers}}
@@ -52,14 +52,14 @@
     {{/if}}
     {{#if this.MemorySize}}"MemorySize":{{this.MemorySize}},{{/if}}
     {{#if this.PackageType}}
-      "PackageType": "{{this.PackageType}}"
+      "PackageType": "{{this.PackageType}}",
     {{/if}}
     {{#if this.ReservedConcurrentExecutions}}
-      "ReservedConcurrentExecutions": {{this.ReservedConcurrentExecutions}}
+      "ReservedConcurrentExecutions": {{this.ReservedConcurrentExecutions}},
     {{/if}}
     {{#if this.Timeout}}"Timeout":{{this.Timeout}},{{/if}}
     {{#if this.TracingConfig}}
-      "TracingConfig": { {{{inject this.TracingConfig}}} }
+      "TracingConfig": { {{{inject this.TracingConfig}}} },
     {{/if}}
     {{#if this.VpcConfig}}"VpcConfig":{
       "SecurityGroupIds":[{{#each this.VpcConfig.SecurityGroupIds}}
