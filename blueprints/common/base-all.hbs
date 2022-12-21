@@ -586,6 +586,10 @@
     {{> ram_resourceshare}},
     {{/each}}
 
+    {{#each RDSClusters}}
+    {{> rds_dbcluster}},
+    {{/each}}
+
     {{#each RDSInstances}}
     {{> rds_instance}},
     {{/each}}
