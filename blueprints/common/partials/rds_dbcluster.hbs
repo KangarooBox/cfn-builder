@@ -3,46 +3,103 @@
   (Amazon Aurora) DB cluster.
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbsubnetgroup.html
  --}}
-"dbsng{{this.Name}}": {
-      "Type": "AWS::RDS::DBSubnetGroup",
-      "Properties": {
-        "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
-        "SubnetIds" : [ {{#each @root.Region.SubnetIds.Private}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}} ],
-        {{> tags Name=(concat @root.ProjectName " DB subnet group")}}
-      }
-    },
+"rdssng{{sanitize this.Name ''}}": {
+  "Type": "AWS::RDS::DBSubnetGroup",
+  {{#if this.DeletionPolicy}}"DeletionPolicy": "{{this.DeletionPolicy}}",{{/if}}
+  "Properties": {
+    "DBSubnetGroupDescription": "{{@root.ProjectName}} DB Cluster subnet group",
+    {{!-- "DBSubnetGroupName": "cluster-{{lowercase (sanitize this.Name '')}}", --}}
+    "SubnetIds": [
+      {{#each @root.Region.Subnets as |subnet name|}}
+        {{#each subnet.addresses}}
+          {{#ifEq ../../SubnetId name}}
+            "{{this.Id}}"{{comma}}
+          {{/ifEq}}
+        {{/each}}
+      {{/each}}
+    ],
 
-    "dbc{{this.Name}}" : {
-      "Type" : "AWS::RDS::DBCluster",
-      "Properties" : {
-        "AvailabilityZones" : [ {{#each @root.Region.AvailabilityZones}}"{{@root.Region.Id}}{{this}}"{{#unless @last}}, {{/unless}}{{/each}} ],
-        "BackupRetentionPeriod" : {{default this.BackupRetentionPeriod 1}},
-        {{~#if this.DBClusterParameterGroupName}}"DBClusterParameterGroupName" : "{{this.DBClusterParameterGroupName}}",{{/if}}
-        "DBSubnetGroupName" : { "Ref" : "dbsng{{this.Name}}" },
-        "Engine" : "{{this.Engine}}",
-        {{~#if this.EngineVersion}}"EngineVersion" : "{{this.EngineVersion}}",{{/if}}
-        {{~#if this.KmsKeyId}}"KmsKeyId" : "{{this.KmsKeyId}}",{{/if}}
-        {{~#if this.SnapshotIdentifier}}
-        "SnapshotIdentifier" : "{{this.SnapshotIdentifier}}",
+    {{> tags Name=(concat @root.ProjectName " DB subnet group")}}
+  }
+},
+
+"rdsdbc{{sanitize this.Name ''}}" : {
+  "Type" : "AWS::RDS::DBCluster",
+  {{#if this.DeletionPolicy}}"DeletionPolicy": "{{this.DeletionPolicy}}",{{/if}}
+  "Properties" : {
+    {{#if this.AllocatedStorage}}"AllocatedStorage": {{this.AllocatedStorage}},{{/if}}
+    {{#if this.AssociatedRoles}}"AssociatedRoles": [
+      {{#each this.AssociatedRoles}}{
+        {{#if this.FeatureName}}"FeatureName": "{{this.FeatureName}}",{{/if}}
+        "RoleArn": {{#startsWith "arn:aws:" this.Role}}
+          "{{this.Role}}"
         {{else}}
-        "MasterUsername" : "{{this.MasterUsername}}",
-        "MasterUserPassword" : "{{this.MasterUserPassword}}",
-        {{/if}}
-        {{~#if this.Port}}"Port" : {{this.Port}},{{/if}}
-        {{~#if this.PreferredBackupWindow}}"PreferredBackupWindow" : "{{this.PreferredBackupWindow}}",{{/if}}
-        {{~#if this.PreferredMaintenanceWindow}}"PreferredMaintenanceWindow" : "{{this.PreferredMaintenanceWindow}}",{{/if}}
-        {{~#if this.StorageEncrypted}}"StorageEncrypted" : {{this.StorageEncrypted}},{{/if}}
-        "VpcSecurityGroupIds" : [{{#each SecurityGroupIds}} { "Ref" : "{{this}}" }{{#unless @last}}, {{/unless}}{{/each}} ],
-        {{> tags Name=(concat @root.ProjectName " DB cluster")}},
-        "DatabaseName" : "{{this.Name}}"
-      }
-    },
-
-    {{#if this.ReadReplicas}}
-    {{#each @root.Region.AvailabilityZones}}
-    {{> rds_instance .. AvailabilityZone=this Parent="dbcluster"}}{{#unless @last}}, {{/unless}}
-    {{/each}}
+          { "Fn::GetAtt": [ "iamr{{this.Role}}", "Arn" ]}
+        {{/startsWith}}
+      }{{comma}}{{/each}}
+    ],{{/if}}
+    {{#if this.AutoMinorVersionUpgrade}}"AutoMinorVersionUpgrade": Boolean,{{/if}}
+    "AvailabilityZones": [ {{#each @root.Region.AvailabilityZones}}"{{@root.Region.Id}}{{this}}"{{comma}}{{/each}} ],
+    {{#if this.BacktrackWindow}}"BacktrackWindow": {{this.BacktrackWindow}},{{/if}}
+    "BackupRetentionPeriod": {{default this.BackupRetentionPeriod 1}},
+    "CopyTagsToSnapshot": {{default (toString this.CopyTagsToSnapshot) false}},
+    "DatabaseName": "{{lowercase this.Name}}",
+    "DBClusterIdentifier":{{#if this.DBClusterIdentifier}}"{{this.DBClusterIdentifier}}"{{else}}"{{sanitize (lowercase this.Name) ''}}"{{/if}},
+    {{#if this.DBClusterInstanceClass}}"DBClusterInstanceClass": "{{this.DBClusterInstanceClass}}",{{/if}}
+    {{#if this.DBClusterParameterGroupName}}"DBClusterParameterGroupName": "{{this.DBClusterParameterGroupName}}",{{/if}}
+    {{#if this.DBInstanceParameterGroupName}}"DBInstanceParameterGroupName": "{{this.DBInstanceParameterGroupName}}",{{/if}}
+    "DBSubnetGroupName": { "Ref": "rdssng{{sanitize this.Name ''}}" },
+    "DeletionProtection": {{default (toString this.DeletionProtection) false}},
+    {{#if this.Domain}}"Domain": "{{this.Domain}}",{{/if}}
+    {{#if this.DomainIAMRoleName}}"DomainIAMRoleName": "{{this.DomainIAMRoleName}}",{{/if}}
+    {{#if this.EnableCloudwatchLogsExports}}"EnableCloudwatchLogsExports": [ String, ... ],{{/if}}
+    "EnableHttpEndpoint": {{default (toString this.EnableHttpEndpoint) false}},
+    "EnableIAMDatabaseAuthentication": {{default (toString this.EnableIAMDatabaseAuthentication) false}},
+    {{#if this.Engine}}"Engine": "{{this.Engine}}",{{/if}}
+    {{#if this.EngineMode}}"EngineMode": "{{this.EngineMode}}",{{/if}}
+    {{#if this.EngineVersion}}"EngineVersion": "{{this.EngineVersion}}",{{/if}}
+    {{#if this.GlobalClusterIdentifier}}"GlobalClusterIdentifier": "{{this.GlobalClusterIdentifier}}",{{/if}}
+    {{#if this.Iops}}"Iops": {{this.Iops}},{{/if}}
+    {{#if this.KmsKeyId}}"KmsKeyId": "{{this.KmsKeyId}}",{{/if}}
+    {{#if this.SnapshotIdentifier}}
+      "SnapshotIdentifier": "{{this.SnapshotIdentifier}}",
     {{else}}
-    {{> rds_instance .. AvailabilityZone=@root.Region.AvailabilityZones.[0] Parent="dbcluster"}}{{#unless @last}}, {{/unless}}
+      "MasterUsername": "{{this.MasterUsername}}",
+      "MasterUserPassword": "{{this.MasterUserPassword}}",
     {{/if}}
+    {{#if this.MonitoringInterval}}"MonitoringInterval": {{this.MonitoringInterval}},{{/if}}
+    {{#if this.MonitoringRoleArn}}"MonitoringRoleArn": "{{this.MonitoringRoleArn}}",{{/if}}
+    {{#if this.NetworkType}}"NetworkType": "{{this.NetworkType}}",{{/if}}
+    {{!-- "PerformanceInsightsEnabled": {{default (toString this.PerformanceInsightsEnabled) false}}, --}}
+    {{#if this.PerformanceInsightsKmsKeyId}}"PerformanceInsightsKmsKeyId": "{{this.PerformanceInsightsKmsKeyId}}",{{/if}}
+    {{#if this.PerformanceInsightsRetentionPeriod}}"PerformanceInsightsRetentionPeriod": {{this.PerformanceInsightsRetentionPeriod}},{{/if}}
+    {{#if this.Port}}"Port": {{this.Port}},{{/if}}
+    {{#if this.PreferredBackupWindow}}"PreferredBackupWindow": "{{this.PreferredBackupWindow}}",{{/if}}
+    {{#if this.PreferredMaintenanceWindow}}"PreferredMaintenanceWindow": "{{this.PreferredMaintenanceWindow}}",{{/if}}
+    {{!-- "PubliclyAccessible": {{default (toString this.PubliclyAccessible) false}}, --}}
+    {{#if this.ReplicationSourceIdentifier}}"ReplicationSourceIdentifier": "{{this.ReplicationSourceIdentifier}}",{{/if}}
+    {{#if this.RestoreType}}"RestoreType": "{{this.RestoreType}}",{{/if}}
+    {{#if this.ScalingConfiguration}}"ScalingConfiguration": ScalingConfiguration,{{/if}}
+    {{#if this.ServerlessV2ScalingConfiguration}}"ServerlessV2ScalingConfiguration": ServerlessV2ScalingConfiguration,{{/if}}
+    {{#if this.SourceDBClusterIdentifier}}"SourceDBClusterIdentifier": "{{this.SourceDBClusterIdentifier}}",{{/if}}
+    {{#if this.SourceRegion}}"SourceRegion": "{{this.SourceRegion}}",{{/if}}
+    {{#if this.StorageEncrypted}}"StorageEncrypted": {{this.StorageEncrypted}},{{/if}}
+    {{#if this.StorageType}}"StorageType": "{{this.StorageType}}",{{/if}}
+    "UseLatestRestorableTime": {{default (toString this.UseLatestRestorableTime) false}},
+    "VpcSecurityGroupIds": [{{#each VpcSecurityGroupIds}} { "Ref": "ec2sg{{this}}" }{{comma}}{{/each}}],
+
+    {{> tags Name=(concat @root.ProjectName " DB cluster")}}
+  }
+}
+
+{{!--
+{{#if this.ReadReplicas}}
+  ,{{#each @root.Region.AvailabilityZones}}
+    {{> rds_instance .. AvailabilityZone=this Parent="dbcluster"}}{{comma}}
+  {{/each}}
+{{else}}
+  ,{{> rds_instance .. AvailabilityZone=@root.Region.AvailabilityZones.[0] Parent="dbcluster" Name=this.Name Engine=this.Engine}}
+{{/if}}
+ --}}
