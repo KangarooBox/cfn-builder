@@ -1,0 +1,14 @@
+{{!--
+  Creates an IAM entity to describe an identity provider (IdP) that supports OpenID Connect (OIDC).
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-oidcprovider.html
+ --}}
+"iamoidcprov{{sanitize this.Name ''}}" : {
+  "Type": "AWS::IAM::OIDCProvider",
+  "Properties": {
+    "ThumbprintList": [ {{#each this.ThumbprintList}}"{{this}}"{{comma}}{{/each}} ],
+    {{#if this.ClientIdList}}"ClientIdList": [ {{#each this.ClientIdList}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{#if this.Url}}"Url": "{{this.Url}}",{{/if}}
+    {{> tags}}
+  }
+}

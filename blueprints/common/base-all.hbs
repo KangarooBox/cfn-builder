@@ -470,6 +470,10 @@
     {{> iam_role}},
     {{/each}}
 
+    {{#each IAMOIDCProviders}}
+    {{> iam_oidcprovider}},
+    {{/each}}
+
     {{#each IAMSAMLProviders}}
     {{> iam_samlprovider}},
     {{/each}}
