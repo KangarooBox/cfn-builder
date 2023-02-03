@@ -3,23 +3,26 @@
 
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html
  --}}
-"rdssng{{sanitize this.Name ''}}": {
-  "Type": "AWS::RDS::DBSubnetGroup",
-  "Properties": {
-    "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
-    "SubnetIds": [
-      {{#each @root.Region.Subnets as |subnet name|}}
-        {{#each subnet.addresses}}
-          {{#ifEq ../../SubnetId name}}
-            "{{this.Id}}"
-          {{#unless @last}},{{/unless}}
-          {{/ifEq}}
+{{#unless this.DBClusterIdentifier}}
+  {{!-- DB Clusters have their own Subnet Groups --}}
+  "rdssng{{sanitize this.Name ''}}": {
+    "Type": "AWS::RDS::DBSubnetGroup",
+    "Properties": {
+      "DBSubnetGroupDescription": "{{@root.ProjectName}} DB subnet group",
+      "SubnetIds": [
+        {{#each @root.Region.Subnets as |subnet name|}}
+          {{#each subnet.addresses}}
+            {{#ifEq ../../SubnetId name}}
+              "{{this.Id}}"
+            {{#unless @last}},{{/unless}}
+            {{/ifEq}}
+          {{/each}}
         {{/each}}
-      {{/each}}
-    ],
-    {{> tags Name=(concat @root.ProjectName " DB subnet group")}}
-  }
-},
+      ],
+      {{> tags Name=(concat @root.ProjectName " DB subnet group")}}
+    }
+  },
+{{/unless}}
 
 "rds{{sanitize this.Name ''}}{{this.AvailabilityZone}}":{
   "Type":"AWS::RDS::DBInstance",
@@ -33,15 +36,22 @@
     {{#if this.MultiAZ}}"MultiAZ": {{default (toString this.MultiAZ) false}},{{/if}}
     {{#if this.StorageEncrypted}}"StorageEncrypted": {{default (toString this.StorageEncrypted) false}},{{/if}}
 
-    "DBInstanceClass":"{{this.DBInstanceClass}}",
-    "VPCSecurityGroups":[{{#each SecurityGroups}}
-      {{#startsWith "sg-" this}}
-      "{{this}}"
-      {{else}}
-      { "Ref":"ec2sg{{this}}" }
-      {{/startsWith}}{{#unless @last}}, {{/unless}}
-    {{/each}}],
-    "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.Name ''}}" },
+    {{#if this.DBClusterIdentifier}}"DBClusterIdentifier":{"Ref": "rdsdbc{{sanitize this.DBClusterIdentifier ''}}"},{{/if}}
+    {{#if this.DBInstanceClass}}"DBInstanceClass":"{{this.DBInstanceClass}}",{{/if}}
+    {{#if this.SecurityGroups}}
+      "VPCSecurityGroups":[{{#each SecurityGroups}}
+        {{#startsWith "sg-" this}}
+          "{{this}}"
+        {{else}}
+          { "Ref":"ec2sg{{this}}" }
+        {{/startsWith}}{{comma}}
+      {{/each}}],
+    {{/if}}
+    {{#if this.DBClusterIdentifier}}
+      "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.DBClusterIdentifier ''}}" },
+    {{else}}
+      "DBSubnetGroupName":{ "Ref": "rdssng{{sanitize this.Name ''}}" },
+    {{/if}}
     "PubliclyAccessible":{{default (toString this.PubliclyAccessible) false}},
     "CopyTagsToSnapshot":{{default (toString this.CopyTagsToSnapshot) false}},
 
@@ -70,18 +80,12 @@
       {{/ifObject}}
       "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 0}},
     {{else}}
-      "Engine":"{{this.Engine}}",
+      {{#if this.Engine}}"Engine":"{{this.Engine}}",{{/if}}
       {{#if this.EngineVersion}}"EngineVersion":"{{this.EngineVersion}}",{{/if}}
-      {{#if this.Parent}}
-        {{#is this.Parent "dbcluster"}}
-          "DBClusterIdentifier":{ "Ref":"dbc{{this.Name}}" },
-        {{/is}}
-      {{else}}
-        "BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},
-        {{#if this.DBName}}"DBName":"{{this.DBName}}",{{/if}}
-        "MasterUsername":"{{this.MasterUsername}}",
-        "MasterUserPassword":"{{{this.MasterUserPassword}}}",
-      {{/if}}
+      {{#unless this.this.DBClusterIdentifier}}"BackupRetentionPeriod":{{default this.BackupRetentionPeriod 1}},{{/unless}}
+      {{#if this.DBName}}"DBName":"{{this.DBName}}",{{/if}}
+      {{#if this.MasterUsername}}"MasterUsername":"{{this.MasterUsername}}",{{/if}}
+      {{#if this.MasterUserPassword}}"MasterUserPassword":"{{{this.MasterUserPassword}}}",{{/if}}
     {{/if}}
     {{> tags}}
   }
