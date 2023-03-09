@@ -7,13 +7,18 @@
 "logmtrflt{{sanitize this.Name ''}}" : {
   "Type": "AWS::Logs::MetricFilter",
   "Properties": {
-    "LogGroupName":"{{this.LogGroupName}}",
+    {{#if this.FilterName}}"FilterName": "{{this.FilterName}}",{{/if}}
     "FilterPattern":"{{{inject this.FilterPattern}}}",
+    "LogGroupName":"{{this.LogGroupName}}",
     "MetricTransformations":[{{#each this.MetricTransformations}}
-      { "MetricValue":"{{this.MetricValue}}",
+      {
+        {{#if this.DefaultValue}}"DefaultValue": {{this.DefaultValue}},{{/if}}
+        {{#if this.Dimensions}}"Dimensions": [{{#each this.Dimensions}}{ {{{inject this}}} }{{comma}}{{/each}}],{{/if}}
+        {{#if this.Unit}}"Unit": "{{this.Unit}}",{{/if}}
+        "MetricValue":"{{this.MetricValue}}",
         "MetricNamespace":"{{this.MetricNamespace}}",
         "MetricName":"{{this.MetricName}}"
-      }{{#unless @last}},{{/unless}}{{/each}}
+      }{{comma}}{{/each}}
     ]
   }
 }
