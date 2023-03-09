@@ -1,0 +1,26 @@
+{{!--
+  Contains an optional backup plan display name and an array of BackupRule objects, each of which
+  specifies a backup rule. Each rule in a backup plan is a separate scheduled task and can back up
+  a different selection of AWS resources.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-backup-backupplan.html
+ --}}
+"bkupbackupplan{{sanitize this.Name ''}}": {
+  "Type": "AWS::Backup::BackupPlan",
+  "Properties": {
+    "BackupPlan": {
+      {{#with this.BackupPlan}}
+        {{#if this.BackupPlanName}}
+          "BackupPlanName": "{{this.BackupPlanName}}",
+        {{else}}
+          "BackupPlanName": "{{../Name}}",
+        {{/if}}
+        {{#if this.AdvancedBackupSettings}}
+          "AdvancedBackupSettings": [ {{#each this.AdvancedBackupSettings}}{ {{{inject this}}} }{{comma}}{{/each}} ],
+        {{/if}}
+        "BackupPlanRule": [ {{#each this.BackupPlanRule}}{ {{{inject this}}} }{{comma}}{{/each}} ]
+      {{/with}}
+    },
+    {{> tags_map PropertyID="BackupPlanTags"}}
+  }
+}

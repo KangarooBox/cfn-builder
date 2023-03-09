@@ -1,0 +1,21 @@
+{{!--
+  Subscription filters allow you to subscribe to a real-time stream of log events and have them
+  delivered to a specific destination.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html
+ --}}
+"logsubsfltr{{sanitize this.Name ''}}" : {
+  "Type": "AWS::Logs::SubscriptionFilter",
+  "Properties": {
+    {{#if this.RoleArn}}"RoleArn":
+      {{#startsWith "aws:arn" this.RoleArn}}
+        "{{this.RoleArn}}",
+      {{else}}
+        {"Fn::GetAtt":["iamr{{this.RoleArn}}","Arn"]},
+      {{/startsWith}}
+    {{/if}}
+    "DestinationArn": "{{this.DestinationArn}}",
+    "FilterPattern": "{{this.FilterPattern}}",
+    "LogGroupName": "{{this.LogGroupName}}"
+  }
+}
