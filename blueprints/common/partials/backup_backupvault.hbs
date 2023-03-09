@@ -1,0 +1,20 @@
+{{!--
+  Creates a logical container where backups are stored.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-backup-backupvault.html
+ --}}
+"bkupbackupvault{{sanitize this.Name ''}}": {
+  "Type": "AWS::Backup::BackupVault",
+  "Properties": {
+    "BackupVaultName": "{{this.Name}}",
+    {{#if this.AccessPolicy}}"AccessPolicy": { {{{inject this.AccessPolicy}}} },{{/if}}
+    {{#if this.EncryptionKeyArn}}{{#startsWith "arn:aws:" this.EncryptionKeyArn}}
+      "EncryptionKeyArn": "{{this.EncryptionKeyArn}}",
+    {{else}}
+      "EncryptionKeyArn": { "Fn::GetAtt": [ "kmskey{{sanitize this.EncryptionKeyArn ''}}", "Arn"] },
+    {{/startsWith}}{{/if}}
+    {{#if this.LockConfiguration}}"LockConfiguration": { {{{inject this.LockConfiguration}}} },{{/if}}
+    {{#if this.Notifications}}"Notifications": { {{{inject this.Notifications}}} },{{/if}}
+    {{> tags_map PropertyID="BackupVaultTags"}}
+  }
+}

@@ -1,0 +1,36 @@
+{{!--
+  Specifies a set of resources to assign to a backup plan.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-backup-backupselection.html
+ --}}
+"bkupbackupselection{{sanitize this.Name ''}}": {
+  "Type": "AWS::Backup::BackupSelection",
+  "Properties": {
+    "BackupPlanId": { "Ref":"bkupbackupplan{{sanitize this.BackupPlanId ''}}" },
+    "BackupSelection": { {{#with this.BackupSelection}}
+      {{#if this.Conditions}}"Conditions": { {{{inject this.Conditions}}} },{{/if}}
+      {{#if this.ListOfTags}}"ListOfTags": [ {{#each this.ListOfTags}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+      {{#if this.NotResources}}"NotResources": [ {{#each this.NotResources}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+      {{#if this.Resources}}"Resources": [
+        {{#each this.Resources}}
+          {{#startsWith "arn:aws:" this}}
+            "{{this}}"
+          {{else}}
+            {"Fn::GetAtt" : ["rdsdbc{{sanitize this ''}}", "DBClusterArn"] }
+          {{/startsWith}}
+        {{comma}}{{/each}}
+      ],{{/if}}
+      {{#if this.SelectionName}}
+        "SelectionName": "{{this.SelectionName}}",
+      {{else}}
+        "SelectionName": "{{../Name}}",
+      {{/if}}
+      {{#startsWith "arn:aws:" this.IamRoleArn}}
+        "IamRoleArn": "{{this.IamRoleArn}}"
+      {{else}}
+        "IamRoleArn": {"Fn::GetAtt" : ["iamr{{sanitize this.IamRoleArn ''}}", "Arn"] }
+      {{/startsWith}}
+    {{/with}}
+    }
+  }
+}
