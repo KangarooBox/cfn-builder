@@ -406,6 +406,10 @@
     {{> ecr_repository}},
     {{/each}}
 
+    {{#each ECSClusters}}
+    {{> ecs_cluster}},
+    {{/each}}
+
     {{#each ECSServices}}
     {{> ecs_service}},
     {{/each}}

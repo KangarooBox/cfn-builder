@@ -6,21 +6,34 @@
 "ecstd{{sanitize this.Name ''}}":{
   "Type": "AWS::ECS::TaskDefinition",
   "Properties": {
-    {{#if this.Volumes}}"Volumes": [{{#each this.Volumes}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
-    {{#if this.Cpu}}"Cpu": "{{this.Cpu}}",{{/if}}
-    {{#if this.ExecutionRole}}"ExecutionRoleArn":{ "Fn::GetAtt":[ "iamr{{this.ExecutionRole}}", "Arn"] },{{/if}}
-    {{#if this.TaskRole}}"TaskRoleArn":{ "Fn::GetAtt":[ "iamr{{this.TaskRole}}", "Arn"] },{{/if}}
-    {{#if this.Family}}"Family": "{{this.Family}}",{{/if}}
-    {{#if this.Memory}}"Memory": "{{this.Memory}}",{{/if}}
-    {{#if this.PlacementConstraints}}"PlacementConstraints": TaskDefinitionPlacementConstraint,{{/if}}
-    {{#if this.RequiresCompatibilities}}"RequiresCompatibilities": [
-      {{#each this.RequiresCompatibilities}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
-    ],{{/if}}
     {{#if this.ContainerDefinitions}}"ContainerDefinitions": [
       {{#each this.ContainerDefinitions}}
         {{> ecs_containerdefinition}}{{#unless @last}},{{/unless}}
       {{/each}}
     ],{{/if}}
-    "NetworkMode": "{{default this.NetworkMode 'awsvpc'}}"
+    {{#if this.Cpu}}"Cpu": "{{this.Cpu}}",{{/if}}
+    {{#if this.EphemeralStorage}}"EphemeralStorage": { {{{inject this.EphemeralStorage}}} },{{/if}}
+    {{#if this.ExecutionRole}}"ExecutionRoleArn":{ "Fn::GetAtt":[ "iamr{{this.ExecutionRole}}", "Arn"] },{{/if}}
+    {{#if this.Family}}"Family": "{{this.Family}}",{{/if}}
+    {{#if this.InferenceAccelerators}}"InferenceAccelerators": [
+      {{#each this.InferenceAccelerators}}{ {{{inject this}}} }{{comma}}{{/each}}
+    ],{{/if}}
+    {{#if this.IpcMode}}"IpcMode": "{{this.IpcMode}}",{{/if}}
+    {{#if this.Memory}}"Memory": "{{this.Memory}}",{{/if}}
+    {{#if this.NetworkMode}}"NetworkMode": "{{this.NetworkMode}}",{{/if}}
+    {{#if this.PidMode}}"PidMode": "{{this.PidMode}}",{{/if}}
+    {{#if this.PlacementConstraints}}"PlacementConstraints": [
+      {{#each this.PlacementConstraints}}{ {{{inject this}}} }{{comma}}{{/each}}
+    ],{{/if}}
+    {{#if this.ProxyConfiguration}}"ProxyConfiguration": { {{{inject this.ProxyConfiguration}}} },{{/if}}
+    {{#if this.RequiresCompatibilities}}"RequiresCompatibilities": "{{this.RequiresCompatibilities}}",{{/if}}
+    {{#if this.RuntimePlatform}}"RuntimePlatform": { {{{inject this.RuntimePlatform}}} },{{/if}}
+    {{#if this.TaskRole}}"TaskRoleArn":{ "Fn::GetAtt":[ "iamr{{this.TaskRole}}", "Arn"] },{{/if}}
+    {{#if this.Volumes}}"Volumes": [{{#each this.Volumes}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
+    {{#if this.RequiresCompatibilities}}"RequiresCompatibilities": [
+      {{#each this.RequiresCompatibilities}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    ],{{/if}}
+
+    {{> tags}}
   }
 }

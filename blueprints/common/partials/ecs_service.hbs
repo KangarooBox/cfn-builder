@@ -7,22 +7,27 @@
 "ecssrvc{{sanitize this.Name ''}}":{
   "Type": "AWS::ECS::Service",
   "Properties": {
-    "Cluster":{{#if this.Cluster}} "{{this.Cluster}}" {{else}}
-      {"Fn::GetAtt":["ecsclst{{sanitize this.Name ''}}", "Arn"]}
-    {{/if}},
+    "Cluster":
+      {{#startsWith "arn:aws:" this.Cluster}}
+        "{{this.Cluster}}"
+      {{else}}
+        {"Fn::GetAtt":["ecsclst{{sanitize this.Cluster ''}}", "Arn"]}
+      {{/startsWith}},
     {{#if this.DeploymentConfiguration}}"DeploymentConfiguration": DeploymentConfiguration,{{/if}}
-    {{#if this.DesiredCount}}"DesiredCount": {{this.DesiredCount}},{{/if}}
+    {{#if this.DeploymentController}}"DeploymentController": { {{{inject this.DeploymentController}}} },{{/if}}
+    "DesiredCount": {{default this.DesiredCount 0}},
     {{#if this.LaunchType}}"LaunchType": "{{this.LaunchType}}",{{/if}}
-    {{#if this.LoadBalancers}}"LoadBalancers": [ Load Balancer Objects, ... ],{{/if}}
-
+    {{#if this.LoadBalancers}}"LoadBalancers": [ {{#each this.LoadBalancers}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
     {{#if this.NetworkConfiguration}}"NetworkConfiguration":
       {{#with this.NetworkConfiguration}}
       { "AwsvpcConfiguration": {
           {{#if this.AssignPublicIp}}"AssignPublicIp": "{{this.AssignPublicIp}}",{{/if}}
           {{#if this.SecurityGroups}}"SecurityGroups":[{{#each this.SecurityGroups}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
           "Subnets":[
-            {{#each (lookupByNode @root.Region.SubnetIds this.SubnetId)}}
-            "{{this}}"{{#unless @last}},{{/unless}}
+            {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+              {{#each this}}
+                "{{this.Id}}"{{#unless @last}},{{/unless}}
+              {{/each}}
             {{/each}}
           ]
         }
@@ -30,19 +35,10 @@
     },{{/if}}
 
     {{#if this.PlacementConstraints}}"PlacementConstraints": [ PlacementConstraints, ... ],{{/if}}
-    {{#if this.Role}}"Role":{ "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] },{{/if}}
+    {{#if this.Role}}"Role":{ "Fn::GetAtt":[ "iamr{{sanitize this.Role ''}}", "Arn"] },{{/if}}
     {{#if this.PlacementStrategies}}"PlacementStrategies": [ PlacementStrategies, ... ],{{/if}}
     {{#if this.PlatformVersion}}"PlatformVersion": "{{this.PlatformVersion}}",{{/if}}
     {{#if this.ServiceName}}"ServiceName": "{{this.ServiceName}}",{{/if}}
-    "TaskDefinition": { "Ref":"ecstd{{this.TaskDefinition}}" }
+    "TaskDefinition": { "Ref":"ecstd{{sanitize this.TaskDefinition ''}}" }
   }
 }
-
-{{#unless this.Cluster}}
-,"ecsclst{{sanitize this.Name ''}}":{
-  "Type": "AWS::ECS::Cluster",
-  "Properties": {
-    "ClusterName": "{{this.Name}}"
-  }
-}
-{{/unless}}
