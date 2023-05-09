@@ -9,28 +9,40 @@
     {{#each this.Command}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
   ],{{/if}}
   {{#if this.Cpu}}"Cpu": {{this.Cpu}},{{/if}}
+  {{#if this.DependsOn}}"DependsOn" : [ {{#each this.DependsOn}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.DisableNetworking}}"DisableNetworking": true,{{/if}}
-  {{#if this.DnsSearchDomains}}"DnsSearchDomains": [ String, ... ],{{/if}}
-  {{#if this.DnsServers}}"DnsServers": [ String, ... ],{{/if}}
+  {{#if this.DnsSearchDomains}}"DnsSearchDomains": [ {{#each this.DnsSearchDomains}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+  {{#if this.DnsServers}}"DnsServers": [ {{#each this.DnsServers}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
   {{#if this.DockerLabels}}"DockerLabels": { String:String, ... },{{/if}}
-  {{#if this.DockerSecurityOptions}}"DockerSecurityOptions": [ String, ... ],{{/if}}
-  {{#if this.EntryPoint}}"EntryPoint": [ String, ... ],{{/if}}
+  {{#if this.DockerSecurityOptions}}"DockerSecurityOptions": [ {{#each this.DockerSecurityOptions}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+  {{#if this.EntryPoint}}"EntryPoint": [ {{#each this.EntryPoint}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
   {{#if this.Environment}}"Environment": [{{{inject this.Environment}}}],{{/if}}
+  {{#if this.EnvironmentFiles}}"EnvironmentFiles" : [ {{#each this.EnvironmentFiles}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.Essential}}"Essential": {{default this.Essential false}},{{/if}}
-  {{#if this.ExtraHosts}}"ExtraHosts": [ HostEntry, ... ],{{/if}}
+  {{#if this.ExtraHosts}}"ExtraHosts": [ {{#each this.ExtraHosts}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
+  {{#if this.FirelensConfiguration}}"FirelensConfiguration": { {{{inject this.FirelensConfiguration}}} },{{/if}}
+  {{#if this.HealthCheck}}"HealthCheck" : "{{this.HealthCheck}}",{{/if}}
   {{#if this.Hostname}}"Hostname": "{{this.Hostname}}",{{/if}}
-  {{#if this.Links}}"Links": [ String, ... ],{{/if}}
-  {{#if this.LinuxParameters}}"LinuxParameters": LinuxParameters,{{/if}}
+  {{#if this.Interactive}}"Interactive": true,{{/if}}
+  {{#if this.Links}}"Links": [ {{#each this.Links}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+  {{#if this.LinuxParameters}}"LinuxParameters": { {{{inject this.LinuxParameters}}} },{{/if}}
   {{#if this.LogConfiguration}}"LogConfiguration": { {{{inject this.LogConfiguration}}} },{{/if}}
   {{#if this.Memory}}"Memory": {{this.Memory}},{{/if}}
   {{#if this.MemoryReservation}}"MemoryReservation": {{this.MemoryReservation}},{{/if}}
   {{#if this.MountPoints}}"MountPoints": [{{#each this.MountPoints}}{ {{{inject this}}} }{{#unless @last}},{{/unless}}{{/each}} ],{{/if}}
-  {{#if this.PortMappings}}"PortMappings": [ PortMapping, ... ],{{/if}}
+  {{#if this.PortMappings}}"PortMappings": [ {{#each this.PortMappings}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.Privileged}}"Privileged": true,{{/if}}
+  {{#if this.PseudoTerminal}}"PseudoTerminal": true,{{/if}}
   {{#if this.ReadonlyRootFilesystem}}"ReadonlyRootFilesystem": true,{{/if}}
-  {{#if this.Ulimits}}"Ulimits": [ Ulimit, ... ],{{/if}}
+  {{#if this.RepositoryCredentials}}"RepositoryCredentials": { {{{inject this.RepositoryCredentials}}} },{{/if}}
+  {{#if this.ResourceRequirements}}"ResourceRequirements": [ {{#each this.ResourceRequirements}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
+  {{#if this.Secrets}}"Secrets": [ {{#each this.Secrets}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
+  {{#if this.StartTimeout}}"StartTimeout": {{this.StartTimeout}},{{/if}}
+  {{#if this.StopTimeout}}"StopTimeout": {{this.StopTimeout}},{{/if}}
+  {{#if this.SystemControls}}"SystemControls": [ {{#each this.SystemControls}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
+  {{#if this.Ulimits}}"Ulimits": [ {{#each this.Ulimits}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.User}}"User": "{{this.User}}",{{/if}}
-  {{#if this.VolumesFrom}}"VolumesFrom": [ VolumeFrom, ... ],{{/if}}
+  {{#if this.VolumesFrom}}"VolumesFrom": [ {{#each this.VolumesFrom}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.WorkingDirectory}}"WorkingDirectory": "{{this.WorkingDirectory}}",{{/if}}
 
   "Image": "{{this.Image}}",

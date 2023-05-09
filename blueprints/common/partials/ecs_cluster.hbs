@@ -1,0 +1,26 @@
+{{!--
+  The AWS::ECS::Cluster resource creates an Amazon Elastic Container Service (Amazon ECS) cluster.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
+--}}
+"ecsclst{{sanitize this.Name ''}}":{
+  "Type": "AWS::ECS::Cluster",
+  "Properties": {
+    {{#if this.ClusterName}}"ClusterName": "{{this.ClusterName}}",{{/if}}
+    {{#if this.CapacityProviders}}"CapacityProviders": [ {{#each this.CapacityProviders}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{#if this.ClusterSettings}}"ClusterSettings": [
+      {{#each this.ClusterSettings}}
+        { {{{inject this}}} }{{comma}}
+      {{/each}}
+    ],{{/if}}
+    {{#if this.Configuration}}"Configuration": { {{{inject this.ClusterConfiguration}}} } ,{{/if}}
+    {{#if this.DefaultCapacityProviderStrategy}}"DefaultCapacityProviderStrategy": [
+      {{#each this.DefaultCapacityProviderStrategy}}
+        { {{{inject this}}} }{{comma}}
+      {{/each}}
+    ],{{/if}}
+    {{#if this.ServiceConnectDefaults}}"ServiceConnectDefaults": { {{{inject this.ServiceConnectDefaults}}} },{{/if}}
+
+    {{> tags}}
+  }
+}
