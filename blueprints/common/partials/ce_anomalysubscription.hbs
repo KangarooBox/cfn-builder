@@ -1,0 +1,23 @@
+{{!--
+  Creates an SNS topic
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html
+ --}}
+"ceanonsub{{sanitize this.Name ''}}": {
+  "Type": "AWS::CE::AnomalySubscription",
+  "Properties": {
+    "Frequency": "{{this.Frequency}}",
+    "MonitorArnList": [ {{#each this.MonitorArnList}}
+      {{#startsWith this "arn:aws:ce"}}
+        "{{this}}"
+      {{else}}
+        { "Ref": "ceanonmon{{sanitize this ''}}" }
+      {{/startsWith}}
+    {{comma}}{{/each}} ],
+    "Subscribers": [ {{#each this.Subscribers}} { {{{inject this}}} }{{comma}}{{/each}} ],
+    {{#if this.Threshold}}"Threshold": {{this.Threshold}},{{/if}}
+    {{#if this.ThresholdExpression}}"ThresholdExpression": "{{{inject this.ThresholdExpression}}}",{{/if}}
+    {{!-- "ResourceTags": , --}}
+    "SubscriptionName": "{{this.Name}}"
+  }
+}
