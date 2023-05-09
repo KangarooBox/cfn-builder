@@ -1,0 +1,16 @@
+{{!--
+  A Cost Explorer resource type that continuously inspects your account's cost data for anomalies,
+  based on MonitorType and MonitorSpecification.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ce-anomalymonitor.html
+ --}}
+"ceanonmon{{sanitize this.Name ''}}": {
+  "Type": "AWS::CE::AnomalyMonitor",
+  "Properties": {
+    {{#if this.MonitorDimension}}"MonitorDimension": "{{this.MonitorDimension}}",{{/if}}
+    {{#if this.MonitorSpecification}}"MonitorSpecification": "{{this.MonitorSpecification}}",{{/if}}
+    "MonitorType": "{{this.MonitorType}}",
+    {{!-- "ResourceTags": [ ResourceTag, ... ] --}}
+    "MonitorName": "{{this.Name}}"
+  }
+}
