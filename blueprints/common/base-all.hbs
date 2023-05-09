@@ -138,6 +138,14 @@
     {{> backup_backupvault}},
     {{/each}}
 
+    {{#each CEAnomalyMonitors}}
+    {{> ce_anomalymonitor}},
+    {{/each}}
+
+    {{#each CEAnomalySubscriptions}}
+    {{> ce_anomalysubscription}},
+    {{/each}}
+
     {{#each CloudFrontDistributions}}
     {{> cloudfront_distribution}},
     {{/each}}

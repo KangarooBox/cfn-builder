@@ -1,7 +1,8 @@
 {{!--
-  Creates an SNS topic
+  A Cost Explorer resource type that sends notifications about specific anomalies that meet an
+  alerting criteria defined by you.
 
-  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ce-anomalysubscription.html
  --}}
 "ceanonsub{{sanitize this.Name ''}}": {
   "Type": "AWS::CE::AnomalySubscription",
