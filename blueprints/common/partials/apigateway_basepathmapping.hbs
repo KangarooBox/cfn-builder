@@ -1,0 +1,28 @@
+"apigwbasepathmapping{{sanitize this.Name ''}}": {
+   "Type" : "AWS::ApiGateway::BasePathMapping" ,
+    "Properties" : {
+      {{#if this.BasePath}}
+        "BasePath" : "{{this.BasePath}}",
+      {{/if}}
+      {{#if this.Id}}
+        "Id": {{#ifObject this.Id}}
+          { {{{inject this.Id}}} }
+        {{else}}
+          "{{this.Id}}" 
+        {{/ifObject}},
+      {{/if}}
+      {{#if this.RestApiId}}
+        "RestApiId": {{#ifObject this.RestApiId}}
+          { {{{inject this.RestApiId}}} }
+        {{else}}
+          "{{this.RestApiId}}" 
+        {{/ifObject}},
+      {{/if}}
+      {{#if this.Stage}}
+        "Stage" : "{{this.Stage}}",
+      {{/if}}
+      
+      "DomainName": "{{this.DomainName}}"
+    },
+    "DependsOn": "apigwdomnam{{sanitize this.Name ''}}"
+}

@@ -1,16 +1,37 @@
-{{!--
+  {{!--
   Creates an API Gateway Domain Name
 
   https://github.com/carlnordenfelt/aws-api-gateway-for-cloudformation#create-a-domain-name
  --}}
-"apdn{{this.Name}}" : {
-   "Type" : "Custom::ApiDomainName",
+"apigwdomnam{{sanitize this.Name ''}}": {
+   "Type" : "AWS::ApiGateway::DomainName" ,
     "Properties" : {
-      "ServiceToken" : "{{@root.Region.ServiceToken}}",
-      "domainName": "{{this.DomainName}}",
-      "certificateName": "{{this.CertificateName}}",
-      "certificateBody": "{{this.CertificateBody}}",
-      "certificateChain": "{{this.CertificateChain}}",
-      "certificatePrivateKey": "{{this.CertificatePrivateKey}}"
-  }
+      {{#if this.CertificateArn}}
+        "CertificateArn": {{#ifObject this.CertificateArn}}
+          { {{{inject this.CertificateArn}}} }
+        {{else}}
+          "{{this.CertificateArn}}" 
+        {{/ifObject}},
+      {{/if}}
+      {{#if this.DomainName}}
+        "DomainName" : "{{this.DomainName}}",
+      {{/if}}
+      {{#if this.EndpointConfiguration}}
+        "EndpointConfiguration": { {{{inject this.EndpointConfiguration}}} },
+      {{/if}}
+      {{#if this.MutualTlsAuthentication}}
+        "MutualTlsAuthentication": { {{{inject this.MutualTlsAuthentication}}} },
+      {{/if}}
+      {{#if this.OwnershipVerificationCertificateArn}}
+        "OwnershipVerificationCertificateArn" : "{{this.OwnershipVerificationCertificateArn}}",
+      {{/if}}
+      {{#if this.RegionalCertificateArn}}
+        "RegionalCertificateArn" : "{{this.RegionalCertificateArn}}",
+      {{/if}}
+      {{#if this.SecurityPolicy}}
+        "SecurityPolicy" : "{{this.SecurityPolicy}}"
+      {{/if}}
+
+      {{> tags}}
+    }
 }
