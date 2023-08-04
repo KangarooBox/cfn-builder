@@ -139,7 +139,9 @@
           {{#switch (lowercase this.Field)}}
             {{#case "http-header"}}{{/case}}
             {{#case "http-request-method"}}{{/case}}
-            {{#case "host-header"}}{{/case}}
+            {{#case "host-header"}}
+              "HostHeaderConfig": { "Values": [{{#each this.HostHeaderConfig.Values}}"{{this}}"{{comma}}{{/each}}] }}
+            {{/case}}
             {{#case "path-pattern"}}
               "PathPatternConfig": { "Values": [{{#each this.PathPatternConfig.Values}}"{{this}}"{{comma}}{{/each}}] }}
               {{/case}}
