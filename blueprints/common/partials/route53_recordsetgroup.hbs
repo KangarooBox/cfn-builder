@@ -21,7 +21,7 @@
     {{/if}}
 
     {{#ifObject this.RecordSets}}
-      "RecordSets": { {{{inject this.RecordSets}}} }
+      "RecordSets": [ {{#each this.RecordSets}}{ {{{inject this}}} }{{comma}}{{/each}} ]
     {{else}}
       "RecordSets": [
       {{#each this.RecordSets}}

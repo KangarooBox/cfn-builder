@@ -13,11 +13,10 @@
     {{/if}}
 
     {{#if this.AliasTarget}}
+      "Name":"{{this.Name}}",
       "AliasTarget":{ {{{inject this.AliasTarget}}} },
-      {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
-        "HostedZoneId":"{{this.HostedZoneId}}",
-        "Name":"{{#if ../DNSName}}{{lowercase ../DNSName}}{{else}}{{lowercase ../Name}}.{{lowercase this.HostedZoneDomain}}{{/if}}",
-      {{/with}}
+      {{#if this.HostedZoneId}}"HostedZoneId": "{{this.HostedZoneId}}",{{/if}}
+      {{#if this.HostedZoneName}}"HostedZoneName": "{{this.HostedZoneName}}",{{/if}}
       "Type": "A"
     {{else}}
       {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
