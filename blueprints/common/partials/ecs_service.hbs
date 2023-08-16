@@ -13,11 +13,20 @@
       {{else}}
         {"Fn::GetAtt":["ecsclst{{sanitize this.Cluster ''}}", "Arn"]}
       {{/startsWith}},
-    {{#if this.DeploymentConfiguration}}"DeploymentConfiguration": DeploymentConfiguration,{{/if}}
+    {{#if this.DeploymentConfiguration}}"DeploymentConfiguration": { {{{inject this.DeploymentConfiguration}}} },{{/if}}
     {{#if this.DeploymentController}}"DeploymentController": { {{{inject this.DeploymentController}}} },{{/if}}
     "DesiredCount": {{default this.DesiredCount 0}},
+    {{#if this.EnableECSManagedTags}}"EnableECSManagedTags": {{default (toString this.EnableECSManagedTags) false}},{{/if}}
+    {{#if this.EnableExecuteCommand}}"EnableExecuteCommand": {{default (toString this.EnableExecuteCommand) false}},{{/if}}
+    {{#if this.HealthCheckGracePeriodSeconds}}"HealthCheckGracePeriodSeconds": {{this.HealthCheckGracePeriodSeconds}},{{/if}}
     {{#if this.LaunchType}}"LaunchType": "{{this.LaunchType}}",{{/if}}
-    {{#if this.LoadBalancers}}"LoadBalancers": [ {{#each this.LoadBalancers}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
+    {{#if this.LoadBalancers}}"LoadBalancers": [ {{#each this.LoadBalancers}}
+      { {{#if this.ContainerName}}"ContainerName": "{{this.ContainerName}}",{{/if}}
+        {{#if this.ContainerPort}}"ContainerPort": {{this.ContainerPort}},{{/if}}
+        {{#if this.LoadBalancerName}}"LoadBalancerName": "{{this.LoadBalancerName}}"{{/if}}
+        {{#if this.TargetGroupArn}}"TargetGroupArn": { "Ref": "elbv2tg{{sanitize this.TargetGroupArn ''}}" }{{/if}}
+      }{{comma}}{{/each}}
+    ],{{/if}}
     {{#if this.NetworkConfiguration}}"NetworkConfiguration":
       {{#with this.NetworkConfiguration}}
       { "AwsvpcConfiguration": {
@@ -35,10 +44,19 @@
     },{{/if}}
 
     {{#if this.PlacementConstraints}}"PlacementConstraints": [ PlacementConstraints, ... ],{{/if}}
+    {{#if this.PropagateTags}}"PropagateTags": "{{this.PropagateTags}}",{{/if}}
     {{#if this.Role}}"Role":{ "Fn::GetAtt":[ "iamr{{sanitize this.Role ''}}", "Arn"] },{{/if}}
     {{#if this.PlacementStrategies}}"PlacementStrategies": [ PlacementStrategies, ... ],{{/if}}
     {{#if this.PlatformVersion}}"PlatformVersion": "{{this.PlatformVersion}}",{{/if}}
     {{#if this.ServiceName}}"ServiceName": "{{this.ServiceName}}",{{/if}}
+    {{#if this.ServiceConnectConfiguration}}"ServiceConnectConfiguration": { {{{inject this.ServiceConnectConfiguration}}} },{{/if}}
+    {{#if this.ServiceRegistries}}"ServiceRegistries": [{{#each this.ServiceRegistries}}
+      { {{#if this.ContainerName}}"ContainerName": "{{this.ContainerName}}",{{/if}}
+        {{#if this.ContainerPort}}"ContainerPort": {{this.ContainerPort}},{{/if}}
+        {{#if this.Port}}"Port": {{this.Port}},{{/if}}
+        {{#if this.RegistryArn}}"RegistryArn": { "Fn::GetAtt":[ "sdservice{{this.RegistryArn}}", "Arn"] }{{/if}}
+      }
+    {{comma}}{{/each}}],{{/if}}
     "TaskDefinition": { "Ref":"ecstd{{sanitize this.TaskDefinition ''}}" }
   }
 }

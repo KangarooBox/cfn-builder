@@ -21,7 +21,7 @@
   {{#if this.Essential}}"Essential": {{default this.Essential false}},{{/if}}
   {{#if this.ExtraHosts}}"ExtraHosts": [ {{#each this.ExtraHosts}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.FirelensConfiguration}}"FirelensConfiguration": { {{{inject this.FirelensConfiguration}}} },{{/if}}
-  {{#if this.HealthCheck}}"HealthCheck" : "{{this.HealthCheck}}",{{/if}}
+  {{#if this.HealthCheck}}"HealthCheck" : { {{{inject this.HealthCheck}}} },{{/if}}
   {{#if this.Hostname}}"Hostname": "{{this.Hostname}}",{{/if}}
   {{#if this.Interactive}}"Interactive": true,{{/if}}
   {{#if this.Links}}"Links": [ {{#each this.Links}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
