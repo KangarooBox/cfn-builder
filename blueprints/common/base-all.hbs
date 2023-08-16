@@ -42,6 +42,10 @@
     {{> certificatemanager_certificate}},
     {{/each}}
 
+    {{#each APIGatewayBasePathMappings}}
+    {{> apigateway_basepathmapping}},
+    {{/each}}
+
     {{#each APIGatewayRestAPIs}}
     {{> apigateway_restapi}},
     {{/each}}
