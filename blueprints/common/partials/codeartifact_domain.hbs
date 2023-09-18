@@ -1,0 +1,14 @@
+{{!--
+  Create an AWS CodeArtifact domain.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codeartifact-domain.html
+ --}}
+"cadomain{{sanitize this.Name ''}}": {
+  "Type": "AWS::CodeArtifact::Domain",
+  "Properties": {
+    "DomainName": "{{this.DomainName}}",
+    {{#if this.EncryptionKey}}"EncryptionKey": "{{this.EncryptionKey}}",{{/if}}
+    {{#if this.PermissionsPolicyDocument}}"PermissionsPolicyDocument": { {{{inject this.PermissionsPolicyDocument}}} },{{/if}}
+    {{> tags}}
+  }
+}

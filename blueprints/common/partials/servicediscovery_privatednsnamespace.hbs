@@ -1,0 +1,14 @@
+{{!--
+
+  http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html
+ --}}
+"sdpdnsname{{sanitize this.Name ''}}":{
+  "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
+  "Properties": {
+      "Name": "{{this.Name}}",
+      {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+      {{#if this.Properties}}"Properties": { {{{inject this.Properties}}} },{{/if}}
+      "Vpc":"{{@root.Region.VPCId}}",
+      {{> tags}}
+    }
+}
