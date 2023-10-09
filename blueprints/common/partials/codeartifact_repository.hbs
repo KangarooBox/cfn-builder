@@ -1,0 +1,18 @@
+{{!--
+  Create an AWS CodeArtifact repository.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codeartifact-repository.html
+ --}}
+"carepo{{sanitize this.Name ''}}": {
+  "Type": "AWS::CodeArtifact::Repository",
+  "Properties": {
+    "DomainName": "{{this.DomainName}}",
+    "RepositoryName": "{{this.RepositoryName}}",
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.DomainOwner}}"DomainOwner": "{{this.DomainOwner}}",{{/if}}
+    {{#if this.ExternalConnections}}"ExternalConnections": [ {{#each this.ExternalConnections}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{#if this.PermissionsPolicyDocument}}"PermissionsPolicyDocument": { {{{inject this.PermissionsPolicyDocument}}} },{{/if}}
+    {{#if this.Upstreams}}"Upstreams": [ {{#each this.Upstreams}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{> tags}}
+  }
+}

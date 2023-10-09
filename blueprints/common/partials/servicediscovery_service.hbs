@@ -1,0 +1,18 @@
+{{!--
+  A complex type that contains information about a service.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicediscovery-service.html
+ --}}
+"sdservice{{sanitize this.Name ''}}":{
+  "Type": "AWS::ServiceDiscovery::Service",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.DnsConfig}}"DnsConfig": { {{{inject this.DnsConfig}}} },{{/if}}
+    {{#if this.HealthCheckConfig}}"HealthCheckConfig": { {{{inject this.HealthCheckConfig}}} },{{/if}}
+    {{#if this.HealthCheckCustomConfig}}"HealthCheckCustomConfig": { {{{inject this.HealthCheckCustomConfig}}} },{{/if}}
+    {{#if this.NamespaceId}}"NamespaceId": {"Ref": "sdpdnsname{{this.NamespaceId}}"},{{/if}}
+    {{#if this.Type}}"Type": "{{this.Type}}",{{/if}}
+    {{> tags}}
+  }
+}
