@@ -622,6 +622,10 @@
     {{> rds_instance}},
     {{/each}}
 
+    {{#each RDSDBClusterParameterGroups}}
+    {{> rds_dbclusterparametergroup}},
+    {{/each}}
+
     {{#each RDSDBParameterGroups}}
     {{> rds_dbparametergroup}},
     {{/each}}
