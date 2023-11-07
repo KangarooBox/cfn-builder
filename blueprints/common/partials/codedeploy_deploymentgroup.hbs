@@ -9,6 +9,7 @@
   "Properties": {
     {{!-- "AlarmConfiguration": AlarmConfiguration, --}}
     {{#if this.AutoRollbackConfiguration}}"AutoRollbackConfiguration": { {{{inject this.AutoRollbackConfiguration}}} },{{/if}}
+    {{#if this.BlueGreenDeploymentConfiguration}}"BlueGreenDeploymentConfiguration": { {{{inject this.BlueGreenDeploymentConfiguration}}} },{{/if}}
     {{#if this.DeploymentConfigName}}"DeploymentConfigName": "{{this.DeploymentConfigName}}",{{/if}}
     {{#if this.DeploymentStyle}} "DeploymentStyle": {
       "DeploymentOption": "{{this.DeploymentStyle.DeploymentOption}}",
