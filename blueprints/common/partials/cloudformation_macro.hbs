@@ -1,0 +1,16 @@
+{{!--
+ A CloudFormation resource type that creates a CloudFormation macro to perform
+ custom processing on CloudFormation templates.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html
+ --}}
+"cfnmacro{{sanitize this.Name ''}}": {
+  "Type": "AWS::CloudFormation::Macro",
+  "Properties": {
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    {{#if this.LogGroupName}}"LogGroupName": "{{this.LogGroupName}}",{{/if}}
+    {{#if this.LogRoleARN}}"LogRoleARN": "{{this.LogRoleARN}}",{{/if}}
+    "FunctionName": "{{this.FunctionName}}",
+    "Name": "{{this.Name}}"
+  }
+}

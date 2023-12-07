@@ -150,6 +150,10 @@
     {{> ce_anomalysubscription}},
     {{/each}}
 
+    {{#each CloudFormationMacros}}
+    {{> cloudformation_macro}},
+    {{/each}}
+
     {{#each CloudFrontDistributions}}
     {{> cloudfront_distribution}},
     {{/each}}
@@ -660,6 +664,10 @@
 
     {{#each S3BucketPolicies}}
     {{> s3_bucketpolicy}},
+    {{/each}}
+
+    {{#each SchedulerSchedules}}
+    {{> scheduler_schedule}},
     {{/each}}
 
     {{#each SecretsManagerResourcePolicies}}

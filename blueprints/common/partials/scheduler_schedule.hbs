@@ -1,0 +1,48 @@
+{{!--
+  A schedule is the main resource you create, configure, and manage using Amazon EventBridge Scheduler.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-scheduler-schedule.html#cfn-scheduler-schedule-groupname
+ --}}
+"schdlrschdl{{sanitize this.Name ''}}":{
+  "Type": "AWS::Scheduler::Schedule",
+  "Properties": {
+    {{#if this.Description}}"Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
+    {{#if this.EndDate}}"EndDate": "{{this.EndDate}}",{{/if}}
+    {{#if this.GroupName}}"GroupName": "{{this.GroupName}}",{{/if}}
+    {{#if this.KmsKeyArn}}
+        "KmsKeyArn": {{#startsWith "arn:aws:" this.KmsKeyArn}}
+        "{{this.KmsKeyArn}}"
+      {{else}}
+        { "Fn::GetAtt":[ "iamr{{this.KmsKeyArn}}", "Arn"] }
+      {{/startsWith}},
+    {{/if}}
+    {{#if this.Name}}"Name": "{{this.Name}}",{{/if}}
+    {{#if this.ScheduleExpressionTimezone}}"ScheduleExpressionTimezone": "{{this.ScheduleExpressionTimezone}}",{{/if}}
+    {{#if this.StartDate}}"StartDate": "{{this.StartDate}}",{{/if}}
+    {{#if this.State}}"State": "{{this.State}}",{{/if}}
+    "FlexibleTimeWindow": { {{{inject this.FlexibleTimeWindow}}} },
+    "ScheduleExpression": "{{this.ScheduleExpression}}",
+    "Target": {
+      {{#with this.Target}}
+        {{#if this.DeadLetterConfig}}"DeadLetterConfig": { {{{inject this.DeadLetterConfig}}} },{{/if}}
+        {{#if this.EcsParameters}}"EcsParameters": { {{{inject this.EcsParameters}}} },{{/if}}
+        {{#if this.EventBridgeParameters}}"EventBridgeParameters": { {{{inject this.EventBridgeParameters}}} },{{/if}}
+        {{#if this.Input}}"Input": "{{this.Input}}",{{/if}}
+        {{#if this.KinesisParameters}}"KinesisParameters": { {{{inject this.KinesisParameters}}} },{{/if}}
+        {{#if this.RetryPolicy}}"RetryPolicy": { {{{inject this.RetryPolicy}}} },{{/if}}
+        {{#if this.SageMakerPipelineParameters}}"SageMakerPipelineParameters": { {{{inject this.SageMakerPipelineParameters}}} },{{/if}}
+        {{#if this.SqsParameters}}"SqsParameters": { {{{inject this.SqsParameters}}} }{{/if}}
+        "Arn":{{#startsWith "arn:aws:" this.Arn}}
+          "{{this.Arn}}"
+        {{else}}
+          { "Fn::GetAtt":[ "iamr{{this.Arn}}", "Arn"] }
+        {{/startsWith}},
+        "RoleArn":{{#startsWith "arn:aws:" this.Role}}
+          "{{this.Role}}"
+        {{else}}
+          { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] }
+        {{/startsWith}}
+      {{/with}}
+    }
+  }
+}
