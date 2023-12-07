@@ -6,12 +6,16 @@
 "asgsa{{this.Name}}":{
   "Type":"AWS::AutoScaling::ScheduledAction",
   "Properties":{
-    {{~#if this.DesiredCapacity}}"DesiredCapacity":{{this.DesiredCapacity}},{{/if}}
-    {{~#if this.EndTime}}"EndTime":{{this.EndTime}},{{/if}}
-    {{~#if this.MaxSize}}"MaxSize":{{this.MaxSize}},{{/if}}
-    {{~#if this.MinSize}}"MinSize":{{this.MinSize}},{{/if}}
-    {{~#if this.Recurrence}}"Recurrence":"{{this.Recurrence}}",{{/if}}
-    {{~#if this.StartTime}}"StartTime":{{this.StartTime}},{{/if}}
-    "AutoScalingGroupName":{"Ref":"asg{{sanitize this.AutoScalingGroupName ''}}"}
+    {{#if this.DesiredCapacity}}"DesiredCapacity":{{this.DesiredCapacity}},{{/if}}
+    {{#if this.EndTime}}"EndTime":{{this.EndTime}},{{/if}}
+    {{#if this.MaxSize}}"MaxSize":{{this.MaxSize}},{{/if}}
+    {{#if this.MinSize}}"MinSize":{{this.MinSize}},{{/if}}
+    {{#if this.Recurrence}}"Recurrence":"{{this.Recurrence}}",{{/if}}
+    {{#if this.StartTime}}"StartTime":{{this.StartTime}},{{/if}}
+    "AutoScalingGroupName": {{#ifObject this.AutoScalingGroupName}}
+      { {{{inject this.AutoScalingGroupName}}} }
+    {{else}}
+      { "Ref": "asg{{sanitize this.AutoScalingGroupName ''}}" }
+    {{/ifObject}}
   }
 }
