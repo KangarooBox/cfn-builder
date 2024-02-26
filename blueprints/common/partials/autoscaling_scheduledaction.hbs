@@ -12,10 +12,12 @@
     {{#if this.MinSize}}"MinSize":{{this.MinSize}},{{/if}}
     {{#if this.Recurrence}}"Recurrence":"{{this.Recurrence}}",{{/if}}
     {{#if this.StartTime}}"StartTime":{{this.StartTime}},{{/if}}
+    {{#if this.TimeZone}}"TimeZone":"{{this.TimeZone}}",{{/if}}
     "AutoScalingGroupName": {{#ifObject this.AutoScalingGroupName}}
       { {{{inject this.AutoScalingGroupName}}} }
     {{else}}
       { "Ref": "asg{{sanitize this.AutoScalingGroupName ''}}" }
     {{/ifObject}}
   }
+  {{#if this.DependsOn}}, "DependsOn": "{{this.DependsOn}}"{{/if}}
 }

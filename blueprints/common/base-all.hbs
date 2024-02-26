@@ -470,6 +470,14 @@
     {{> elasticloadbalancingv2_loadbalancer}},
     {{/each}}
 
+    {{#each ElasticLoadBalancerV2Listeners}}
+    {{> elasticloadbalancingv2_listener}},
+    {{/each}}
+
+    {{#each ElasticLoadBalancerV2ListenerCertificates}}
+    {{> elasticloadbalancingv2_listenercertificate}},
+    {{/each}}
+
     {{#each ElasticLoadBalancerV2TargetGroups}}
     {{> elasticloadbalancingv2_targetgroup}},
     {{/each}}

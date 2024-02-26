@@ -7,6 +7,9 @@
 "ecssrvc{{sanitize this.Name ''}}":{
   "Type": "AWS::ECS::Service",
   "Properties": {
+    {{#if this.CapacityProviderStrategy}}"CapacityProviderStrategy":
+      [ {{#each this.CapacityProviderStrategy}}{ {{{inject this}}} }{{comma}}{{/each}} ],
+    {{/if}}
     "Cluster":
       {{#startsWith "arn:aws:" this.Cluster}}
         "{{this.Cluster}}"

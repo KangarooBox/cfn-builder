@@ -12,26 +12,33 @@
     {{else}}"{{@root.ProjectName}}: {{this.Name}} ({{@root.EnvVersion}}{{@root.EnvName}})",
     {{/if}}
 
-    {{#if this.AliasTarget}}
-      "Name":"{{#if this.DNSName}}{{lowercase this.DNSName}}{{else}}{{lowercase this.Name}}.{{lowercase this.HostedZoneDomain}}{{/if}}",
-      "AliasTarget":{ {{{inject this.AliasTarget}}} },
-      {{#if this.HostedZoneId}}
-        "HostedZoneId": "{{this.HostedZoneId}}",
-      {{else}}
-        {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
-          {{#ifEq this.Type ../DomainType}}"HostedZoneId":"{{this.HostedZoneId}}",{{/ifEq}}
-        {{/with}}
-      {{/if}}
-      {{#if this.HostedZoneName}}"HostedZoneName": "{{this.HostedZoneName}}",{{/if}}
-      "Type": "A"
-    {{else}}
-      {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
-        {{#ifEq this.Type ../DomainType}}
-          "HostedZoneId":"{{this.HostedZoneId}}",
-          "Name":"{{#if ../DNSName}}{{lowercase ../DNSName}}{{else}}{{lowercase ../Name}}.{{lowercase this.HostedZoneDomain}}{{/if}}",
-        {{/ifEq}}
-      {{/with}}
+    {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
+      {{#ifEq this.Type ../DomainType}}
+        "HostedZoneId":"{{this.HostedZoneId}}",
+        "Name":"{{#if ../DNSName}}{{lowercase ../DNSName}}{{else}}{{lowercase ../Name}}.{{lowercase this.HostedZoneDomain}}{{/if}}",
+      {{/ifEq}}
+    {{/with}}
 
+    {{#if this.SetIdentifier}}"SetIdentifier": "{{this.SetIdentifier}}",{{/if}}
+    {{#if this.Weight}}"Weight": "{{this.Weight}}",{{/if}}
+
+    {{#if this.AliasTarget}}
+      "Type": "A",
+      "AliasTarget":{
+        "DNSName": {{#ifObject this.AliasTarget.DNSName}}
+          { {{{inject this.AliasTarget.DNSName}}} }{{else}}"{{this.AliasTarget.DNSName}}"
+        {{/ifObject}},
+        {{#if this.AliasTarget.HostedZoneId}}
+          "HostedZoneId": {{#ifObject this.AliasTarget.HostedZoneId}}
+            { {{{inject this.AliasTarget.HostedZoneId}}} }{{else}}"{{this.AliasTarget.HostedZoneId}}"
+          {{/ifObject}}
+        {{else}}
+          {{#with (lookupById @root.DNS (lowercase this.DomainName))}}
+            {{#ifEq this.Type ../DomainType}}"HostedZoneId":"{{this.HostedZoneId}}"{{/ifEq}}
+          {{/with}}
+        {{/if}}
+      }
+    {{else}}
       "Type":"{{default this.Type "CNAME"}}",
       "TTL":{{default this.TTL 300}},
       "ResourceRecords":[

@@ -6,7 +6,7 @@
  --}}
 {
   {{#if this.Command}}"Command": [
-    {{#each this.Command}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
+    {{#each this.Command}}"{{{this}}}"{{#unless @last}},{{/unless}}{{/each}}
   ],{{/if}}
   {{#if this.Cpu}}"Cpu": {{this.Cpu}},{{/if}}
   {{#if this.DependsOn}}"DependsOn" : [ {{#each this.DependsOn}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}

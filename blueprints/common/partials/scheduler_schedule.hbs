@@ -25,9 +25,30 @@
     "Target": {
       {{#with this.Target}}
         {{#if this.DeadLetterConfig}}"DeadLetterConfig": { {{{inject this.DeadLetterConfig}}} },{{/if}}
-        {{#if this.EcsParameters}}"EcsParameters": { {{{inject this.EcsParameters}}} },{{/if}}
+        {{#if this.EcsParameters}}
+          {{#with this.EcsParameters}}
+
+            "EcsParameters": {
+              {{#if this.CapacityProviderStrategy}}"CapacityProviderStrategy": [ CapacityProviderStrategyItem, ... ],{{/if}}
+              {{#if this.EnableECSManagedTags}}"EnableECSManagedTags": {{default (toString this.EnableECSManagedTags) false}},{{/if}}
+              {{#if this.EnableExecuteCommand}}"EnableExecuteCommand": {{default (toString this.EnableExecuteCommand) false}},{{/if}}
+              {{#if this.Group}}"Group": "{{this.Group}}",{{/if}}
+              {{#if this.LaunchType}}"LaunchType": "{{this.LaunchType}}",{{/if}}
+              {{#if this.NetworkConfiguration}}"NetworkConfiguration": { {{{inject this.NetworkConfiguration}}} },{{/if}}
+              {{#if this.PlacementConstraints}}"PlacementConstraints": [ PlacementConstraint, ... ],{{/if}}
+              {{#if this.PlacementStrategy}}"PlacementStrategy": [ PlacementStrategy, ... ],{{/if}}
+              {{#if this.PlatformVersion}}"PlatformVersion": "{{this.PlatformVersion}}",{{/if}}
+              {{#if this.PropagateTags}}"PropagateTags": "{{this.PropagateTags}}",{{/if}}
+              {{#if this.ReferenceId}}"ReferenceId": "{{this.ReferenceId}}",{{/if}}
+              {{#if this.Tags}}"Tags": [ {Key: Value, ...}, ... ],{{/if}}
+              {{#if this.TaskCount}}"TaskCount": {{this.TaskCount}},{{/if}}
+              "TaskDefinitionArn": "{{this.TaskDefinitionArn}}"
+            },
+
+          {{/with}}
+        {{/if}}
         {{#if this.EventBridgeParameters}}"EventBridgeParameters": { {{{inject this.EventBridgeParameters}}} },{{/if}}
-        {{#if this.Input}}"Input": "{{this.Input}}",{{/if}}
+        {{#if this.Input}}"Input": "{{{this.Input}}}", {{/if}}
         {{#if this.KinesisParameters}}"KinesisParameters": { {{{inject this.KinesisParameters}}} },{{/if}}
         {{#if this.RetryPolicy}}"RetryPolicy": { {{{inject this.RetryPolicy}}} },{{/if}}
         {{#if this.SageMakerPipelineParameters}}"SageMakerPipelineParameters": { {{{inject this.SageMakerPipelineParameters}}} },{{/if}}
@@ -37,10 +58,10 @@
         {{else}}
           { "Fn::GetAtt":[ "iamr{{this.Arn}}", "Arn"] }
         {{/startsWith}},
-        "RoleArn":{{#startsWith "arn:aws:" this.Role}}
-          "{{this.Role}}"
+        "RoleArn":{{#startsWith "arn:aws:" this.RoleArn}}
+          "{{this.RoleArn}}"
         {{else}}
-          { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] }
+          { "Fn::GetAtt":[ "iamr{{this.RoleArn}}", "Arn"] }
         {{/startsWith}}
       {{/with}}
     }
