@@ -1,0 +1,25 @@
+{{!--
+  The AWS::Batch::ComputeEnvironment resource defines your AWS Batch compute environment.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-computeenvironment.html
+ --}}
+"batchce{{sanitize this.Name ''}}": {
+  "Type": "AWS::Batch::ComputeEnvironment",
+  "Properties": {
+      "ComputeEnvironmentName":
+        {{#if this.ComputeEnvironmentName}}
+          "{{this.ComputeEnvironmentName}}"
+        {{else}}
+          "{{lowercase this.Name}}"
+        {{/if}},
+      {{#if this.ComputeResources}}"ComputeResources": { {{{inject this.ComputeResources}}} },{{/if}}
+      {{#if this.EksConfiguration}}"EksConfiguration": { {{{inject this.EksConfiguration}}} },{{/if}}
+      {{#if this.ReplaceComputeEnvironment}}"ReplaceComputeEnvironment": {{default (toString this.ReplaceComputeEnvironment) true}},{{/if}}
+      {{#if this.ServiceRole}}"ServiceRole": "{{this.ServiceRole}}",{{/if}}
+      {{#if this.State}}"State": "{{this.State}}",{{/if}}
+      {{#if this.UnmanagedvCpus}}"UnmanagedvCpus": {{this.UnmanagedvCpus}},{{/if}}
+      {{#if this.UpdatePolicy}}"UpdatePolicy": { {{{inject this.UpdatePolicy}}} },{{/if}}
+      {{#if this.Tags}}{ {{{inject this.Tags}}} },{{/if}}
+      "Type": "{{this.Type}}"
+    }
+}

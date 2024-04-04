@@ -142,6 +142,18 @@
     {{> backup_backupvault}},
     {{/each}}
 
+    {{#each BatchComputeEnvironments}}
+    {{> batch_computeenvironment}},
+    {{/each}}
+
+    {{#each BatchJobDefinitions}}
+    {{> batch_jobdefinition}},
+    {{/each}}
+
+    {{#each BatchJobQueues}}
+    {{> batch_jobqueue}},
+    {{/each}}
+
     {{#each CEAnomalyMonitors}}
     {{> ce_anomalymonitor}},
     {{/each}}
