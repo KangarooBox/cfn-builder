@@ -11,11 +11,15 @@
       [ {{#each this.CapacityProviderStrategy}}{ {{{inject this}}} }{{comma}}{{/each}} ],
     {{/if}}
     "Cluster":
-      {{#startsWith "arn:aws:" this.Cluster}}
-        "{{this.Cluster}}"
+      {{#ifObject this.Cluster}}
+        { {{{inject this.Cluster}}} }
       {{else}}
-        {"Fn::GetAtt":["ecsclst{{sanitize this.Cluster ''}}", "Arn"]}
-      {{/startsWith}},
+        {{#startsWith "arn:aws:" this.Cluster}}
+          "{{this.Cluster}}"
+        {{else}}
+          {"Fn::GetAtt":["ecsclst{{sanitize this.Cluster ''}}", "Arn"]}
+        {{/startsWith}}
+      {{/ifObject}},
     {{#if this.DeploymentConfiguration}}"DeploymentConfiguration": { {{{inject this.DeploymentConfiguration}}} },{{/if}}
     {{#if this.DeploymentController}}"DeploymentController": { {{{inject this.DeploymentController}}} },{{/if}}
     "DesiredCount": {{default this.DesiredCount 0}},
@@ -53,6 +57,7 @@
     {{#if this.PlatformVersion}}"PlatformVersion": "{{this.PlatformVersion}}",{{/if}}
     {{#if this.ServiceName}}"ServiceName": "{{this.ServiceName}}",{{/if}}
     {{#if this.ServiceConnectConfiguration}}"ServiceConnectConfiguration": { {{{inject this.ServiceConnectConfiguration}}} },{{/if}}
+    {{#if this.ServiceConnectService}}"ServiceConnectService": { {{{inject this.ServiceConnectService}}} },{{/if}}
     {{#if this.ServiceRegistries}}"ServiceRegistries": [{{#each this.ServiceRegistries}}
       { {{#if this.ContainerName}}"ContainerName": "{{this.ContainerName}}",{{/if}}
         {{#if this.ContainerPort}}"ContainerPort": {{this.ContainerPort}},{{/if}}
@@ -60,6 +65,8 @@
         {{#if this.RegistryArn}}"RegistryArn": { "Fn::GetAtt":[ "sdservice{{this.RegistryArn}}", "Arn"] }{{/if}}
       }
     {{comma}}{{/each}}],{{/if}}
-    "TaskDefinition": { "Ref":"ecstd{{sanitize this.TaskDefinition ''}}" }
+    {{#if this.TaskDefinition}}"TaskDefinition": { "Ref":"ecstd{{sanitize this.TaskDefinition ''}}" },{{/if}}
+    {{#if this.TaskDefinitionFamily}}"TaskDefinition": "arn:aws:ecs:{{@root.Region.Id}}:{{@root.Account.ID}}:task-definition/{{this.TaskDefinitionFamily}}",{{/if}}
+    {{> tags}}
   }
 }
