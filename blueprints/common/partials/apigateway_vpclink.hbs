@@ -1,0 +1,20 @@
+{{!--
+  Creates an API Gateway VPC link for a REST API to access resources in an Amazon Virtual Private Cloud (VPC).
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-vpclink.html
+--}}
+"apigwvpclink{{sanitize this.Name ''}}": {
+  "Type": "AWS::ApiGateway::VpcLink",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "TargetArns": [
+      {{#each this.TargetArns}}
+        { "Ref": "elbv2{{sanitize this ''}}" }
+      {{comma}}{{/each}}
+    ],
+
+
+    {{> tags}}
+  }
+}

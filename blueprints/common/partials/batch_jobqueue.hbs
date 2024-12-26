@@ -1,0 +1,16 @@
+{{!--
+  The AWS::Batch::JobQueue resource specifies the parameters for an AWS Batch job queue definition.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html
+ --}}
+"batchjq{{sanitize this.Name ''}}": {
+  "Type": "AWS::Batch::JobQueue",
+  "Properties": {
+    "ComputeEnvironmentOrder": [ {{#each this.ComputeEnvironmentOrder}}{ {{{inject this}}} }{{comma}}{{/each}} ],
+    "JobQueueName": {{#if this.JobQueueName}}"{{this.JobQueueName}}"{{else}}"{{this.Name}}"{{/if}},
+    "Priority": {{this.Priority}},
+    {{#if this.SchedulingPolicyArn}}"SchedulingPolicyArn": "{{this.SchedulingPolicyArn}}",{{/if}}
+    {{#if this.State}}"State": "{{this.State}}",{{/if}}
+    {{> tags_map}}
+  }
+}

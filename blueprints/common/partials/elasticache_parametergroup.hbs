@@ -4,11 +4,15 @@
   http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html
  --}}
 
-"ecpg{{this.Name}}":{
+"ecpg{{sanitize this.Name ''}}":{
   "Type": "AWS::ElastiCache::ParameterGroup",
   "Properties": {
-    "Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvType}})",
+    {{#if this.Description}}
+      "Description":"{{this.Description}}",
+    {{else}}
+      "Description":"Custom parameter group for {{this.CacheParameterGroupFamily}} ({{@root.ProjectName}}-{{@root.EnvName}})",
+    {{/if}}
     "CacheParameterGroupFamily":"{{this.CacheParameterGroupFamily}}",
-    "Properties":{ {{#each this.Properties}}"{{this.key}}":"{{this.value}}"{{#unless @last}},{{/unless}}{{/each}} }
+    "Properties":{ {{#each this.Properties}}"{{this.Key}}":"{{this.Value}}"{{#unless @last}},{{/unless}}{{/each}} }
   }
 }

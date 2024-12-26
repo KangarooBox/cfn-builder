@@ -1,0 +1,23 @@
+{{!--
+  The AWS::Batch::JobDefinition resource specifies the parameters for an AWS Batch job definition.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobdefinition.html
+ --}}
+"batchjdef{{sanitize this.Name ''}}": {
+  "Type": "AWS::Batch::JobDefinition",
+  "Properties": {
+    {{#if this.ContainerProperties}}"ContainerProperties": { {{{inject this.ContainerProperties}}} },{{/if}}
+    {{#if this.EcsProperties}}"EcsProperties": { {{{inject this.EcsProperties}}} },{{/if}}
+    {{#if this.EksProperties}}"EksProperties": { {{{inject this.EksProperties}}} },{{/if}}
+    "JobDefinitionName": {{#if this.JobDefinitionName}}"{{this.JobDefinitionName}}"{{else}}"{{this.Name}}"{{/if}},
+    {{#if this.NodeProperties}}"NodeProperties": { {{{inject this.NodeProperties}}} },{{/if}}
+    {{#if this.Parameters}}"Parameters": { {{{inject this.Parameters}}} },{{/if}}
+    {{#if this.PlatformCapabilities}}"PlatformCapabilities": [ {{#each this.PlatformCapabilities}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
+    {{#if this.PropagateTags}}"PropagateTags": {{default (toString this.PropagateTags) false}},{{/if}}
+    {{#if this.RetryStrategy}}"RetryStrategy": { {{{inject this.RetryStrategy}}} },{{/if}}
+    {{#if this.SchedulingPriority}}"SchedulingPriority": {{this.SchedulingPriority}},{{/if}}
+    {{#if this.Timeout}}"Timeout": { {{{inject this.Timeout}}} },{{/if}}
+    "Type": "{{this.Type}}",
+    {{> tags_map}}
+  }
+}

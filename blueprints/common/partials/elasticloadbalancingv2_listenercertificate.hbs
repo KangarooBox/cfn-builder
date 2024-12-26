@@ -1,0 +1,20 @@
+{{!--
+  Adds an SSL server certificate to the certificte list for an HTTPS or TLS listener.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenercertificate.html
+ --}}
+"elbv2liscert{{sanitize this.Name ''}}": {
+  "Type": "AWS::ElasticLoadBalancingV2::ListenerCertificate",
+  "Properties": {
+    "Certificates": [{{#each this.Certificates}}
+      {{#ifObject this}} { {{{inject this}}} } {{else}}
+        {{#startsWith "arn:aws:acm:" this}}
+          { "CertificateArn":"{{this}}" }
+        {{else}}
+          { "CertificateArn": { "Ref":"acmc{{sanitize this ''}}" }}
+        {{/startsWith}}
+      {{/ifObject}}
+    {{comma}}{{/each}}],
+    "ListenerArn": {"Ref": "elbv2lis{{sanitize this.ListenerArn ''}}" }
+  }
+}

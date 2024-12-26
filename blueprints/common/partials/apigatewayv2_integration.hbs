@@ -7,67 +7,41 @@
 "apiv2int{{sanitize this.Name ''}}":{
   "Type" : "AWS::ApiGatewayV2::Integration",
   "Properties" : {
-
-    {{#if this.ConnectionId}}
-      "ConnectionId": "{{this.ConnectionId}}",
-    {{/if}}
-    {{#if this.ConnectionType}}
-      "ConnectionType": "{{this.ConnectionType}}",
-    {{/if}}
-    {{#if this.ContentHandlingStrategy}}
-      "ContentHandlingStrategy": "{{this.ContentHandlingStrategy}}",
-    {{/if}}
-    {{#if this.CredentialsArn}}
-      "CredentialsArn": "{{this.CredentialsArn}}",
-    {{/if}}
-    {{#if this.Description}}
-      "Description": "{{this.Description}}",
-    {{/if}}
-    {{#if this.IntegrationSubtype}}
-      "IntegrationSubtype": "{{this.IntegrationSubtype}}",
-    {{/if}}
-    {{#if this.IntegrationType}}
-      "IntegrationType": "{{this.IntegrationType}}",
-    {{/if}}
-    {{#if this.IntegrationUri}}
-      "IntegrationUri": {{#ifObject this.IntegrationUri}}
+    {{#if this.ConnectionId}}"ConnectionId": { {{{inject this.ConnectionId}}} },{{/if}}
+    {{#if this.ConnectionType}}"ConnectionType": "{{this.ConnectionType}}",{{/if}}
+    {{#if this.ContentHandlingStrategy}}"ContentHandlingStrategy": "{{this.ContentHandlingStrategy}}",{{/if}}
+    {{#if this.CredentialsArn}}"CredentialsArn": "{{this.CredentialsArn}}",{{/if}}
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "IntegrationType": "{{this.IntegrationType}}",
+    {{#if this.IntegrationMethod}}"IntegrationMethod": "{{this.IntegrationMethod}}",{{/if}}
+    {{#if this.IntegrationSubtype}}"IntegrationSubtype": "{{this.IntegrationSubtype}}",{{/if}}
+    {{#if this.IntegrationUri}}"IntegrationUri":
+      {{#ifObject this.IntegrationUri}}
         { {{{inject this.IntegrationUri}}} }
       {{else}}
-        { "Fn::GetAtt" : [ "fun{{sanitize this.IntegrationUri ''}}", "Arn" ] }
-      {{/ifObject}},
-    {{/if}}
-    {{#if this.PassthroughBehavior}}
-      "PassthroughBehavior": "{{this.PassthroughBehavior}}",
-    {{/if}}
-    {{#if this.PayloadFormatVersion}}
-      "PayloadFormatVersion": "{{this.PayloadFormatVersion}}",
-    {{/if}}
-    {{#if this.RequestParameters}}
-      "RequestParameters": { {{{inject this.RequestParameters}}} },
-    {{/if}}
-    {{#if this.RequestTemplates}}
-      "RequestTemplates": { {{{inject this.RequestTemplates}}} },
-    {{/if}}
-    {{#if this.ResponseParameters}}
-      "ResponseParameters": { {{{inject this.ResponseParameters}}} },
-    {{/if}}
-    {{#if this.TemplateSelectionExpression}}
-      "TemplateSelectionExpression": {{this.TemplateSelectionExpression}},
-    {{/if}}
-    {{#if this.TimeoutInMillis}}
-      "TimeoutInMillis": {{this.TimeoutInMillis}},
-    {{/if}}
-    {{#if this.TlsConfig}}
-      "TlsConfig": { {{{inject this.TlsConfig}}} }
-    {{/if}}
+        {{#switch this.IntegrationType}}
+          {{#case "AWS_PROXY" break=true}}
+            { "Fn::GetAtt" : [ "fun{{sanitize this.IntegrationUri ''}}", "Arn" ] }
+          {{/case}}
+          {{#case "HTTP_PROXY" break=true}}
+            { "Fn::GetAtt" : [ "elbv2{{sanitize this.IntegrationUri ''}}", "Arn" ] }
+          {{/case}}
+        {{/switch}}
+      {{/ifObject}}
+    {{/if}},
+    {{#if this.PassthroughBehavior}}"PassthroughBehavior": "{{this.PassthroughBehavior}}",{{/if}}
+    {{#if this.PayloadFormatVersion}}"PayloadFormatVersion": "{{this.PayloadFormatVersion}}",{{/if}}
+    {{#if this.RequestParameters}}"RequestParameters": { {{{inject this.RequestParameters}}} },{{/if}}
+    {{#if this.RequestTemplates}}"RequestTemplates": { {{{inject this.RequestTemplates}}} },{{/if}}
+    {{#if this.ResponseParameters}}"ResponseParameters": { {{{inject this.ResponseParameters}}} },{{/if}}
+    {{#if this.TemplateSelectionExpression}}"TemplateSelectionExpression": {{this.TemplateSelectionExpression}},{{/if}}
+    {{#if this.TimeoutInMillis}}"TimeoutInMillis": {{this.TimeoutInMillis}},{{/if}}
+    {{#if this.TlsConfig}}"TlsConfig": { {{{inject this.TlsConfig}}} },{{/if}}
 
     "ApiId": {{#ifObject this.ApiId}}
        { {{{inject this.ApiId}}} }
      {{else}}
        { "Ref":"apiv2{{sanitize this.ApiId ''}}" }
-     {{/ifObject}},
-
-     "IntegrationMethod": "{{this.IntegrationMethod}}"
-
+     {{/ifObject}}
     }
 }

@@ -8,7 +8,7 @@
   "Properties": {
     "UserPoolName": "{{this.Name}}",
     {{#if this.AdminCreateUserConfig}}"AdminCreateUserConfig": { {{{inject this.AdminCreateUserConfig}}} },{{/if}}
-
+    {{#if this.AccountRecoverySetting}}"AccountRecoverySetting": { {{{inject this.AccountRecoverySetting}}} },{{/if}}
     {{#if this.AliasAttributes}}"AliasAttributes":[
       {{#each this.AliasAttributes}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}
     ],{{/if}}

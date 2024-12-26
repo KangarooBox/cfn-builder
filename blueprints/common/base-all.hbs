@@ -94,6 +94,14 @@
     {{> apigatewayv2_deployment}},
     {{/each}}
 
+    {{#each APIGatewayV2VpcLinks}}
+    {{> apigatewayv2_vpclink}},
+    {{/each}}
+
+    {{#each APIGatewayVpcLinks}}
+    {{> apigateway_vpclink}},
+    {{/each}}
+
     {{#each AppStreamFleets}}
     {{> appstream_fleet}},
     {{/each}}
@@ -142,12 +150,28 @@
     {{> backup_backupvault}},
     {{/each}}
 
+    {{#each BatchComputeEnvironments}}
+    {{> batch_computeenvironment}},
+    {{/each}}
+
+    {{#each BatchJobDefinitions}}
+    {{> batch_jobdefinition}},
+    {{/each}}
+
+    {{#each BatchJobQueues}}
+    {{> batch_jobqueue}},
+    {{/each}}
+
     {{#each CEAnomalyMonitors}}
     {{> ce_anomalymonitor}},
     {{/each}}
 
     {{#each CEAnomalySubscriptions}}
     {{> ce_anomalysubscription}},
+    {{/each}}
+
+    {{#each CloudFormationMacros}}
+    {{> cloudformation_macro}},
     {{/each}}
 
     {{#each CloudFrontDistributions}}
@@ -458,12 +482,24 @@
     {{> elasticache_replicationgroup}},
     {{/each}}
 
+    {{#each ElastiCacheServerlessCaches}}
+    {{> elasticache_serverlesscache}},
+    {{/each}}
+
     {{#each ElasticLoadBalancers}}
     {{> elasticloadbalancing_loadbalancer}},
     {{/each}}
 
     {{#each ElasticLoadBalancersV2}}
     {{> elasticloadbalancingv2_loadbalancer}},
+    {{/each}}
+
+    {{#each ElasticLoadBalancerV2Listeners}}
+    {{> elasticloadbalancingv2_listener}},
+    {{/each}}
+
+    {{#each ElasticLoadBalancerV2ListenerCertificates}}
+    {{> elasticloadbalancingv2_listenercertificate}},
     {{/each}}
 
     {{#each ElasticLoadBalancerV2TargetGroups}}
@@ -662,6 +698,14 @@
     {{> s3_bucketpolicy}},
     {{/each}}
 
+    {{#each SchedulerSchedules}}
+    {{> scheduler_schedule}},
+    {{/each}}
+
+    {{#each SchedulerScheduleGroups}}
+    {{> scheduler_schedulegroup}},
+    {{/each}}
+
     {{#each SecretsManagerResourcePolicies}}
     {{> secretsmanager_resourcepolicy}},
     {{/each}}
@@ -672,6 +716,14 @@
 
     {{#each SecurityHubHubs}}
     {{> securityhub_hub}},
+    {{/each}}
+
+    {{#each SecurityHubConfigurationPolicies}}
+    {{> securityhub_configurationpolicy}},
+    {{/each}}
+
+    {{#each SecurityHubStandards}}
+    {{> securityhub_standard}},
     {{/each}}
 
     {{#each ServiceDiscoveryPrivateDnsNamespaces}}
