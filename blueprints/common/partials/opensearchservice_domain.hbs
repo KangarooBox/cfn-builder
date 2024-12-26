@@ -1,0 +1,25 @@
+{{!--
+  The AWS::OpenSearchService::Domain resource creates an Amazon OpenSearch Service domain.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchservice-domain.html
+ --}}
+"opnsrchdomain{{sanitize this.Name ''}}": {
+  "Type": "AWS::OpenSearchService::Domain",
+  "Properties": {
+    "DomainName": {{#if this.DomainName}}"{{this.DomainName}}"{{else}}"{{this.Name}}"{{/if}},
+    {{#if this.AccessPolicies}}"AccessPolicies": "{ {{{inject this.AccessPolicies true}}} }",{{/if}}
+    {{#if this.AdvancedOptions}}"AdvancedOptions": {Key: Value, ...},{{/if}}
+    {{#if this.AdvancedSecurityOptions}}"AdvancedSecurityOptions": { {{{inject this.AdvancedSecurityOptionsInput}}} },{{/if}}
+    {{#if this.ClusterConfig}}"ClusterConfig": { {{{inject this.ClusterConfig}}} },{{/if}}
+    {{#if this.CognitoOptions}}"CognitoOptions": { {{{inject this.CognitoOptions }}} },{{/if}}
+    {{#if this.DomainEndpointOptions}}"DomainEndpointOptions": { {{{inject this.DomainEndpointOptions }}} },{{/if}}
+    {{#if this.EBSOptions}}"EBSOptions": { {{{inject EBSOptions}}} },{{/if}}
+    {{#if this.EncryptionAtRestOptions}}"EncryptionAtRestOptions": { {{{this.EncryptionAtRestOptions}}} },{{/if}}
+    {{#if this.EngineVersion}}"EngineVersion": String,{{/if}}
+    {{#if this.LogPublishingOptions}}"LogPublishingOptions": {Key: Value, ...},{{/if}}
+    {{#if this.NodeToNodeEncryptionOptions}}"NodeToNodeEncryptionOptions": { {{{this.NodeToNodeEncryptionOptions}}} },{{/if}}
+    {{#if this.SnapshotOptions}}"SnapshotOptions": { {{{this.SnapshotOptions}}} },{{/if}}
+    {{#if this.VPCOptions}}"VPCOptions": { {{{this.VPCOptions}}} },{{/if}}
+    {{> tags}}
+  }
+}

@@ -6,6 +6,9 @@
  --}}
 "ecssrvc{{sanitize this.Name ''}}":{
   "Type": "AWS::ECS::Service",
+  {{#if this.DependsOn}}
+    "DependsOn": [{{#each this.DependsOn}}"{{this}}"{{comma}}{{/each}}],
+  {{/if}}
   "Properties": {
     {{#if this.CapacityProviderStrategy}}"CapacityProviderStrategy":
       [ {{#each this.CapacityProviderStrategy}}{ {{{inject this}}} }{{comma}}{{/each}} ],

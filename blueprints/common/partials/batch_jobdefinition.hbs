@@ -7,6 +7,7 @@
   "Type": "AWS::Batch::JobDefinition",
   "Properties": {
     {{#if this.ContainerProperties}}"ContainerProperties": { {{{inject this.ContainerProperties}}} },{{/if}}
+    {{#if this.EcsProperties}}"EcsProperties": { {{{inject this.EcsProperties}}} },{{/if}}
     {{#if this.EksProperties}}"EksProperties": { {{{inject this.EksProperties}}} },{{/if}}
     "JobDefinitionName": {{#if this.JobDefinitionName}}"{{this.JobDefinitionName}}"{{else}}"{{this.Name}}"{{/if}},
     {{#if this.NodeProperties}}"NodeProperties": { {{{inject this.NodeProperties}}} },{{/if}}

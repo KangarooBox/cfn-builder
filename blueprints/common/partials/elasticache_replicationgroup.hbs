@@ -35,7 +35,15 @@
     "AutomaticFailoverEnabled": {{default (toString this.AutomaticFailoverEnabled) false}},
     "AutoMinorVersionUpgrade": {{default (toString this.AutoMinorVersionUpgrade) false}},
     {{#if this.CacheNodeType}}"CacheNodeType": "{{this.CacheNodeType}}",{{/if}}
-    {{#if this.CacheParameterGroupName}}"CacheParameterGroupName": "{{this.CacheParameterGroupName}}",{{/if}}
+
+    {{#if this.CacheParameterGroupName}}
+      {{#ifObject this.CacheParameterGroupName}}
+        "CacheParameterGroupName": { {{{inject this.CacheParameterGroupName}}} }
+      {{else}}
+        "CacheParameterGroupName": "{{this.CacheParameterGroupName}}"
+      {{/ifObject}},
+    {{/if}}
+
     {{#if this.CacheSecurityGroupNames}}"CacheSecurityGroupNames": [ String, ... ],{{/if}}
     "CacheSubnetGroupName":{"Ref":"ecsng{{sanitize this.Name ''}}"},
     {{#if this.Engine}}"Engine": "{{this.Engine}}",{{/if}}

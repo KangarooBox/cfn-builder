@@ -86,7 +86,11 @@
               "RedirectConfig": { {{{inject this.RedirectConfig}}} }}
             {{/case}}
             {{#case "forward"}}
-              "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"} }
+              {{#ifObject this.TargetGroupArn}}
+                "TargetGroupArn": { {{{inject this.TargetGroupArn}}} } }
+              {{else}}
+                "TargetGroupArn": {"Ref":"elbv2tg{{sanitize this.TargetGroupArn ''}}"} }
+              {{/ifObject}}
             {{/case}}
           {{/switch}}
         {{comma}}{{/each}}

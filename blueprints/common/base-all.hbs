@@ -94,6 +94,14 @@
     {{> apigatewayv2_deployment}},
     {{/each}}
 
+    {{#each APIGatewayV2VpcLinks}}
+    {{> apigatewayv2_vpclink}},
+    {{/each}}
+
+    {{#each APIGatewayVpcLinks}}
+    {{> apigateway_vpclink}},
+    {{/each}}
+
     {{#each AppStreamFleets}}
     {{> appstream_fleet}},
     {{/each}}
@@ -474,6 +482,10 @@
     {{> elasticache_replicationgroup}},
     {{/each}}
 
+    {{#each ElastiCacheServerlessCaches}}
+    {{> elasticache_serverlesscache}},
+    {{/each}}
+
     {{#each ElasticLoadBalancers}}
     {{> elasticloadbalancing_loadbalancer}},
     {{/each}}
@@ -690,6 +702,10 @@
     {{> scheduler_schedule}},
     {{/each}}
 
+    {{#each SchedulerScheduleGroups}}
+    {{> scheduler_schedulegroup}},
+    {{/each}}
+
     {{#each SecretsManagerResourcePolicies}}
     {{> secretsmanager_resourcepolicy}},
     {{/each}}
@@ -700,6 +716,14 @@
 
     {{#each SecurityHubHubs}}
     {{> securityhub_hub}},
+    {{/each}}
+
+    {{#each SecurityHubConfigurationPolicies}}
+    {{> securityhub_configurationpolicy}},
+    {{/each}}
+
+    {{#each SecurityHubStandards}}
+    {{> securityhub_standard}},
     {{/each}}
 
     {{#each ServiceDiscoveryPrivateDnsNamespaces}}

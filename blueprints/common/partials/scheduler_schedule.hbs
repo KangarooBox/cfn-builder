@@ -48,7 +48,13 @@
           {{/with}}
         {{/if}}
         {{#if this.EventBridgeParameters}}"EventBridgeParameters": { {{{inject this.EventBridgeParameters}}} },{{/if}}
-        {{#if this.Input}}"Input": "{{{this.Input}}}", {{/if}}
+        {{#if this.Input}}
+          {{#ifObject this.Input}}
+            "Input": "{ {{{inject this.Input true}}} }",
+          {{else}}
+            "Input": "{{{this.Input}}}",
+          {{/ifObject}}
+        {{/if}}
         {{#if this.KinesisParameters}}"KinesisParameters": { {{{inject this.KinesisParameters}}} },{{/if}}
         {{#if this.RetryPolicy}}"RetryPolicy": { {{{inject this.RetryPolicy}}} },{{/if}}
         {{#if this.SageMakerPipelineParameters}}"SageMakerPipelineParameters": { {{{inject this.SageMakerPipelineParameters}}} },{{/if}}

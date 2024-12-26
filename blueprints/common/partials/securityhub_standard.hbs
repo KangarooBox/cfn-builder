@@ -1,0 +1,12 @@
+{{!--
+  Specifies the enablement of a security standard.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html
+ --}}
+"sechubhub{{sanitize this.Name ''}}": {
+  "Type": "AWS::SecurityHub::Standard",
+  "Properties": {
+    "DisabledStandardsControls": [ {{#each this.DisabledStandardsControls}} { {{{inject this}}} }{{comma}}{{/each}} ],
+    "StandardsArn": "{{this.StandardsArn}}"
+  }
+}

@@ -1,0 +1,33 @@
+{{!--
+  Creates a Amazon ElastiCache serverless cache
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-serverlesscache.html
+ --}}
+
+"ecsc{{sanitize this.Name ''}}": {
+  "Type": "AWS::ElastiCache::ServerlessCache",
+  "Properties": {
+    {{#if this.CacheUsageLimits}}"CacheUsageLimits": { {{{inject this.CacheUsageLimits}}} },{{/if}}
+    {{#if this.DailySnapshotTime}}"DailySnapshotTime": "{{this.DailySnapshotTime}}",{{/if}}
+    {{#if this.Description}}"Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
+    {{#if this.Endpoint}}"Endpoint": { {{{inject this.Endpoint}}} },{{/if}}
+    "Engine": "{{this.Engine}}",
+    {{#if this.FinalSnapshotName}}"FinalSnapshotName": "{{this.FinalSnapshotName}}",{{/if}}
+    {{#if this.KmsKeyId}}"KmsKeyId": "{{this.KmsKeyId}}",{{/if}}
+    {{#if this.MajorEngineVersion}}"MajorEngineVersion": "{{this.MajorEngineVersion}}",{{/if}}
+    {{#if this.ReaderEndpoint}}"ReaderEndpoint": { {{{inject this.ReaderEndpoint}}} },{{/if}}
+    {{#if this.SecurityGroupIds}}"SecurityGroupIds": [{{#each this.SecurityGroupIds}}{"Ref":"ec2sg{{this}}"}{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    "ServerlessCacheName": "{{this.Name}}",
+    {{#if this.SnapshotArnsToRestore}}"SnapshotArnsToRestore":[{{#each this.SnapshotArnsToRestore}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+    {{#if this.SnapshotRetentionLimit}}"SnapshotRetentionLimit":{{this.SnapshotRetentionLimit}},{{/if}}
+    "SubnetIds":[
+      {{#each (lookupByNode @root.Region.Subnets this.SubnetId)}}
+        {{#each this}}
+          "{{this.Id}}"{{#unless @last}},{{/unless}}
+        {{/each}}
+      {{/each}}
+    ],
+    {{#if this.UserGroupId}}"UserGroupId": "{{this.UserGroupId}}",{{/if}}
+    {{> tags}}
+  }
+}

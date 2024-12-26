@@ -1,0 +1,15 @@
+{{!--
+  Represents the implementation of the AWS Security Hub service in your account.
+  One hub resource is created for each Region in which you enable Security Hub.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-configurationpolicy-policy.html
+ --}}
+"sechubpolconf{{sanitize this.Name ''}}": {
+  "Type": "AWS::SecurityHub::ConfigurationPolicy",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+    "ConfigurationPolicy": { {{{ inject this.ConfigurationPolicy}}} },
+    {{> tags_map}}
+  }
+}

@@ -1,0 +1,13 @@
+{{!--
+  A schedule group is an Amazon EventBridge Scheduler resource you use to organize your schedules.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-scheduler-schedulegroup.html
+ --}}
+
+"schdlrschdlgrp{{sanitize this.Name ''}}":{
+  "Type": "AWS::Scheduler::ScheduleGroup",
+  "Properties": {
+    "Name": "{{this.Name}}",
+    {{> tags}}
+  }
+}

@@ -45,6 +45,10 @@
   {{#if this.VolumesFrom}}"VolumesFrom": [ {{#each this.VolumesFrom}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.WorkingDirectory}}"WorkingDirectory": "{{this.WorkingDirectory}}",{{/if}}
 
-  "Image": "{{this.Image}}",
+  {{#ifObject this.Image}}
+    "Image": { {{{inject this.Image}}} }
+  {{else}}
+    "Image": "{{this.Image}}"
+  {{/ifObject}},
   "Name": "{{this.Name}}"
 }
