@@ -1,0 +1,19 @@
+{{!--
+  Defines a scaling policy that Application Auto Scaling uses to adjust the capacity of a scalable target.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalingpolicy.html
+ --}}
+"aassp{{sanitize this.Name ''}}": {
+  "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+  "Properties": {
+    "PolicyName": "{{this.Name}}",
+    {{#if this.PredictiveScalingPolicyConfiguration}}"PredictiveScalingPolicyConfiguration": { {{{inject this.PredictiveScalingPolicyConfiguration}}} },{{/if}}
+    {{#if this.ResourceId}}"ResourceId": "{{this.ResourceId}}",{{/if}}
+    {{#if this.ScalableDimension}}"ScalableDimension": "{{this.ScalableDimension}}",{{/if}}
+    {{#if this.ScalingTargetId}}"ScalingTargetId": "{{this.ScalingTargetId}}",{{/if}}
+    {{#if this.ServiceNamespace}}"ServiceNamespace": "{{this.ServiceNamespace}}",{{/if}}
+    {{#if this.StepScalingPolicyConfiguration}}"StepScalingPolicyConfiguration": { {{{inject this.StepScalingPolicyConfiguration}}} },{{/if}}
+    {{#if this.TargetTrackingScalingPolicyConfiguration}}"TargetTrackingScalingPolicyConfiguration": { {{{inject this.TargetTrackingScalingPolicyConfiguration}}} },{{/if}}
+    "PolicyType": "{{this.PolicyType}}"
+  }
+}

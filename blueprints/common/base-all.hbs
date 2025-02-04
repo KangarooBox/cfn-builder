@@ -102,6 +102,14 @@
     {{> apigateway_vpclink}},
     {{/each}}
 
+    {{#each ApplicationAutoScalingScalingPolicies}}
+    {{> applicationautoscaling_scalingpolicy}},
+    {{/each}}
+
+    {{#each ApplicationAutoScalingScalableTargets}}
+    {{> applicationautoscaling_scalabletarget}},
+    {{/each}}
+
     {{#each AppStreamFleets}}
     {{> appstream_fleet}},
     {{/each}}

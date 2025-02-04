@@ -1,0 +1,19 @@
+{{!--
+  Specifies a resource that Application Auto Scaling can scale, such as an
+  AWS::DynamoDB::Table or AWS::ECS::Service resource.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html
+ --}}
+"aasst{{sanitize this.Name ''}}": {
+  "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+  "Properties": {
+    "MaxCapacity": {{this.MaxCapacity}},
+    "MinCapacity": {{this.MinCapacity}},
+    "ResourceId": "{{this.ResourceId}}",
+    {{#if this.RoleARN}}"RoleARN": "{{this.RoleARN}}",{{/if}}
+    "ScalableDimension": "{{this.ScalableDimension}}",
+    {{#if this.ScheduledActions}}"ScheduledActions": [ {{#each this.ScheduledActions}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
+    {{#if this.SuspendedState}}"SuspendedState": { {{{inject this.SuspendedState}}} },{{/if}}
+    "ServiceNamespace": "{{this.ServiceNamespace}}"
+  }
+}
