@@ -18,7 +18,7 @@
   {{#if this.EntryPoint}}"EntryPoint": [ {{#each this.EntryPoint}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
   {{#if this.Environment}}"Environment": [{{{inject this.Environment}}}],{{/if}}
   {{#if this.EnvironmentFiles}}"EnvironmentFiles" : [ {{#each this.EnvironmentFiles}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
-  {{#if this.Essential}}"Essential": {{default this.Essential false}},{{/if}}
+  "Essential": {{default (toString this.Essential) true}},
   {{#if this.ExtraHosts}}"ExtraHosts": [ {{#each this.ExtraHosts}}{ {{{inject this}}} }{{comma}}{{/each}} ],{{/if}}
   {{#if this.FirelensConfiguration}}"FirelensConfiguration": { {{{inject this.FirelensConfiguration}}} },{{/if}}
   {{#if this.HealthCheck}}"HealthCheck" : { {{{inject this.HealthCheck}}} },{{/if}}
