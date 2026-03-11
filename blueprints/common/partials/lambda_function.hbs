@@ -42,6 +42,7 @@
     {{#if this.MemorySize}}"MemorySize":{{this.MemorySize}},{{/if}}
     {{#if this.PackageType}}"PackageType": "{{this.PackageType}}",{{/if}}
     {{#if this.ReservedConcurrentExecutions}}"ReservedConcurrentExecutions": {{this.ReservedConcurrentExecutions}},{{/if}}
+    {{#if this.Runtime}}"Runtime":"{{this.Runtime}}",{{/if}}
     {{#if this.Timeout}}"Timeout":{{this.Timeout}},{{/if}}
     {{#if this.TracingConfig}}"TracingConfig": { {{{inject this.TracingConfig}}} },{{/if}}
     {{#if this.VpcConfig}}"VpcConfig":{
@@ -63,7 +64,6 @@
       },
     {{/if}}
     "Role":{ "Fn::GetAtt":[ "iamr{{this.Role}}","Arn"] },
-    "Runtime":"{{this.Runtime}}",
     "FunctionName":"{{this.Name}}",
     {{> tags Role=''}}
   }

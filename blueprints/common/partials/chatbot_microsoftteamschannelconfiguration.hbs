@@ -1,0 +1,33 @@
+{{!--
+  The AWS::Chatbot::MicrosoftTeamsChannelConfiguration resource configures a Microsoft
+  Teams channel to allow users to use Amazon Q Developer with AWS CloudFormation templates.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-chatbot-microsoftteamschannelconfiguration.html
+ --}}
+"chatmsteamschnl{{sanitize this.Name ''}}" : {
+  "Type": "AWS::Chatbot::MicrosoftTeamsChannelConfiguration",
+  "Properties": {
+    "ConfigurationName": "{{this.Name}}",
+    "IamRoleArn": {"Fn::GetAtt" : ["iamr{{sanitize this.IamRoleArn ''}}", "Arn"] },
+    "TeamId": "{{this.TeamId}}",
+    "TeamsChannelId": "{{this.TeamsChannelId}}",
+    "TeamsTenantId": "{{this.TeamsTenantId}}",
+    {{#if this.CustomizationResourceArns}}"CustomizationResourceArns": [
+      {{#each this.CustomizationResourceArns}}"{{this}}"{{/each}}{{comma}}
+    ],{{/if}}
+    {{#if this.GuardrailPolicies}}"GuardrailPolicies": [
+      {{#each this.GuardrailPolicies}}"{{this}}"{{comma}}{{/each}}
+    ],{{/if}}
+    {{#if this.LoggingLevel}}"LoggingLevel": "{{this.LoggingLevel}}",{{/if}}
+    {{#if this.SnsTopicArns}}"SnsTopicArns": [
+      {{#each this.SnsTopicArns}}"{{this}}"{{comma}}{{/each}}
+    ],{{/if}}
+    {{#if this.TeamsChannelName}}
+      "TeamsChannelName": "{{this.TeamsChannelName}}",
+    {{else}}
+      "TeamsChannelName": "{{this.Name}}",
+    {{/if}}
+    {{#if this.UserRoleRequired}}"UserRoleRequired": Boolean,{{/if}}
+    {{> tags}}
+  }
+}

@@ -8,11 +8,11 @@
   "Type":"AWS::Events::Rule",
   "Properties":{
     {{#if this.EventPattern}}"EventPattern":{ {{{inject this.EventPattern}}} },{{/if}}
-    {{#if this.Role}}
-    "RoleArn":{{#startsWith "arn:aws:" this.Role}}
-      "{{this.Role}}"
+    {{#if this.RoleArn}}
+    "RoleArn":{{#startsWith "arn:aws:" this.RoleArn}}
+      "{{this.RoleArn}}"
     {{else}}
-      { "Fn::GetAtt":[ "iamr{{this.Role}}", "Arn"] }
+      { "Fn::GetAtt":[ "iamr{{this.RoleArn}}", "Arn"] }
     {{/startsWith}},
     {{/if}}
     {{#if this.ScheduleExpression}}"ScheduleExpression":"{{this.ScheduleExpression}}",{{/if}}
@@ -20,6 +20,12 @@
     {{#if this.Targets}}"Targets":[{{#each this.Targets}}
       { {{#if this.Input}}"Input":"{ {{{inject this.Input true}}} }",{{/if}}
         {{#if this.InputPath}}"InputPath":"{{this.InputPath}}",{{/if}}
+        {{#if this.InputTransformer}}"InputTransformer": {
+
+          "InputPathsMap": { {{{inject this.InputTransformer.InputPathsMap}}} },
+          "InputTemplate": "{ {{{inject this.InputTransformer.InputTemplate true}}} }"
+
+        },{{/if}}
         "Arn":{{#startsWith "arn:aws:" this.Arn}}
         "{{this.Arn}}"
         {{else}}
@@ -32,9 +38,11 @@
             { "Fn::GetAtt":[ "iamr{{this.RoleArn}}", "Arn"] }
           {{/startsWith}},
         {{/if}}
+
         "Id":"{{this.Id}}"
-      }{{#unless @last}},{{/unless}}{{/each}}],{{/if}}
+      }{{comma}}{{/each}}],{{/if}}
     {{#if this.Description}}"Description":"{{this.Description}} ({{@root.ProjectName}}-{{@root.EnvVersion}}{{@root.EnvName}})",{{/if}}
-    "Name":"{{this.Name}}"
+    "Name":"{{this.Name}}",
+    {{> tags}}
   }
 }

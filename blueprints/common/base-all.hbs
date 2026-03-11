@@ -182,6 +182,10 @@
     {{> ce_anomalysubscription}},
     {{/each}}
 
+    {{#each ChatBotMSTeamsChannels}}
+    {{> chatbot_microsoftteamschannelconfiguration}},
+    {{/each}}
+
     {{#each CloudFormationMacros}}
     {{> cloudformation_macro}},
     {{/each}}
@@ -796,6 +800,10 @@
 
     {{#each SSOPermissionSets}}
     {{> sso_permissionset}},
+    {{/each}}
+
+    {{#each StepFunctionsStateMachines}}
+    {{> stepfunctions_statemachine}},
     {{/each}}
 
     {{#each SQSQueues}}
