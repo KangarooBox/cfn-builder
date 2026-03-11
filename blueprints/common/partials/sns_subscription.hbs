@@ -9,9 +9,18 @@
     {{#if this.Endpoint}}"Endpoint": "{{this.Endpoint}}",{{/if}}
     {{#if this.DeliveryPolicy}}"DeliveryPolicy": { {{{inject this.DeliveryPolicy}}} },{{/if}}
     {{#if this.FilterPolicy}}"FilterPolicy": { {{{inject this.FilterPolicy}}} },{{/if}}
+    {{#if this.FilterPolicyScope}}"FilterPolicyScope": "{{this.FilterPolicyScope}}",{{/if}}
     {{#if (toString this.RawMessageDelivery)}}"RawMessageDelivery": {{toString this.RawMessageDelievery}},{{/if}}
     {{#if this.RedrivePolicy}}"RedrivePolicy": { {{{inject this.RedrivePolicy}}} },{{/if}}
+    {{#if this.ReplayPolicy}}"ReplayPolicy": { {{{inject this.ReplayPolicy}}} },{{/if}}
     {{#if this.Region}}"Region": "{{this.Region}}",{{/if}}
+    {{#if this.SubscriptionRoleArn}}
+      "SubscriptionRoleArn": {{#startsWith "arn:aws:" this.SubscriptionRoleArn}}
+          "{{this.SubscriptionRoleArn}}"
+        {{else}}
+          { "Ref": "iamr{{sanitize this.SubscriptionRoleArn ''}}" }
+      {{/startsWith}},
+    {{/if}}
     "Protocol": "{{this.Protocol}}",
     "TopicArn": {{#startsWith "arn:aws:" this.TopicArn}}"{{this.TopicArn}}"{{else}}
       { "Ref": "snst{{sanitize this.TopicArn ''}}" }
