@@ -194,6 +194,10 @@
     {{> cloudfront_distribution}},
     {{/each}}
 
+    {{#each CloudFrontOriginAccessControls}}
+    {{> cloudfront_originaccesscontrol}},
+    {{/each}}
+
     {{#each CloudFrontOriginAccessIdentities}}
     {{> cloudfront_originaccessidentity}},
     {{/each}}
