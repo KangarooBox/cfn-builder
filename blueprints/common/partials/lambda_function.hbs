@@ -8,17 +8,23 @@
   "Properties":{
     {{#if this.Architectures}}"Architectures": [ {{{inject this.Architectures}}} ],{{/if}}
     "Code":{
-    {{#if this.ZipFile}}
-      "ZipFile":{ "Fn::Join": ["\n",[ {{#each this.ZipFile}}"{{{this}}}"{{#unless @last}},{{/unless}}{{/each}} ] ]}
-    {{/if}}
-    {{#if this.ImageUri}}
-      "ImageUri": {{#ifObject this.ImageUri}}{ {{{inject this.ImageUri}}} }{{else}}"{{this.ImageUri}}"{{/ifObject}}
-    {{/if}}
-    {{#if this.S3Bucket}}
-      {{#if this.S3ObjectVersion}}"S3ObjectVersion":"{{this.S3ObjectVersion}}",{{/if~}}
-      "S3Bucket":"{{this.S3Bucket}}",
-      "S3Key":{{#ifObject this.S3Key}}{ {{{inject this.S3Key}}} }{{else}}"{{this.S3Key}}"{{/ifObject}}
-    {{/if}}
+      {{#with this.Code}}
+        {{#if this.ZipFile}}
+          {{#ifObject this.ZipFile}}
+            "ZipFile":{ "Fn::Join": ["\n",[ {{#each this.ZipFile}}"{{{this}}}"{{#unless @last}},{{/unless}}{{/each}} ]]}
+          {{else}}
+            "ZipFile": "{{this.ZipFile}}"
+          {{/ifObject}}
+        {{/if}}
+        {{#if this.ImageUri}}
+          "ImageUri": {{#ifObject this.ImageUri}}{ {{{inject this.ImageUri}}} }{{else}}"{{this.ImageUri}}"{{/ifObject}}
+        {{/if}}
+        {{#if this.S3Bucket}}
+          {{#if this.S3ObjectVersion}}"S3ObjectVersion":"{{this.S3ObjectVersion}}",{{/if~}}
+          "S3Bucket":"{{this.S3Bucket}}",
+          "S3Key":{{#ifObject this.S3Key}}{ {{{inject this.S3Key}}} }{{else}}"{{this.S3Key}}"{{/ifObject}}
+        {{/if}}
+      {{/with}}
     },
     {{#if this.CodeSigningConfigArn}}"CodeSigningConfigArn": "{{this.CodeSigningConfigArn}}",{{/if}}
     {{#if this.DeadLetterConfig}}"DeadLetterConfig": { {{{inject this.DeadLetterConfig}}} },{{/if}}

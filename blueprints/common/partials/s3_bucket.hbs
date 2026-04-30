@@ -7,10 +7,15 @@
   "Type":"AWS::S3::Bucket",
   "DeletionPolicy":"{{default this.DeletionPolicy 'Retain'}}",
   "Properties":{
-    "BucketName":"{{this.Name}}",
     {{#if this.BucketEncryption}}
       "BucketEncryption": { {{{inject this.BucketEncryption}}} },
     {{/if}}
+    {{#if this.BucketNamePrefix}}
+      "BucketNamePrefix": "{{this.BucketNamePrefix}}",
+    {{else}}
+      "BucketName":"{{this.Name}}",
+    {{/if}}
+    {{#if this.BucketNamespace}}"BucketNamespace": "{{this.BucketNamespace}}",{{/if}}
     {{#if this.AccessControl}}"AccessControl":"{{this.AccessControl}}",{{/if}}
     {{#if this.CorsConfiguration}}"CorsConfiguration":{ {{{inject this.CorsConfiguration}}} },{{/if}}
     {{#if this.LifecycleConfiguration}}

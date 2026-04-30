@@ -1,0 +1,22 @@
+{{!--
+  After you create an origin access control, you can add it to an origin in a CloudFront
+  distribution so that CloudFront sends authenticated (signed) requests to the origin.
+
+  This makes it possible to block public access to the origin, allowing viewers (users)
+  to access the origin's content only through CloudFront.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-cloudfront-originaccesscontrol.html
+ --}}
+
+"cfntoacont{{sanitize this.Name ''}}": {
+  "Type": "AWS::CloudFront::OriginAccessControl",
+  "Properties": {
+    "OriginAccessControlConfig":
+      { "Name": "{{this.Name}}",
+        {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
+        "OriginAccessControlOriginType": "{{default "s3" this.OriginAccessControlOriginType}}",
+        "SigningBehavior": "{{default "always" this.SigningBehavior}}",
+        "SigningProtocol": "sigv4"
+      }
+    }
+  }

@@ -5,8 +5,12 @@
  --}}
 "s3bp{{sanitize this.Bucket ''}}" : {
   "Type" : "AWS::S3::BucketPolicy",
-  "Properties" : {
-    "Bucket" : { "Ref" : "s3b{{sanitize this.Bucket ''}}" },
+  "Properties": {
+    {{#ifObject this.Bucket}}
+      "Bucket": { {{{this.Bucket}}} }
+    {{else}}
+      "Bucket": { "Ref" : "s3b{{sanitize this.Bucket ''}}" }
+    {{/ifObject}},
     "PolicyDocument" : { {{{inject this.PolicyDocument}}} }
   },
   "DependsOn":"s3b{{sanitize this.Bucket ''}}"

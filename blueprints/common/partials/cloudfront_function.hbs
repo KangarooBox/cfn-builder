@@ -1,0 +1,16 @@
+{{!--
+  Creates a CloudFront function.
+
+  https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-cloudfront-function.html
+ --}}
+
+"cfntfunc{{sanitize this.Name ''}}": {
+  "Type": "AWS::CloudFront::Function",
+  "Properties": {
+    "AutoPublish": {{default (toString this.AutoPublish) false}},
+    "FunctionCode": "{{{this.FunctionCode}}}",
+    "FunctionConfig": { {{{inject this.FunctionConfig}}} },
+    {{#if this.FunctionMetadata}}"FunctionMetadata": { {{{this.FunctionMetadata}}} },{{/if}}
+    "Name": "{{this.Name}}"
+  }
+}
