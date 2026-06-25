@@ -1,12 +1,12 @@
 {
   "author": "Richard Hurt",
   "bin": {
-    "cfn-build": "./scripts/build.js",
-    "cfn-diff": "./scripts/diff.js",
-    "cfn-watch": "./scripts/watch.js",
-    "cfn-sync": "./scripts/sync.js",
-    "cfn-changeSet": "./scripts/changeSet.js",
-    "cfn-refresh": "./scripts/refresh.js"
+    "cfn-build": "scripts/build.js",
+    "cfn-diff": "scripts/diff.js",
+    "cfn-watch": "scripts/watch.js",
+    "cfn-sync": "scripts/sync.js",
+    "cfn-changeSet": "scripts/changeSet.js",
+    "cfn-refresh": "scripts/refresh.js"
   },
   "bugs": {
     "url": "https://github.com/rnhurt/cfn-builder/issues"
@@ -44,7 +44,7 @@
     "type": "git",
     "url": "git+https://github.com/rnhurt/cfn-builder.git"
   },
-  "version": "0.14.0",
+  "version": "0.14.3",
   "scripts": {
     "test": "yarn run lint",
     "lint": "eslint lib scripts/*.js"
