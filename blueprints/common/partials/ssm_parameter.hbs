@@ -6,7 +6,7 @@
 "ssmp{{sanitize this.Name ''}}":{
   "Type": "AWS::SSM::Parameter",
   "Properties": {
-    "Name": "{{this.Name}}",
+    "Name": {{#ifObject this.Name}}{ {{{inject this.Name}}} }{{else}}"{{this.Name}}"{{/ifObject}},
     {{#if this.AllowedPattern}}"AllowedPattern": "{{this.AllowedPattern}}",{{/if}}
     {{#if this.Description}}"Description": "{{this.Description}}",{{/if}}
     {{#if this.Policies}}"Policies": "{{this.Policies}}",{{/if}}
