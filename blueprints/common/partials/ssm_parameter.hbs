@@ -5,6 +5,7 @@
  --}}
 "ssmp{{sanitize this.Name ''}}":{
   "Type": "AWS::SSM::Parameter",
+  {{#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
   "Properties": {
     "Name": {{#ifObject this.Name}}{ {{{inject this.Name}}} }{{else}}"{{this.Name}}"{{/ifObject}},
     {{#if this.AllowedPattern}}"AllowedPattern": "{{this.AllowedPattern}}",{{/if}}
