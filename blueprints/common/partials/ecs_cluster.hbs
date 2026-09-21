@@ -5,6 +5,7 @@
 --}}
 "ecsclst{{sanitize this.Name ''}}":{
   "Type": "AWS::ECS::Cluster",
+  {{#if this.DeletionPolicy}}"DeletionPolicy":"{{this.DeletionPolicy}}",{{/if}}
   "Properties": {
     {{#if this.ClusterName}}"ClusterName": "{{this.ClusterName}}",{{/if}}
     {{#if this.CapacityProviders}}"CapacityProviders": [ {{#each this.CapacityProviders}}"{{this}}"{{comma}}{{/each}} ],{{/if}}
