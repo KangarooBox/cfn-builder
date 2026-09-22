@@ -1,0 +1,4 @@
+.claude/
+.eslintrc.js
+.gitignore
+yarn.lock
