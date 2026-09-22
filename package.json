@@ -9,7 +9,7 @@
     "cfn-refresh": "scripts/refresh.js"
   },
   "bugs": {
-    "url": "https://github.com/rnhurt/cfn-builder/issues"
+    "url": "https://github.com/KangarooBox/cfn-builder/issues"
   },
   "dependencies": {
     "async": "^2.6.3",
@@ -30,7 +30,7 @@
     "yargs": "^13.3.0"
   },
   "description": "A command line application that builds AWS CloudFormation templates our of JSON 'blueprints'.",
-  "homepage": "https://github.com/rnhurt/cfn-builder",
+  "homepage": "https://github.com/KangarooBox/cfn-builder",
   "keywords": [
     "CloudFormation",
     "AWS",
@@ -42,9 +42,9 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rnhurt/cfn-builder.git"
+    "url": "git+https://github.com/KangarooBox/cfn-builder.git"
   },
-  "version": "0.14.4",
+  "version": "0.14.5",
   "scripts": {
     "test": "yarn run lint",
     "lint": "eslint lib scripts/*.js"
